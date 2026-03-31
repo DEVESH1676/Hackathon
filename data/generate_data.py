@@ -1,6 +1,8 @@
 import os
 import sys
 import time
+import json
+import requests
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
@@ -19,7 +21,7 @@ Categories (distribute evenly across 500):
 
 Priority: P1 Critical(10%), P2 High(25%), P3 Medium(40%), P4 Low(25%)
 
-Departments: Infrastructure→Cloud Platform Engineering, Application→Application Support Team, Security→Security Operations Center (SOC), Database→Database Administration (DBA), Network→Network Operations Center (NOC), Access Management→Identity & Access Management (IAM)
+Departments: Infrastructure->Cloud Platform Engineering, Application->Application Support Team, Security->Security Operations Center (SOC), Database->Database Administration (DBA), Network->Network Operations Center (NOC), Access Management->Identity & Access Management (IAM)
 
 Rules:
 - ticket_id: TKT-2024-00001 through TKT-2024-00500
@@ -28,7 +30,6 @@ Rules:
 - resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
 - ~10% descriptions should have minor typos like a real employee
 - 15% should be ambiguous (could fit 2 categories)
-- 10% should be recurring patterns (same root cause, different reporters)
 - Wrap fields containing commas in double quotes
 
 Output RAW CSV only. Start with header row. No markdown. No code blocks."""
@@ -47,7 +48,7 @@ Categories (distribute evenly across 500):
 
 Priority: P1 Critical(10%), P2 High(25%), P3 Medium(40%), P4 Low(25%)
 
-Departments: Infrastructure→Cloud Platform Engineering, Application→Application Support Team, Security→Security Operations Center (SOC), Database→Database Administration (DBA), Network→Network Operations Center (NOC), Access Management→Identity & Access Management (IAM)
+Departments: Infrastructure->Cloud Platform Engineering, Application->Application Support Team, Security->Security Operations Center (SOC), Database->Database Administration (DBA), Network->Network Operations Center (NOC), Access Management->Identity & Access Management (IAM)
 
 Rules:
 - ticket_id: TKT-2024-00501 through TKT-2024-01000
@@ -56,7 +57,6 @@ Rules:
 - resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
 - ~10% descriptions should have minor typos like a real employee
 - 15% should be ambiguous (could fit 2 categories)
-- 10% should be recurring patterns (same root cause, different reporters)
 - Wrap fields containing commas in double quotes
 
 Output RAW CSV only. Start with header row. No markdown. No code blocks."""
@@ -78,7 +78,6 @@ def print_progress(current, total, start_time, batch_num, bar_width=40):
     sys.stdout.flush()
 
 def clean_csv(content):
-    """Strip markdown code blocks and whitespace."""
     content = content.strip()
     for prefix in ["```csv", "```"]:
         if content.startswith(prefix):
@@ -87,34 +86,64 @@ def clean_csv(content):
         content = content[:-3]
     return content.strip()
 
-def generate_batch(llm, prompt, batch_num):
+def generate_batch(base_url, model, prompt, batch_num):
     print(f"\n{'='*55}")
     print(f"  BATCH {batch_num}: Generating {TARGET_PER_BATCH} tickets...")
     print(f"{'='*55}")
     
-    from langchain_core.messages import HumanMessage
+    url = f"{base_url}/api/chat"
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "stream": True,
+        "options": {
+            "temperature": 0.7,
+            "num_predict": 65536
+        }
+    }
     
     start_time = time.time()
-    collected_chunks = []
+    collected = []
     ticket_count = 0
     header_seen = False
     
-    for chunk in llm.stream([HumanMessage(content=prompt)]):
-        text = chunk.content
-        collected_chunks.append(text)
-        newlines = text.count('\n')
-        if newlines > 0:
-            if not header_seen:
-                header_seen = True
-                ticket_count += max(0, newlines - 1)
-            else:
-                ticket_count += newlines
-            if ticket_count > 0:
-                print_progress(min(ticket_count, TARGET_PER_BATCH), TARGET_PER_BATCH, start_time, batch_num)
+    print(f"  Sending request to {url}...")
+    
+    # Use a long timeout - cloud models can take time to start
+    response = requests.post(url, json=payload, stream=True, timeout=(30, 600))
+    response.raise_for_status()
+    
+    print(f"  ✓ Connection established. Streaming tokens...")
+    
+    for line in response.iter_lines():
+        if not line:
+            continue
+        try:
+            data = json.loads(line)
+            if "message" in data and "content" in data["message"]:
+                text = data["message"]["content"]
+                collected.append(text)
+                
+                nl = text.count('\n')
+                if nl > 0:
+                    if not header_seen:
+                        header_seen = True
+                        ticket_count += max(0, nl - 1)
+                    else:
+                        ticket_count += nl
+                    if ticket_count > 0:
+                        print_progress(min(ticket_count, TARGET_PER_BATCH), TARGET_PER_BATCH, start_time, batch_num)
+            
+            # Check if generation is done
+            if data.get("done", False):
+                break
+                
+        except json.JSONDecodeError:
+            continue
     
     print()
     elapsed = time.time() - start_time
-    content = clean_csv(''.join(collected_chunks))
+    content = clean_csv(''.join(collected))
     
     lines = [l for l in content.split('\n') if l.strip()]
     actual = len(lines) - 1  # minus header
@@ -124,86 +153,60 @@ def generate_batch(llm, prompt, batch_num):
 
 def main():
     CLOUD_MODEL = "deepseek-v3.2:cloud"
+    BASE_URL = config.OLLAMA_BASE_URL
     
     print(f"╔══════════════════════════════════════════════════════╗")
-    print(f"║  Synthetic Ticket Generator (Cloud Edition)        ║")
+    print(f"║  Synthetic Ticket Generator (Direct API)           ║")
     print(f"║  Model: {CLOUD_MODEL:<43}║")
-    print(f"║  Host:  {config.OLLAMA_BASE_URL:<43}║")
+    print(f"║  Host:  {BASE_URL:<43}║")
     print(f"║  Strategy: 2 batches × 500 = 1000 tickets          ║")
     print(f"╚══════════════════════════════════════════════════════╝")
     
-    from langchain_community.chat_models import ChatOllama
-    
-    llm = ChatOllama(
-        base_url=config.OLLAMA_BASE_URL,
-        model=CLOUD_MODEL,
-        temperature=0.7,
-        num_predict=65536,
-    )
+    # Quick connectivity test
+    print(f"\n  Testing connection to {BASE_URL}...")
+    try:
+        r = requests.get(f"{BASE_URL}/api/tags", timeout=5)
+        models = [m["name"] for m in r.json().get("models", [])]
+        print(f"  ✓ Connected! Available models: {len(models)}")
+        if CLOUD_MODEL not in models and f"{CLOUD_MODEL}" not in str(models):
+            print(f"  ⚠ Warning: {CLOUD_MODEL} not found in model list. Trying anyway...")
+    except Exception as e:
+        print(f"  ✗ Cannot reach Ollama: {e}")
+        return
     
     output_path = os.path.join(os.path.dirname(__file__), 'synthetic_tickets.csv')
     batch1_path = os.path.join(os.path.dirname(__file__), 'batch1_tickets.csv')
-    batch2_path = os.path.join(os.path.dirname(__file__), 'batch2_tickets.csv')
     
     # --- BATCH 1 ---
-    csv_1, count_1 = generate_batch(llm, PROMPT_BATCH_1, 1)
+    csv_1, count_1 = generate_batch(BASE_URL, CLOUD_MODEL, PROMPT_BATCH_1, 1)
     
-    # Save batch 1 immediately so we don't lose it if batch 2 fails
+    # Save batch 1 immediately
     with open(batch1_path, 'w', encoding='utf-8') as f:
         f.write(csv_1)
-    print(f"  💾 Batch 1 saved to: {batch1_path}")
-    
-    # Also save as main file immediately (so we have data even if batch 2 fails)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(csv_1)
-    print(f"  💾 Intermediate save: {output_path} ({count_1} tickets)")
+    print(f"  💾 Batch 1 saved ({count_1} tickets)")
     
     # --- BATCH 2 ---
     try:
-        csv_2, count_2 = generate_batch(llm, PROMPT_BATCH_2, 2)
+        csv_2, count_2 = generate_batch(BASE_URL, CLOUD_MODEL, PROMPT_BATCH_2, 2)
         
-        # Save batch 2 separately
-        with open(batch2_path, 'w', encoding='utf-8') as f:
-            f.write(csv_2)
-        print(f"  💾 Batch 2 saved to: {batch2_path}")
-        
-    except Exception as e:
-        print(f"\n  ⚠ Batch 2 failed: {e}")
-        print(f"  → Batch 1 data ({count_1} tickets) is still saved and usable!")
-        count_2 = 0
-        csv_2 = ""
-    
-    # --- MERGE ---
-    if csv_2:
-        print(f"\n{'='*55}")
-        print(f"  MERGING BATCHES...")
-        print(f"{'='*55}")
-        
+        # Merge
         lines_1 = csv_1.split('\n')
         lines_2 = csv_2.split('\n')
-        
-        # Keep header from batch 1, skip header from batch 2
-        merged_lines = list(lines_1)
-        if lines_2:
-            merged_lines.extend(lines_2[1:])  # skip batch 2 header
-        
-        merged = '\n'.join(merged_lines)
-        
+        merged = '\n'.join(lines_1 + lines_2[1:])
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(merged)
+        print(f"  💾 Merged: {count_1 + count_2} total tickets")
+    except Exception as e:
+        print(f"\n  ⚠ Batch 2 failed: {e}")
+        print(f"  → Batch 1 ({count_1} tickets) is still saved!")
+        count_2 = 0
     
     total = count_1 + count_2
-    print(f"\n  ✓ Saved {total} total tickets to: {output_path}")
-    print(f"    Batch 1: {count_1} tickets")
-    print(f"    Batch 2: {count_2} tickets")
-    
-    if total < 800:
-        print(f"\n  ⚠ Got fewer than expected. Still usable for hackathon.")
-    else:
-        print(f"\n  ✓ Target reached!")
-    
     print(f"\n{'='*55}")
-    print(f"  DONE. Next: python core/embeddings.py")
+    print(f"  DONE: {total} tickets → {output_path}")
+    print(f"  Next: python core/embeddings.py")
     print(f"{'='*55}")
 
 if __name__ == "__main__":
