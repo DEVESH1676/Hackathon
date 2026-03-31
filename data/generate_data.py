@@ -5,153 +5,177 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
-PROMPT = """You are a Senior IT Service Desk Data Engineer at a Fortune 500 enterprise (50,000 employees, hybrid cloud infrastructure). Generate exactly 1000 realistic IT support tickets in CSV format.
+PROMPT_BATCH_1 = """Generate exactly 500 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.
 
-STRICT SCHEMA (use these exact column headers):
-ticket_id,title,description,category,resolution,priority,department
+Header: ticket_id,title,description,category,resolution,priority,department
 
-CATEGORY DISTRIBUTION (enforce exactly):
-- Infrastructure: 200 tickets (servers, VMs, storage, cloud resources, DNS, load balancers, Kubernetes pods, CI/CD pipelines)
-- Application: 175 tickets (CRM crashes, ERP errors, microservice failures, API timeouts, deployment rollbacks, memory leaks, log4j patches)
-- Security: 150 tickets (phishing attempts, MFA failures, certificate expirations, SOC alerts, vulnerability scans, ransomware indicators, DLP violations)
-- Database: 175 tickets (query performance, replication lag, deadlocks, backup failures, schema migrations, connection pool exhaustion, Oracle/PostgreSQL/MongoDB specific)
-- Network: 150 tickets (VPN drops, firewall rule requests, VLAN misconfigs, BGP flaps, SD-WAN issues, packet loss, DNS resolution failures)
-- Access Management: 150 tickets (AD group additions, RBAC role requests, service account creation, SSO issues, PAM vault access, offboarding access revocation, API key rotation)
+Categories (distribute evenly across 500):
+- Infrastructure (100): servers, VMs, storage, K8s, CI/CD, DNS, load balancers
+- Application (85): CRM crashes, API timeouts, microservice failures, memory leaks, deployment issues
+- Security (75): phishing, MFA failures, cert expirations, vulnerability scans, ransomware, DLP
+- Database (85): slow queries, replication lag, deadlocks, backup failures, connection pools, ORA errors
+- Network (75): VPN drops, firewall rules, VLAN misconfigs, BGP flaps, packet loss, DNS failures
+- Access Management (80): AD groups, RBAC, service accounts, SSO issues, PAM access, offboarding
 
-PRIORITY DISTRIBUTION:
-- P1 Critical: 10% (production down, security breach, data loss)
-- P2 High: 25% (degraded service, security vulnerability, key system affected)
-- P3 Medium: 40% (workaround exists, scheduled maintenance, standard requests)
-- P4 Low: 25% (cosmetic issues, documentation, feature requests, training)
+Priority: P1 Critical(10%), P2 High(25%), P3 Medium(40%), P4 Low(25%)
 
-DEPARTMENT ROUTING:
-- Infrastructure -> Cloud Platform Engineering
-- Application -> Application Support Team
-- Security -> Security Operations Center (SOC)
-- Database -> Database Administration (DBA)
-- Network -> Network Operations Center (NOC)
-- Access Management -> Identity & Access Management (IAM)
+Departments: Infrastructure→Cloud Platform Engineering, Application→Application Support Team, Security→Security Operations Center (SOC), Database→Database Administration (DBA), Network→Network Operations Center (NOC), Access Management→Identity & Access Management (IAM)
 
-CRITICAL REALISM RULES:
-1. EVERY description MUST be 2-5 sentences long, written as a real employee would write. Some formal, some casual, ~10% with minor typos. Include real server names like PROD-APP-07, error codes like ORA-12541, HTTP 503, etc.
-2. Include realistic enterprise tools: ServiceNow, Jira, Splunk, CrowdStrike, Okta, HashiCorp Vault, AWS Console, Azure AD, Terraform, Ansible.
-3. Resolutions MUST be specific technical steps (NOT generic). Example: "Restarted Apache Tomcat service on PROD-APP-07 via Ansible playbook restart_tomcat.yml. Root cause: JVM heap exhaustion at 95% - increased from 4GB to 8GB in /opt/tomcat/bin/setenv.sh."
-4. Include 15% ambiguous tickets where the category could reasonably be 2+ categories (e.g., "Cannot access database" could be Network, Database, or Access Management).
-5. Include 10% recurring/pattern tickets (same root cause, different reporters).
-6. Ticket IDs must be sequential: TKT-2024-00001 through TKT-2024-01000.
-7. DO NOT get lazy with descriptions. Every single row must have a unique, detailed description. No "check" or "update request" placeholders.
+Rules:
+- ticket_id: TKT-2024-00001 through TKT-2024-00500
+- description: 2-4 real sentences. Use server names (PROD-APP-07), error codes (ORA-12541, HTTP 503), tool names (ServiceNow, Jira, Splunk, CrowdStrike, Okta, Terraform, Ansible, AWS, Azure AD)
+- resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
+- ~10% descriptions should have minor typos like a real employee
+- 15% should be ambiguous (could fit 2 categories)
+- 10% should be recurring patterns (same root cause, different reporters)
+- Wrap fields containing commas in double quotes
 
-Output ONLY the CSV data starting with the header row. No explanations, no markdown, no code blocks. Properly escape any commas in text fields using double quotes.
-"""
+Output RAW CSV only. Start with header row. No markdown. No code blocks."""
 
-TARGET_TICKETS = 1000
+PROMPT_BATCH_2 = """Generate exactly 500 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.
 
-def print_progress(current, total, start_time, bar_width=40):
-    """Print a live progress bar to terminal."""
-    pct = current / total
+Header: ticket_id,title,description,category,resolution,priority,department
+
+Categories (distribute evenly across 500):
+- Infrastructure (100): cloud migration, container orchestration, bare metal servers, hypervisor patching, CDN config, S3 storage issues
+- Application (85): ERP module errors, SSO integration bugs, webhook failures, queue worker crashes, cache invalidation, log4j patches
+- Security (75): SOC alerts, endpoint compromise, DDoS mitigation, SSL cert issues, insider threats, compliance violations
+- Database (85): PostgreSQL vacuum, MongoDB sharding, schema migrations, index bloat, transaction locks, data corruption
+- Network (75): SD-WAN issues, MPLS circuits, NTP sync, DHCP exhaustion, wireless interference, MTU mismatches
+- Access Management (80): API key rotation, privileged access reviews, MFA enrollment, LDAP sync, conditional access policies, license compliance
+
+Priority: P1 Critical(10%), P2 High(25%), P3 Medium(40%), P4 Low(25%)
+
+Departments: Infrastructure→Cloud Platform Engineering, Application→Application Support Team, Security→Security Operations Center (SOC), Database→Database Administration (DBA), Network→Network Operations Center (NOC), Access Management→Identity & Access Management (IAM)
+
+Rules:
+- ticket_id: TKT-2024-00501 through TKT-2024-01000
+- description: 2-4 real sentences. Use server names (PROD-DB-03, STG-WEB-12), error codes (PG::DeadlockDetected, ECONNREFUSED), tool names (Grafana, PagerDuty, Datadog, HashiCorp Vault, Kubernetes, Docker, Jenkins)
+- resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
+- ~10% descriptions should have minor typos like a real employee
+- 15% should be ambiguous (could fit 2 categories)
+- 10% should be recurring patterns (same root cause, different reporters)
+- Wrap fields containing commas in double quotes
+
+Output RAW CSV only. Start with header row. No markdown. No code blocks."""
+
+TARGET_PER_BATCH = 500
+
+def print_progress(current, total, start_time, batch_num, bar_width=40):
+    pct = min(current / total, 1.0)
     filled = int(bar_width * pct)
     bar = '█' * filled + '░' * (bar_width - filled)
-    
     elapsed = time.time() - start_time
     if current > 0:
         eta = (elapsed / current) * (total - current)
         eta_str = f"{int(eta//60)}m {int(eta%60)}s"
     else:
-        eta_str = "calculating..."
-    
+        eta_str = "..."
     rate = current / elapsed if elapsed > 0 else 0
-    
-    sys.stdout.write(f"\r  [{bar}] {current}/{total} tickets ({pct*100:.1f}%) | {rate:.1f} tickets/s | ETA: {eta_str}  ")
+    sys.stdout.write(f"\r  Batch {batch_num} [{bar}] {current}/{total} ({pct*100:.1f}%) | {rate:.1f} t/s | ETA: {eta_str}  ")
     sys.stdout.flush()
 
-def main():
-    print(f"╔══════════════════════════════════════════════════════╗")
-    print(f"║  Synthetic Ticket Generator                        ║")
-    print(f"║  Model: {config.OLLAMA_MODEL:<43}║")
-    print(f"║  Host:  {config.OLLAMA_BASE_URL:<43}║")
-    print(f"║  Target: {TARGET_TICKETS} tickets                              ║")
-    print(f"╚══════════════════════════════════════════════════════╝")
+def generate_batch(llm, prompt, batch_num):
+    print(f"\n{'='*55}")
+    print(f"  BATCH {batch_num}: Generating {TARGET_PER_BATCH} tickets...")
+    print(f"{'='*55}")
+    
+    from langchain_core.messages import HumanMessage
+    
+    start_time = time.time()
+    collected_chunks = []
+    ticket_count = 0
+    header_seen = False
+    
+    for chunk in llm.stream([HumanMessage(content=prompt)]):
+        text = chunk.content
+        collected_chunks.append(text)
+        newlines = text.count('\n')
+        if newlines > 0:
+            if not header_seen:
+                header_seen = True
+                ticket_count += max(0, newlines - 1)
+            else:
+                ticket_count += newlines
+            if ticket_count > 0:
+                print_progress(min(ticket_count, TARGET_PER_BATCH), TARGET_PER_BATCH, start_time, batch_num)
+    
     print()
+    elapsed = time.time() - start_time
+    content = ''.join(collected_chunks).strip()
+    
+    # Clean markdown artifacts
+    for prefix in ["```csv", "```"]:
+        if content.startswith(prefix):
+            content = content[len(prefix):]
+    if content.endswith("```"):
+        content = content[:-3]
+    content = content.strip()
+    
+    lines = [l for l in content.split('\n') if l.strip()]
+    actual = len(lines) - 1  # minus header
+    print(f"  ✓ Batch {batch_num} complete: {actual} tickets in {int(elapsed//60)}m {int(elapsed%60)}s")
+    
+    return content, actual
+
+def main():
+    CLOUD_MODEL = "deepseek-v3.2:cloud"
+    
+    print(f"╔══════════════════════════════════════════════════════╗")
+    print(f"║  Synthetic Ticket Generator (Cloud Edition)        ║")
+    print(f"║  Model: {CLOUD_MODEL:<43}║")
+    print(f"║  Host:  {config.OLLAMA_BASE_URL:<43}║")
+    print(f"║  Strategy: 2 batches × 500 = 1000 tickets          ║")
+    print(f"╚══════════════════════════════════════════════════════╝")
     
     from langchain_community.chat_models import ChatOllama
-    from langchain_core.messages import HumanMessage
     
     llm = ChatOllama(
         base_url=config.OLLAMA_BASE_URL,
-        model=config.OLLAMA_MODEL,
+        model=CLOUD_MODEL,
         temperature=0.7,
         num_predict=65536,
     )
     
     output_path = os.path.join(os.path.dirname(__file__), 'synthetic_tickets.csv')
     
-    print("[1/3] Sending prompt to Ollama... (waiting for first token)")
-    start_time = time.time()
+    # --- BATCH 1 ---
+    csv_1, count_1 = generate_batch(llm, PROMPT_BATCH_1, 1)
     
-    # Use streaming to track progress in real-time
-    collected_chunks = []
-    ticket_count = 0
-    header_seen = False
+    # --- BATCH 2 ---
+    csv_2, count_2 = generate_batch(llm, PROMPT_BATCH_2, 2)
     
-    try:
-        for chunk in llm.stream([HumanMessage(content=PROMPT)]):
-            text = chunk.content
-            collected_chunks.append(text)
-            
-            # Count newlines = new CSV rows = new tickets
-            newlines = text.count('\n')
-            if newlines > 0:
-                if not header_seen:
-                    header_seen = True
-                    ticket_count += (newlines - 1)  # first newline is after header
-                else:
-                    ticket_count += newlines
-                
-                if ticket_count > 0:
-                    print_progress(min(ticket_count, TARGET_TICKETS), TARGET_TICKETS, start_time)
-        
-        print()  # newline after progress bar
-        elapsed = time.time() - start_time
-        print(f"\n[2/3] Stream complete in {int(elapsed//60)}m {int(elapsed%60)}s")
-        
-        # Join all chunks and clean
-        content = ''.join(collected_chunks).strip()
-        
-        # Strip markdown code blocks if present
-        if content.startswith("```csv"):
-            content = content[6:]
-        if content.startswith("```"):
-            content = content[3:]
-        if content.endswith("```"):
-            content = content[:-3]
-        content = content.strip()
-        
-        # Write to file
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(content)
-        
-        # Final validation
-        lines = [l for l in content.split('\n') if l.strip()]
-        actual_tickets = len(lines) - 1  # minus header
-        
-        print(f"\n[3/3] Validation:")
-        print(f"  ✓ File saved: {output_path}")
-        print(f"  ✓ Total lines: {len(lines)} (header + {actual_tickets} tickets)")
-        
-        if actual_tickets < TARGET_TICKETS:
-            print(f"  ⚠ Warning: Got {actual_tickets}/{TARGET_TICKETS} tickets (model may have hit context limit)")
-            print(f"    → {actual_tickets} tickets is still usable for the hackathon prototype")
-        else:
-            print(f"  ✓ Target reached: {actual_tickets}/{TARGET_TICKETS}")
-        
-        print(f"\n  Time: {int(elapsed//60)}m {int(elapsed%60)}s")
-        print(f"  Rate: {actual_tickets/elapsed:.1f} tickets/second")
-        print(f"\n{'='*55}")
-        print(f"  DONE. Run `core/embeddings.py` next to ingest into ChromaDB.")
-        print(f"{'='*55}")
-        
-    except Exception as e:
-        print(f"\n\n✗ Error during generation: {e}")
+    # --- MERGE ---
+    print(f"\n{'='*55}")
+    print(f"  MERGING BATCHES...")
+    print(f"{'='*55}")
+    
+    lines_1 = csv_1.split('\n')
+    lines_2 = csv_2.split('\n')
+    
+    # Keep header from batch 1, skip header from batch 2
+    merged_lines = lines_1  # includes header + data
+    if lines_2:
+        merged_lines.extend(lines_2[1:])  # skip header of batch 2
+    
+    merged = '\n'.join(merged_lines)
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(merged)
+    
+    total = count_1 + count_2
+    print(f"\n  ✓ Saved {total} total tickets to: {output_path}")
+    print(f"    Batch 1: {count_1} tickets")
+    print(f"    Batch 2: {count_2} tickets")
+    
+    if total < 800:
+        print(f"\n  ⚠ Got fewer than expected. Still usable for hackathon.")
+    else:
+        print(f"\n  ✓ Target reached!")
+    
+    print(f"\n{'='*55}")
+    print(f"  DONE. Next: python core/embeddings.py")
+    print(f"{'='*55}")
 
 if __name__ == "__main__":
     main()
