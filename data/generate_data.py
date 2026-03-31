@@ -7,7 +7,7 @@ import config
 
 PROMPT_BATCH_1 = """Generate exactly 500 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.
 
-Header: ticket_id,title,description,category,resolution,priority,department
+Header: ticket_id,title,description,category,resolution,priority,department,created_at
 
 Categories (distribute evenly across 500):
 - Infrastructure (100): servers, VMs, storage, K8s, CI/CD, DNS, load balancers
@@ -23,6 +23,7 @@ Departments: Infrastructure→Cloud Platform Engineering, Application→Applicat
 
 Rules:
 - ticket_id: TKT-2024-00001 through TKT-2024-00500
+- created_at: Random dates between 2024-01-01 and 2024-12-31 in YYYY-MM-DD HH:MM:SS format
 - description: 2-4 real sentences. Use server names (PROD-APP-07), error codes (ORA-12541, HTTP 503), tool names (ServiceNow, Jira, Splunk, CrowdStrike, Okta, Terraform, Ansible, AWS, Azure AD)
 - resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
 - ~10% descriptions should have minor typos like a real employee
@@ -34,7 +35,7 @@ Output RAW CSV only. Start with header row. No markdown. No code blocks."""
 
 PROMPT_BATCH_2 = """Generate exactly 500 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.
 
-Header: ticket_id,title,description,category,resolution,priority,department
+Header: ticket_id,title,description,category,resolution,priority,department,created_at
 
 Categories (distribute evenly across 500):
 - Infrastructure (100): cloud migration, container orchestration, bare metal servers, hypervisor patching, CDN config, S3 storage issues
@@ -50,6 +51,7 @@ Departments: Infrastructure→Cloud Platform Engineering, Application→Applicat
 
 Rules:
 - ticket_id: TKT-2024-00501 through TKT-2024-01000
+- created_at: Random dates between 2024-01-01 and 2024-12-31 in YYYY-MM-DD HH:MM:SS format
 - description: 2-4 real sentences. Use server names (PROD-DB-03, STG-WEB-12), error codes (PG::DeadlockDetected, ECONNREFUSED), tool names (Grafana, PagerDuty, Datadog, HashiCorp Vault, Kubernetes, Docker, Jenkins)
 - resolution: Specific technical steps with commands, file paths, tool names. NOT generic.
 - ~10% descriptions should have minor typos like a real employee
@@ -74,6 +76,16 @@ def print_progress(current, total, start_time, batch_num, bar_width=40):
     rate = current / elapsed if elapsed > 0 else 0
     sys.stdout.write(f"\r  Batch {batch_num} [{bar}] {current}/{total} ({pct*100:.1f}%) | {rate:.1f} t/s | ETA: {eta_str}  ")
     sys.stdout.flush()
+
+def clean_csv(content):
+    """Strip markdown code blocks and whitespace."""
+    content = content.strip()
+    for prefix in ["```csv", "```"]:
+        if content.startswith(prefix):
+            content = content[len(prefix):]
+    if content.endswith("```"):
+        content = content[:-3]
+    return content.strip()
 
 def generate_batch(llm, prompt, batch_num):
     print(f"\n{'='*55}")
@@ -102,15 +114,7 @@ def generate_batch(llm, prompt, batch_num):
     
     print()
     elapsed = time.time() - start_time
-    content = ''.join(collected_chunks).strip()
-    
-    # Clean markdown artifacts
-    for prefix in ["```csv", "```"]:
-        if content.startswith(prefix):
-            content = content[len(prefix):]
-    if content.endswith("```"):
-        content = content[:-3]
-    content = content.strip()
+    content = clean_csv(''.join(collected_chunks))
     
     lines = [l for l in content.split('\n') if l.strip()]
     actual = len(lines) - 1  # minus header
@@ -138,30 +142,55 @@ def main():
     )
     
     output_path = os.path.join(os.path.dirname(__file__), 'synthetic_tickets.csv')
+    batch1_path = os.path.join(os.path.dirname(__file__), 'batch1_tickets.csv')
+    batch2_path = os.path.join(os.path.dirname(__file__), 'batch2_tickets.csv')
     
     # --- BATCH 1 ---
     csv_1, count_1 = generate_batch(llm, PROMPT_BATCH_1, 1)
     
+    # Save batch 1 immediately so we don't lose it if batch 2 fails
+    with open(batch1_path, 'w', encoding='utf-8') as f:
+        f.write(csv_1)
+    print(f"  💾 Batch 1 saved to: {batch1_path}")
+    
+    # Also save as main file immediately (so we have data even if batch 2 fails)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(csv_1)
+    print(f"  💾 Intermediate save: {output_path} ({count_1} tickets)")
+    
     # --- BATCH 2 ---
-    csv_2, count_2 = generate_batch(llm, PROMPT_BATCH_2, 2)
+    try:
+        csv_2, count_2 = generate_batch(llm, PROMPT_BATCH_2, 2)
+        
+        # Save batch 2 separately
+        with open(batch2_path, 'w', encoding='utf-8') as f:
+            f.write(csv_2)
+        print(f"  💾 Batch 2 saved to: {batch2_path}")
+        
+    except Exception as e:
+        print(f"\n  ⚠ Batch 2 failed: {e}")
+        print(f"  → Batch 1 data ({count_1} tickets) is still saved and usable!")
+        count_2 = 0
+        csv_2 = ""
     
     # --- MERGE ---
-    print(f"\n{'='*55}")
-    print(f"  MERGING BATCHES...")
-    print(f"{'='*55}")
-    
-    lines_1 = csv_1.split('\n')
-    lines_2 = csv_2.split('\n')
-    
-    # Keep header from batch 1, skip header from batch 2
-    merged_lines = lines_1  # includes header + data
-    if lines_2:
-        merged_lines.extend(lines_2[1:])  # skip header of batch 2
-    
-    merged = '\n'.join(merged_lines)
-    
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(merged)
+    if csv_2:
+        print(f"\n{'='*55}")
+        print(f"  MERGING BATCHES...")
+        print(f"{'='*55}")
+        
+        lines_1 = csv_1.split('\n')
+        lines_2 = csv_2.split('\n')
+        
+        # Keep header from batch 1, skip header from batch 2
+        merged_lines = list(lines_1)
+        if lines_2:
+            merged_lines.extend(lines_2[1:])  # skip batch 2 header
+        
+        merged = '\n'.join(merged_lines)
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(merged)
     
     total = count_1 + count_2
     print(f"\n  ✓ Saved {total} total tickets to: {output_path}")

@@ -64,7 +64,7 @@ def ingest_tickets(csv_path: str):
             meta['created_at'] = str(row.created_at)
         metadatas.append(meta)
         
-    collection.add(
+    collection.upsert(
         ids=df['ticket_id'].tolist(),
         embeddings=embeddings,
         documents=texts,
