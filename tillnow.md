@@ -27,16 +27,18 @@
 - [Implement LLM resolution generation] - Formatted a highly specific prompt containing context from past resolutions and queried Ollama via straight HTTP POST to output step-by-step technical fixes.
 
 ## Phase 4: Agentic Layer & UI
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 **What We Did Now:**
 - [Escalation logic rules] - Created `core/agent.py` to identify tickets that the Classifier flags with < 75% confidence, marking them for Human L2 Escalation.
 - [Repeat detection] - Built similarity-clustering logic into the Agent layer to identify if 3 or more highly-similar tickets occur (using a >0.85 similarity threshold), triggering an automated runbook suggestion.
+- [Streamlit dashboard implementation] - Built `app.py` with a 3-tab layout: Ticket Submission (with real-time classification, RAG, and agent checks), Analytics Dashboard (with Plotly visualizations for ticket distributions), and Session History. The UI features a premium dark theme and responsive layout.
 
 **Next Steps:**
-- [Build Interactive Streamlit UI (`app.py`)] - We need to link all these core logical components into the frontend dashboard for the Hackathon demo.
+- Present the Hackathon MVP. The full pipeline (Data -> Embeddings -> Classifier -> RAG -> Agent -> UI) is complete and functional.
 
 **Files Created/Modified:**
+- `app.py` - The main Streamlit dashboard application.
 - `data/synthetic_tickets.csv` - The generated dataset.
 - `core/embeddings.py` - Script for embedding and ChromaDB ingestion.
 - `core/classifier.py` - Core logic for category matching and routing.
