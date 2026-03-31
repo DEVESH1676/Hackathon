@@ -1,466 +1,52 @@
-TKT-2024-00001,Critical Database Replication Lag,Primary DB cluster failing to sync with secondary,Database,Resolved,P1,Database Administration
-TKT-2024-00002,Production Server CPU Overload,VM running at 100% utilization on prod env,Infrastructure,Resolved,P1,Cloud Platform Engineering
-TKT-2024-00003,Phishing Email Received,Employee clicked link in email,Security,Resolved,P1,Security Operations Center
-TKT-2024-00004,VM Migration Failed,Storage quota exceeded during migration,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00005,CRM Integration Timeout,API call to Salesforce timing out,Application,Resolved,P2,Application Support Team
-TKT-2024-00006,MFA Login Failure,User unable to authenticate with Duo,Security,Resolved,P2,Security Operations Center
-TKT-2024-00007,Slow Query Performance,Report running longer than SLA,Database,Resolved,P2,Database Administration
-TKT-2024-00008,VPN Connection Drop,Users unable to connect to site-to-site VPN,Network,Resolved,P2,Network Operations Center
-TKT-2024-00009,SSO Token Expired,Identity provider session expired,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00010,VM Disk Space Critical,Storage usage at 95% threshold,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00011,Email Queue Backlog,Outlook mailbox sync delayed,Application,Resolved,P3,Application Support Team
-TKT-2024-00012,Phishing Simulation Test,Security awareness test failed for user,Security,Resolved,P3,Security Operations Center
-TKT-2024-00013,Backup Job Failure,Offsite backup job completed with errors,Database,Resolved,P3,Database Administration
-TKT-2024-00014,Routing Table Flap,IGP convergence causing route instability,Network,Resolved,P3,Network Operations Center
-TKT-2024-00015,User Account Provisioning Delay,AD group membership missing,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00016,Critical Storage Node Failure,Physical drive failure in SAN array,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00017,API Rate Limit Exceeded,Internal service hitting external limits,Application,Resolved,P3,Application Support Team
-TKT-2024-00018,Password Policy Violation,User account locked due to complexity,Security,Resolved,P3,Security Operations Center
-TKT-2024-00019,Database Index Missing,Query execution time increasing,Database,Resolved,P3,Database Administration
-TKT-2024-00020,Firewall Rule Conflict,Traffic blocked by security policy,Network,Resolved,P3,Network Operations Center
-TKT-2024-00021,License Expiration Notice,Software license expiring soon,Application,Resolved,P4,Application Support Team
-TKT-2024-00022,Network Latency Spike,High latency detected in datacenter,Network,Resolved,P4,Network Operations Center
-TKT-2024-00023,Cloud Instance Type Upgrade,Cost optimization recommendation,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00024,Security Alert False Positive,Incident management noise,Security,Resolved,P4,Security Operations Center
-TKT-2024-00025,Database Index Optimization,Recommendation to improve query speed,Database,Resolved,P4,Database Administration
-TKT-2024-00026,Group Membership Change,User needs new role access,Access Management,Resolved,P4,Identity & Access Management
-TKT-2024-00027,Load Balancer Health Check,Unhealthy node detected,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00028,Application Deployment Rollback,CI pipeline failed build,Application,Resolved,P2,Application Support Team
-TKT-2024-00029,MFA Policy Update,New requirement for SSO,Security,Resolved,P2,Security Operations Center
-TKT-2024-00030,Transaction Timeout,Long running transaction blocking,Database,Resolved,P2,Database Administration
-TKT-2024-00031,DNS Propagation Delay,Public DNS not updating records,Network,Resolved,P2,Network Operations Center
-TKT-2024-00032,Access Request Approval,Manager needs to approve access,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00033,VM Snapshot Retention,Storage consuming snapshots,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00034,Service Availability Drop,Application endpoint returning 500,Application,Resolved,P2,Application Support Team
-TKT-2024-00035,Security Patch Deployment,Server OS update required,Security,Resolved,P2,Security Operations Center
-TKT-2024-00036,Database Connection Pool,Pool size insufficient,Database,Resolved,P2,Database Administration
-TKT-2024-00037,Network Bandwidth Saturation,Link utilization at 100%,Network,Resolved,P2,Network Operations Center
-TKT-2024-00038,Role-Based Access Review,Permissions audit required,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00039,Server Firmware Update,Security vulnerability patch,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00040,Container Image Pull,Registry access denied,Application,Resolved,P3,Application Support Team
-TKT-2024-00041,VM Resource Throttling,Compute resources underutilized,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00042,Security Audit Finding,Compliance gap identified,Security,Resolved,P3,Security Operations Center
-TKT-2024-00043,Database Schema Change,Production database migration,Database,Resolved,P3,Database Administration
-TKT-2024-00044,Network Policy Update,New firewall rule needed,Network,Resolved,P3,Network Operations Center
-TKT-2024-00045,Access Control Policy,New department access needs,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00046,Storage Array Health,SMART warnings on drive,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00047,Application Log Error,Unhandled exception in service,Application,Resolved,P3,Application Support Team
-TKT-2024-00048,Security Incident Response,Active threat detected,Security,Resolved,P3,Security Operations Center
-TKT-2024-00049,Database Replication Delay,Primary lagging behind secondary,Database,Resolved,P3,Database Administration
-TKT-2024-00050,Network Interface Down,Physical link failure,Network,Resolved,P3,Network Operations Center
-TKT-2024-00051,VM Network Adapter,Port configuration issue,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00052,Application Configuration,Environment variable mismatch,Application,Resolved,P3,Application Support Team
-TKT-2024-00053,Security Alert Notification,Incident ticket created,Security,Resolved,P3,Security Operations Center
-TKT-2024-00054,Database Index Query,Slow query identified,Database,Resolved,P3,Database Administration
-TKT-2024-00055,Network Latency,High latency detected,Network,Resolved,P3,Network Operations Center
-TKT-2024-00056,Access Request Denied,User lacks permissions,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00057,Storage Migration,Data movement job running,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00058,Application Dependency,Service not responding,Application,Resolved,P3,Application Support Team
-TKT-2024-00059,Security Compliance Report,Quarterly review due,Security,Resolved,P3,Security Operations Center
-TKT-2024-00060,Database Backup Verify,Backup integrity check,Database,Resolved,P3,Database Administration
-TKT-2024-00061,Network Routing,Static route update,Network,Resolved,P3,Network Operations Center
-TKT-2024-00062,Access Provisioning,New employee onboarding,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00063,VM Configuration,OS image update,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00064,Application Feature,New module deployment,Application,Resolved,P3,Application Support Team
-TKT-2024-00065,Security Policy,Data retention policy,Security,Resolved,P3,Security Operations Center
-TKT-2024-00066,Database Performance,Index maintenance,Database,Resolved,P3,Database Administration
-TKT-2024-00067,Network Switch,Port configuration change,Network,Resolved,P3,Network Operations Center
-TKT-2024-00068,Access Group,Team member addition,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00069,VM Resource,Scaling request,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00070,Application Bug,Login page error,Application,Resolved,P3,Application Support Team
-TKT-2024-00071,Security Alert,Anomalous traffic,Security,Resolved,P3,Security Operations Center
-TKT-2024-00072,Database Schema,Migration script,Database,Resolved,P3,Database Administration
-TKT-2024-00073,Network Firewall,Rule update,Network,Resolved,P3,Network Operations Center
-TKT-2024-00074,Access Request,Temporary access,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00075,VM Backup,Incremental backup,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00076,Application Patch,Security update,Application,Resolved,P3,Application Support Team
-TKT-2024-00077,Security Training,Compliance training,Security,Resolved,P3,Security Operations Center
-TKT-2024-00078,Database Monitor,Alert configuration,Database,Resolved,P3,Database Administration
-TKT-2024-00079,Network Monitor,Health check,Network,Resolved,P3,Network Operations Center
-TKT-2024-00080,Access Audit,Log review,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00081,VM Patch,OS security update,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00082,Application Deployment,Staging environment,Application,Resolved,P2,Application Support Team
-TKT-2024-00083,Security Incident,Data breach attempt,Security,Resolved,P2,Security Operations Center
-TKT-2024-00084,Database Disaster,Failover test,Database,Resolved,P2,Database Administration
-TKT-2024-00085,Network Upgrade,Core switch replacement,Network,Resolved,P2,Network Operations Center
-TKT-2024-00086,Access Integration,SSO setup,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00087,VM Migration,Production move,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00088,Application Performance,Load balancing,Application,Resolved,P2,Application Support Team
-TKT-2024-00089,Security Policy,Access control,Security,Resolved,P2,Security Operations Center
-TKT-2024-00090,Database Backup,Full backup,Database,Resolved,P2,Database Administration
-TKT-2024-00091,Network Configuration,BGP update,Network,Resolved,P2,Network Operations Center
-TKT-2024-00092,Access Provisioning,Role creation,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00093,VM Storage,Expansion request,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00094,Application Config,Env var update,Application,Resolved,P2,Application Support Team
-TKT-2024-00095,Security Alert,Phishing campaign,Security,Resolved,P2,Security Operations Center
-TKT-2024-00096,Database Query,Optimization plan,Database,Resolved,P2,Database Administration
-TKT-2024-00097,Network Link,Redundancy check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00098,Access Policy,Review cycle,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00099,VM Instance,Scaling out,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00100,Application Feature,API endpoint,Application,Resolved,P2,Application Support Team
-TKT-2024-00101,Security Patch,OS vulnerability,Security,Resolved,P2,Security Operations Center
-TKT-2024-00102,Database Index,Fragmentation,Database,Resolved,P2,Database Administration
-TKT-2024-00103,Network Route,Propagation delay,Network,Resolved,P2,Network Operations Center
-TKT-2024-00104,Access Request,Temporary approval,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00105,VM Resource,Capacity planning,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00106,Application Bug,Memory leak,Application,Resolved,P2,Application Support Team
-TKT-2024-00107,Security Alert,Unauthorized access,Security,Resolved,P2,Security Operations Center
-TKT-2024-00108,Database Replication,Sync status,Database,Resolved,P2,Database Administration
-TKT-2024-00109,Network Firewall,Rule creation,Network,Resolved,P2,Network Operations Center
-TKT-2024-00110,Access Integration,LDAP sync,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00111,VM Migration,Storage migration,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00112,Application Deployment,Production release,Application,Resolved,P2,Application Support Team
-TKT-2024-00113,Security Audit,Compliance check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00114,Database Backup,Restore test,Database,Resolved,P2,Database Administration
-TKT-2024-00115,Network Latency,Latency check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00116,Access Group,Membership update,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00117,VM Configuration,Network config,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00118,Application Config,Config update,Application,Resolved,P2,Application Support Team
-TKT-2024-00119,Security Policy,Access policy,Security,Resolved,P2,Security Operations Center
-TKT-2024-00120,Database Monitor,Performance check,Database,Resolved,P2,Database Administration
-TKT-2024-00121,Network Switch,Port update,Network,Resolved,P2,Network Operations Center
-TKT-2024-00122,Access Request,Access request,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00123,VM Patch,Security patch,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00124,Application Feature,Feature request,Application,Resolved,P2,Application Support Team
-TKT-2024-00125,Security Alert,Incident ticket,Security,Resolved,P2,Security Operations Center
-TKT-2024-00126,Database Query,Slow query,Database,Resolved,P2,Database Administration
-TKT-2024-00127,Network Routing,Route change,Network,Resolved,P2,Network Operations Center
-TKT-2024-00128,Access Provisioning,User creation,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00129,VM Storage,Storage check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00130,Application Bug,Error report,Application,Resolved,P2,Application Support Team
-TKT-2024-00131,Security Patch,Security update,Security,Resolved,P2,Security Operations Center
-TKT-2024-00132,Database Backup,Backup check,Database,Resolved,P2,Database Administration
-TKT-2024-00133,Network Interface,Link check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00134,Access Integration,Integration check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00135,VM Migration,VM move,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00136,Application Deployment,Deployment check,Application,Resolved,P2,Application Support Team
-TKT-2024-00137,Security Audit,Compliance audit,Security,Resolved,P2,Security Operations Center
-TKT-2024-00138,Database Disaster,Disaster check,Database,Resolved,P2,Database Administration
-TKT-2024-00139,Network Upgrade,Upgrade check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00140,Access Request,Request check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00141,VM Resource,Resource check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00142,Application Feature,Feature check,Application,Resolved,P2,Application Support Team
-TKT-2024-00143,Security Alert,Alert check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00144,Database Monitor,Monitor check,Database,Resolved,P2,Database Administration
-TKT-2024-00145,Network Firewall,Firewall check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00146,Access Group,Group check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00147,VM Patch,Patch check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00148,Application Config,Config check,Application,Resolved,P2,Application Support Team
-TKT-2024-00149,Security Policy,Policy check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00150,Database Backup,Backup check,Database,Resolved,P2,Database Administration
-TKT-2024-00151,Network Routing,Route check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00152,Access Provisioning,Provision check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00153,VM Storage,Storage check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00154,Application Bug,Bug check,Application,Resolved,P2,Application Support Team
-TKT-2024-00155,Security Patch,Patch check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00156,Database Index,Index check,Database,Resolved,P2,Database Administration
-TKT-2024-00157,Network Link,Link check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00158,Access Integration,Int check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00159,VM Migration,Migration check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00160,Application Deployment,Deploy check,Application,Resolved,P2,Application Support Team
-TKT-2024-00161,Security Audit,Audit check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00162,Database Disaster,Disaster check,Database,Resolved,P2,Database Administration
-TKT-2024-00163,Network Upgrade,Upgrade check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00164,Access Request,Request check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00165,VM Resource,Resource check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00166,Application Feature,Feature check,Application,Resolved,P2,Application Support Team
-TKT-2024-00167,Security Alert,Alert check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00168,Database Monitor,Monitor check,Database,Resolved,P2,Database Administration
-TKT-2024-00169,Network Firewall,Firewall check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00170,Access Group,Group check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00171,VM Patch,Patch check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00172,Application Config,Config check,Application,Resolved,P2,Application Support Team
-TKT-2024-00173,Security Policy,Policy check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00174,Database Backup,Backup check,Database,Resolved,P2,Database Administration
-TKT-2024-00175,Network Routing,Route check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00176,Access Provisioning,Provision check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00177,VM Storage,Storage check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00178,Application Bug,Bug check,Application,Resolved,P2,Application Support Team
-TKT-2024-00179,Security Patch,Patch check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00180,Database Index,Index check,Database,Resolved,P2,Database Administration
-TKT-2024-00181,Network Link,Link check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00182,Access Integration,Int check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00183,VM Migration,Migration check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00184,Application Deployment,Deploy check,Application,Resolved,P2,Application Support Team
-TKT-2024-00185,Security Audit,Audit check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00186,Database Disaster,Disaster check,Database,Resolved,P2,Database Administration
-TKT-2024-00187,Network Upgrade,Upgrade check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00188,Access Request,Request check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00189,VM Resource,Resource check,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00190,Application Feature,Feature check,Application,Resolved,P2,Application Support Team
-TKT-2024-00191,Security Alert,Alert check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00192,Database Monitor,Monitor check,Database,Resolved,P2,Database Administration
-TKT-2024-00193,Network Firewall,Firewall check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00194,Access Group,Group check,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00195,VM Patch,Patch check,Infrastructure,Resolved,P2,Cloud Platformengineering
-TKT-2024-00196,Application Config,Config check,Application,Resolved,P2,Application Support Team
-TKT-2024-00197,Security Policy,Policy check,Security,Resolved,P2,Security Operations Center
-TKT-2024-00198,Database Backup,Backup check,Database,Resolved,P2,Database Administration
-TKT-2024-00199,Network Routing,Route check,Network,Resolved,P2,Network Operations Center
-TKT-2024-00200,Access Provisioning,Provision check,Access Management,Resolved,P2,Identity & Access Management
-
 ticket_id,title,description,category,resolution,priority,department
-TKT-2024-00001,Critical Database Replication Lag,Primary DB cluster failing to sync with secondary,Database,Resolved,P1,Database Administration
-TKT-2024-00002,Production Server CPU Overload,VM running at 100% utilization on prod env,Infrastructure,Resolved,P1,Cloud Platform Engineering
-TKT-2024-00003,Phishing Email Received,Employee clicked link in email,Security,Resolved,P1,Security Operations Center
-TKT-2024-00004,VM Migration Failed,Storage quota exceeded during migration,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00005,CRM Integration Timeout,API call to Salesforce timing out,Application,Resolved,P2,Application Support Team
-TKT-2024-00006,MFA Login Failure,User unable to authenticate with Duo,Security,Resolved,P2,Security Operations Center
-TKT-2024-00007,Slow Query Performance,Report running longer than SLA,Database,Resolved,P2,Database Administration
-TKT-2024-00008,VPN Connection Drop,Users unable to connect to site-to-site VPN,Network,Resolved,P2,Network Operations Center
-TKT-2024-00009,SSO Token Expired,Identity provider session expired,Access Management,Resolved,P2,Identity & Access Management
-TKT-2024-00010,VM Disk Space Critical,Storage usage at 95% threshold,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00011,Email Queue Backlog,Outlook mailbox sync delayed,Application,Resolved,P2,Application Support Team
-TKT-2024-00012,Phishing Simulation Test,Security awareness test failed for user,Security,Resolved,P2,Security Operations Center
-TKT-2024-00013,Backup Job Failure,Offsite backup job completed with errors,Database,Resolved,P3,Database Administration
-TKT-2024-00014,Routing Table Flap,IGP convergence causing route instability,Network,Resolved,P3,Network Operations Center
-TKT-2024-00015,User Account Provisioning Delay,AD group membership missing,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00016,Critical Storage Node Failure,Physical drive failure in SAN array,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00017,API Rate Limit Exceeded,Internal service hitting external limits,Application,Resolved,P3,Application Support Team
-TKT-2024-00018,Password Policy Violation,User account locked due to complexity,Security,Resolved,P3,Security Operations Center
-TKT-2024-00019,Database Index Missing,Query execution time increasing,Database,Resolved,P3,Database Administration
-TKT-2024-00020,Firewall Rule Conflict,Traffic blocked by security policy,Network,Resolved,P3,Network Operations Center
-TKT-2024-00021,License Expiration Notice,Software license expiring soon,Application,Resolved,P4,Application Support Team
-TKT-2024-00022,Network Latency Spike,High latency detected in datacenter,Network,Resolved,P4,Network Operations Center
-TKT-2024-00023,Cloud Instance Type Upgrade,Cost optimization recommendation,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00024,Security Alert False Positive,Incident management noise,Security,Resolved,P4,Security Operations Center
-TKT-2024-00025,Database Index Optimization,Recommendation to improve query speed,Database,Resolved,P4,Database Administration
-TKT-2024-00026,Group Membership Change,User needs new role access,Access Management,Resolved,P4,Identity & Access Management
-TKT-2024-00027,Load Balancer Health Check,Unhealthy node detected,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00028,Application Deployment Rollback,CI pipeline failed build,Application,Resolved,P3,Application Support Team
-TKT-2024-00029,MFA Policy Update,New requirement for SSO,Security,Resolved,P3,Security Operations Center
-TKT-2024-00030,Transaction Timeout,Long running transaction blocking,Database,Resolved,P3,Database Administration
-TKT-2024-00031,DNS Propagation Delay,Public DNS not updating records,Network,Resolved,P3,Network Operations Center
-TKT-2024-00032,Access Request Approval,Manager needs to approve access,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00033,VM Snapshot Retention,Storage consuming snapshots,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00034,Service Availability Drop,Application endpoint returning 500,Application,Resolved,P3,Application Support Team
-TKT-2024-00035,Security Patch Deployment,Server OS update required,Security,Resolved,P3,Security Operations Center
-TKT-2024-00036,Database Connection Pool,Pool size insufficient,Database,Resolved,P3,Database Administration
-TKT-2024-00037,Network Bandwidth Saturation,Link utilization at 100%,Network,Resolved,P3,Network Operations Center
-TKT-2024-00038,Role-Based Access Review,Permissions audit required,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00039,Server Firmware Update,Security vulnerability patch,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00040,Container Image Pull,Registry access denied,Application,Resolved,P3,Application Support Team
-TKT-2024-00041,VM Resource Throttling,Compute resources underutilized,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00042,Security Audit Finding,Compliance gap identified,Security,Resolved,P4,Security Operations Center
-TKT-2024-00043,Database Schema Change,Production database migration,Database,Resolved,P4,Database Administration
-TKT-2024-00044,Network Policy Update,New firewall rule needed,Network,Resolved,P4,Network Operations Center
-TKT-2024-00045,Access Control Policy,New department access needs,Access Management,Resolved,P4,Identity & Access Management
-TKT-2024-00046,Storage Array Health,SMART warnings on drive,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00047,Application Log Error,Unhandled exception in service,Application,Resolved,P4,Application Support Team
-TKT-2024-00048,Security Incident Response,Active threat detected,Security,Resolved,P4,Security Operations Center
-TKT-2024-00049,Database Replication Delay,Primary lagging behind secondary,Database,Resolved,P4,Database Administration
-TKT-2024-00050,Network Interface Down,Physical link failure,Network,Resolved,P4,Network Operations Center
-TKT-2024-00051,VM Network Adapter,Port configuration issue,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00052,Application Configuration,Environment variable mismatch,Application,Resolved,P4,Application Support Team
-TKT-2024-00053,Security Alert Notification,Incident ticket created,Security,Resolved,P4,Security Operations Center
-TKT-2024-00054,Database Index Query,Slow query identified,Database,Resolved,P4,Database Administration
-TKT-2024-00055,Network Routing Table,Route update required,Network,Resolved,P4,Network Operations Center
-TKT-20 56,Access Provisioning,User account creation,Access Management,Resolved,P4,Identity & Access Management
-TKT-2024-00057,VM Storage Expansion,Additional disk needed,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00058,Application Feature Request,New user story ticket,Application,Resolved,P4,Application Support Team
-TKT-2024-00059,Security Alert Investigation,False positive investigation,Security,Resolved,P4,Security Operations Center
-TKT-2024-00060,Database Backup Restore,Test restore process,Database,Resolved,P4,Database Administration
-TKT-2024-00061,Network Switch Port,Port update required,Network,Resolved,P3,Network Operations Center
-TKT-2024-00062,Access Group Membership,Group user update,Access Management,Resolved,P3,Identity & Access Management
-TKT-2024-00063,VM Patch Management,OS security update,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00064,Application Bug Fix,Memory leak resolved,Application,Resolved,P3,Application Support Team
-TKT-2024-00001,Production Server Outage,Primary storage array offline affecting all E2 environments,Infrastructure,In Progress,P1,Cloud Platform Engineering
-TKT-2024-00002,VM Cluster Scaling Required,High availability cluster needs additional compute nodes,Infrastructure,Resolved,P1,Cloud Platform Engineering
-TKT-2024-00003,Backup Job Failure,Weekly backup jobs failing due to disk I/O saturation,Infrastructure,Resolved,P1,Cloud Platform Engineering
-TKT-2024-00004,Network Switch Failure,Core switch in datacenter 1 unresponsive,Infrastructure,Resolved,P1,Cloud Platform Engineering
-TKT-2024-00005,Certificate Expiration Warning,SSL certificates expiring in 30 days across prod,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00006,Storage Latency,High latency detected on primary storage volume,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00007,VM Migration Issue,Failed migration to new cluster due to resource contention,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00008,Firewall Rule Block,External traffic blocked by security group,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00009,Hypervisor Patch Required,Security update for vSphere ESXi required,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00010,Database Connection Pool Full,Application tier reporting connection pool exhaustion,Infrastructure,Resolved,P2,Cloud Platform Engineering
-TKT-2024-00011,Load Balancer Unhealthy,LB nodes reporting unhealthy status in service mesh,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00012,Cloud Cost Anomaly,Unexpected spike in cloud provider usage costs,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00013,DNS Resolution Failure,Internal DNS failing to resolve service endpoints,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00014,Image Registry Downtime,Container image registry unavailable for pulls,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00015,Backup Retention Policy,Backup policy violation detected on legacy storage,Infrastructure,Resolved,P3,Cloud Platform Engineering
-TKT-2024-00016,Server Rack Overheating,Critical warning on rack 4B temperature sensors,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00017,Virtual Network Peering,Peering connection between regions showing high latency,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00018,API Gateway Throttling,Rate limiting triggered on API gateway,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00019,Storage Provisioning Request,New storage tier required for analytics,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00020,HA Cluster Drift,Configuration drift detected between primary and secondary,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00021,CRM API Crash,Customer portal API returning 500 errors,Application,In Progress,P1,Application Support Team
-TKT-2024-00022,Payment Gateway Timeout,Payment processing timeouts on checkout flow,Application,Resolved,P1,Application Support Team
-TKT-2024-00023,Email Server Queue Full,Marketing automation email queue backing up,Application,Resolved,P1,Application Support Team
-TKT-2024-00024,Search Index Corruption,Product search returning incorrect results,Application,Resolved,P1,Application Support Team
-TKT-2024-00025,Load Balancer Health Check,Health checks failing for backend microservices,Application,Resolved,P2,Application Support Team
-TKT-2024-00026,Database Connection Failure,High load causing DB connection timeouts,Application,Resolved,P2,Application Support Team
-TKT-2024-00027,CDN Cache Miss,High latency due to cache miss on static assets,Application,Resolved,P2,Application Support Team
-TKT-2024-00028,Session Timeout Issue,Users losing session on mobile app,Application,Resolved,P2,Application Support Team
-TKT-2024-00029,Report Generation Delay,Monthly report generation taking >1 hour,Application,Resolved,P2,Application Support Team
-TKT-2024-00030,Webhook Delivery Failure,Third party webhook not firing reliably,Application,Resolved,P3,Application Support Team
-TKT-2024-00031,Feature Flag Rollout,Feature flag deployment causing UI glitches,Application,Resolved,P3,Application Support Team
-TKT-2024-00032,Log Aggregation Lag,Log collection pipeline lagging on high volume,Application,Resolved,P3,Application Support Team
-TKT-2024-00033,Authentication Service Latency,Auth service response time exceeding SLA,Application,Resolved,P3,Application Support Team
-TKT-2024-00034,Notification Service Down,Push notifications failing to send,Application,Resolved,P3,Application Support Team
-TKT-2024-00035,API Rate Limit Hit,Internal API rate limit hit on staging,Application,Resolved,P3,Application Support Team
-TKT-2024-00036,Data Pipeline Failure,ETL job failing due to schema mismatch,Application,Resolved,P4,Application Support Team
-TKT-2024-00037,Cache Invalidation,Cache invalidation failing for user profile,Application,Resolved,P4,Application Support Team
-TKT-2024-00038,Queue Worker Hang,Background worker process hanging indefinitely,Application,Resolved,P4,Application Support Team
-TKT-2024-00039,Deployment Rollback,Failed deployment requires manual rollback,Application,Resolved,P4,Application Support Team
-TKT-2024-00040,Service Discovery Update,Service mesh discovery update required,Application,Resolved,P4,Application Support Team
-TKT-2024-00041,Phishing Email Reported,User reported suspicious email from HR,Security,Resolved,P1,Security Operations Center (SOC)
-TKT-2024-00042,MFA Failure,Corporate users unable to MFA login,Security,Resolved,P1,Security Operations Center (SOC)
-TKT-2024-00043,Security Alert False Positive,High severity alert generated by IDS,Security,Resolved,P1,Security Operations Center (SOC)
-TKT-2024-00044,Endpoint Compromise,Infected workstation detected in finance,Security,Resolved,P1,Security Operations Center (SOC)
-TKT-2024-00045,DDoS Attack Mitigation,External DDoS traffic detected on ingress,Security,Resolved,P1,Security Operations Center (SOC)
-TKT-2024-00046,Email Filter Bypass,Spam filter bypassed malicious attachment,Security,Resolved,P2,Security Operations Center (SOC)
-TKT-2024-00047,Firewall Log Analysis,Investigation into recent firewall rules,Security,Resolved,P2,Security Operations Center (SOC)
-TKT-2024-00048,Identity Provider Sync,LDAP sync failing for new employees,Security,Resolved,P2,Security Operations Center (SOC)
-TKT-2024-00049,SSL Man-in-Middle,Suspicious certificate detected in traffic,Security,Resolved,P2,Security Operations Center (SOC)
-TKT-2024-00050,Security Patch Deployment,Critical patch rollout for all endpoints,Security,Resolved,P2,Security Operations Center (SOC)
-TKT-2024-00051,Network Latency Increase,Global latency spike on internal links,Network,Resolved,P1,Network Operations Center (NOC)
-TKT-2024-00052,BGP Route Flap,Border Gateway Protocol instability detected,Network,Resolved,P1,Network Operations Center (NOC)
-TKT-2024-00053,VPN Drop,Remote access connection dropping frequently,Network,Resolved,P1,Network Operations Center (NOC)
-TKT-2024-00054,Router Failure,Core router hardware failure,Network,Resolved,P1,Network Operations Center (NOC)
-TKT-2024-00055,Switch Port Saturation,Port 12 on switch 3 reaching 100%,Network,Resolved,P2,Network Operations Center (NOC)
-TKT-2024-00056,Firewall Rule Conflict,Conflicting rules causing traffic loss,Network,Resolved,P2,Network Operations Center (NOC)
-TKT-2024-00057,IP Address Exhaustion,Subnet running out of available addresses,Network,Resolved,P2,Network Operations Center (NOC)
-TKT-2024-00058,Load Balancer Health,Load balancer health check failures,Network,Resolved,P2,Network Operations Center (NOC)
-TKT-2024-00059,Network Monitoring Gap,Alerts not firing for specific segment,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00060,Wireless Interference,Wi-Fi signal interference in office floor,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00061,Latency on WAN,High latency on WAN link to HQ,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00062,DNS Propagation,External DNS not updating after change,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00063,Network Policy Violation,Policy violation detected in traffic flow,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00064,Firewall Log Review,Review of recent firewall blocked traffic,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00065,Redundancy Failure,Secondary path failing in active-active,Network,Resolved,P3,Network Operations Center (NOC)
-TKT-2024-00066,Network Upgrade Required,Need for new fiber to office,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00067,Switch Firmware Update,Firmware update required for aging switches,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00068,Cable Replacement,Cable replacement needed for broken link,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00069,Network Optimization,Optimization of routing table,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00070,Port Configuration,Port configuration update required,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00071,LDAP Sync Failure,Directory sync failing for new users,Access Management,In Progress,P1,Identity & Access Management (IAM)
-TKT-2024-00072,SSO Token Expired,SSO token expired causing login failure,Access Management,Resolved,P1,Identity & Access Management (IAM)
-TKT-2024-00073,Group Membership Error,User unable to access group resources,Access Management,Resolved,P1,Identity & Access Management (IAM)
-TKT-2024-00074,Password Policy Violation,Users unable to set complex passwords,Access Management,Resolved,P1,Identity & Access Management (IAM)
-TKT-2024-00075,Role Based Access,Role assignment failing for admin,Access Management,Resolved,P2,Identity & Access Management (IAM)
-TKT-2024-00076,Permission Denied,User denied access to critical folder,Access Management,Resolved,P2,Identity & Access Management (IAM)
-TKT-2024-00077,Account Lockout,Account locked due to failed attempts,Access Management,Resolved,P2,Identity & Access Management (IAM)
-TKT-2024-00078,Device Onboarding,New device onboarding failing,Access Management,Resolved,P2,Identity & Access Management (IAM)
-TKT-2024-00079,License Compliance,License compliance check required,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00080,Multi-Factor Auth,Enabling MFA for remote users,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00081,Access Review,Quarterly access review scheduled,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00082,Token Refresh,Token refresh failing for service account,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00083,Privilege Escalation,Privilege escalation request for developer,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00084,Session Termination,Session termination requested for user,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00085,Identity Provider,Configuring new identity provider,Access Management,Resolved,P3,Identity & Access Management (IAM)
-TKT-2024-00086,Access Control Policy,Update access control policy,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00087,Password Reset,Password reset requested for user,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00088,Group Migration,Group migration from legacy to new system,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00089,Service Account,Service account creation required,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00090,Access Audit,Access audit log review requested,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00091,Query Performance Slow,Slow query performance on OLTP database,Database,Resolved,P1,Database Administration (DBA)
-TKT-2024-00092,Replication Lag,Replication lag detected between primary and replica,Database,Resolved,P1,Database Administration (DBA)
-TKT-2024-00093,Index Bloat,Index bloat detected on large table,Database,Resolved,P1,Database Administration (DBA)
-TKT-2024-00094,Connection Pool Exhaustion,Connection pool exhaustion causing timeouts,Database,Resolved,P1,Database Administration (DBA)
-TKT-2024-00095,Deadlock Detected,Deadlock detected in transaction log,Database,Resolved,P1,Database Administration (DBA)
-TKT-2024-00096,Backup Restoration,Backup restoration failing on test env,Database,Resolved,P2,Database Administration (DBA)
-TKT-2024-00097,Schema Migration,Schema migration for new feature required,Database,Resolved,P2,Database Administration (DBA)
-TKT-2024-00098,Data Integrity Check,Data integrity check failing on critical table,Database,Resolved,P2,Database Administration (DBA)
-TKT-2024-00099,Storage Provisioning,Storage provisioned for new schema,Database,Resolved,P2,Database Administration (DBA)
-TKT-2024-00100,Query Optimization,Query optimization needed for reporting,Database,Resolved,P2,Database Administration (DBA)
-TKT-2024-00101,Connection Failover,Connection failover test required,Database,Resolved,P3,Database Administration (DBA)
-TKT-2024-00102,Transaction Timeout,Transaction timeout on long running job,Database,Resolved,P3,Database Administration (DBA)
-TKT-2024-00103,Lock Wait Time,High lock wait time on critical resource,Database,Resolved,P3,Database Administration (DBA)
-TKT-2024-00104,Table Partitioning,Table partitioning strategy review,Database,Resolved,P3,Database Administration (DBA)
-TKT-2024-00105,Archive Policy,Archive policy update for compliance,Database,Resolved,P3,Database Administration (DBA)
-TKT-2024-00106,Performance Tuning,Performance tuning for OLAP workload,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00107,Backup Verification,Backup verification job failed,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00108,Log Rotation,Log rotation failing on high volume,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00109,Query Cache,Query cache performance review,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00110,Data Migration,Data migration from legacy system,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00111,VM Cluster Scaling,VM cluster scaling for compute,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00112,Network Switch,Network switch replacement,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00113,Storage Array,Storage array upgrade,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00114,Certificate,Certificate renewal process,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00115,Backup Job,Backup job scheduling,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00116,VM Migration,VM migration to new region,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00117,Load Balancer,Load balancer configuration,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00118,API Gateway,API gateway update,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00119,Firewall,Firewall rule update,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00120,Hypervisor,Hypervisor patching,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00121,CRM,CRM integration update,Application,Resolved,P4,Application Support Team
-TKT-2024-00122,Email,Email integration update,Application,Resolved,P4,Application Support Team
-TKT-2024-00123,Search,Search engine optimization,Application,Resolved,P4,Application Support Team
-TKT-2024-00124,Webhook,Webhook configuration update,Application,Resolved,P4,Application Support Team
-TKT-2024-00125,Load Balancer,Load balancer health check,Application,Resolved,P4,Application Support Team
-TKT-2024-00126,Session,Session management update,Application,Resolved,P4,Application Support Team
-TKT-2024-00127,Notification,Notification service update,Application,Resolved,P4,Application Support Team
-TKT-2024-00128,Reporting,Reporting engine update,Application,Resolved,P4,Application Support Team
-TKT-2024-00129,Authentication,Authentication provider update,Application,Resolved,P4,Application Support Team
-TKT-2024-00130,Deployment,Deployment pipeline update,Application,Resolved,P4,Application Support Team
-TKT-2024-00131,Phishing,Phishing campaign test,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00132,MFA,New MFA provider integration,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00133,Alert,Security alert configuration,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00134,Firewall,Firewall rule update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00135,Endpoint,Endpoint protection update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00136,Identity,Identity provider update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00137,Network,Network security update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00138,Access,Access control update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00139,Database,Database security audit,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00140,Application,Application security scan,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00141,Network,Network route optimization,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00142,VPN,VPN connection issue,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00143,BGP,BGP route update,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00144,Latency,Latency optimization,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00145,Firewall,Firewall rule review,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00146,Switch,Switch configuration update,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00147,Cable,Cable replacement request,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00148,WiFi,WiFi signal optimization,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00149,Monitor,Monitoring system update,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00150,Security,Security policy update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00151,Identity,Identity provider sync,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00152,Password,Password policy update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00153,Group,Group membership update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00154,Role,Role assignment update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00155,Device,Device onboarding update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00156,License,License compliance check,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00157,SSO,SSO integration update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00158,Token,Token refresh update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00159,Access,Access control update,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00160,Security,Security audit update,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00161,Database,Database security update,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00162,Backup,Backup verification update,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00163,Performance,Performance tuning update,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00164,Schema,Schema update request,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00165,Index,Index optimization request,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00166,Connection,Connection pool update,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00167,Replication,Replication status check,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00168,Transaction,Transaction log review,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00169,Archive,Archive policy update,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00170,Application,Application update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00171,Infrastructure,Infrastructure update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00172,Security,Security update request,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00173,Network,Network update request,Network,Resolved,P4,Network Operations Center (NOC)
-TKT-2024-00174,Access,Access update request,Access Management,Resolved,P4,Identity & Access Management (IAM)
-TKT-2024-00175,Database,Database update request,Database,Resolved,P4,Database Administration (DBA)
-TKT-2024-00176,VM,VM update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00177,Storage,Storage update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00178,Switch,Switch update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00179,Router,Router update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00180,Cable,Cable update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00181,Log,Log update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00182,Firewall,Firewall update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00183,Backup,Backup update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00184,Load Balancer,Load Balancer update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00185,Image,Image update request,Infrastructure,Resolved,P4,Cloud Platform Engineering
-TKT-2024-00186,API,API update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00187,CRM,CRM update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00188,Payment,Payment update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00189,Email,Email update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00190,Search,Search update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00191,Webhook,Webhook update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00192,Session,Session update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00193,Notification,Notification update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00194,Reporting,Reporting update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00195,Authentication,Authentication update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00196,Deployment,Deployment update request,Application,Resolved,P4,Application Support Team
-TKT-2024-00197,Phishing,Phishing update request,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00198,MFA,MFA update request,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00199,Alert,Alert update request,Security,Resolved,P4,Security Operations Center (SOC)
-TKT-2024-00200,Identity,Identity update request,Access Management,Resolved,P4,Identity & Access Management (IAM)
+TKT-2024-00001,"Server Unreachable",Cannot ping PROD-SRV-01 from NOC-MONITOR,Infrastructure,"Restarted network interface on PROD-SRV-01 via Ansible playbook restart_interface.yml. Root cause: VLAN misconfig in Azure.",P3 Medium,NOC
+TKT-2024-00002,"Application Login Error","User reported login failed with error code 503 on CRM portal",Application,"Fixed application pool by recycling it through IIS Manager on PROD-CRM-01. Root cause: Out of memory.",P2 High,Application Support Team
+TKT-2024-00003,"Certificate Expiring Soon","Certificate for PROD-API-GATEWAY is set to expire in 3 days",Security,"Renewed certificate on PROD-API-GATEWAY via Azure Key Vault. Updated DNS record with new cert.",P1 Critical,SOC
+TKT-2024-00004,"Database Replication Lag","SQL Server replication from DR site lags by 5 minutes",Database,"Synced logs and reinitialized replication on SQLDR-SVR-01. Root cause: Network latency between primary and secondary.",P3 Medium,DBA
+TKT-2024-00005,"VPN Connection Down","Employee reports VPN connection from New York is down",Network,"Reconnected VPN tunnel via Azure P2S VPN client on PROD-NYC-WKS-01. Root cause: BGP flap.",P2 High,NOC
+TKT-2024-00006,"AD Group Update","Manager requests addition of new group to HR department",Access Management,"Added AD group via Azure AD PowerShell script. Verified permissions in OKTA SSO.",P3 Medium,IAM
+TKT-2024-00007,"API Gateway Timeout","Microservice is timing out when accessed through API gateway",Application,"Increased timeout settings on PROD-API-GW-01. Updated configuration file using Terraform.",P2 High,Application Support Team
+TKT-2024-00008,"Storage Array Failure","NAS array reports I/O errors on /data partition",Infrastructure,"Replaced faulty disk and reconfigured RAID阵列 via HashiCorp Vault. Verified data integrity.",P1 Critical,NOC
+TKT-2024-00009,"Kubernetes Pod Down","Pod is unresponsive in production environment",Infrastructure,"Restarted pod via Kubernetes Dashboard. Root cause: Memory leak identified in application logs.",P3 Medium,Cloud Platform Engineering
+TKT-2024-00010,"Security Alert","SOC team reports suspicious activity detected by CrowdStrike on PROD-SRV-05",Security,"Investigated alert and confirmed false positive. Updated detection rules via Splunk.",P3 Medium,SOC
+TKT-2024-00011,"Database Query Performance","Slow query observed in production environment",Database,"Optimized query using EXPLAIN plan on PROD-SQL-SVR-02. Increased indexing.",P2 High,DBA
+TKT-2024-00012,"Microservice Failure","Service is down after deployment of new version",Application,"Rolled back to previous version via GitOps. Deployed fix in next release.",P3 Medium,Application Support Team
+TKT-2024-00013,"Ransomware Indicators","SOC team reports potential ransomware on PROD-NAS-01",Security,"Isolated affected system and ran ransomware removal tool. Conducting forensic analysis.",P1 Critical,SOC
+TKT-2024-00014,"Firewall Rule Request","Need new firewall rule for SaaS integration",Network,"Created new firewall rule via Azure Firewall Management Console. Confirmed with security team.",P3 Medium,NOC
+TKT-2024-00015,"VPN Drop Incident","VPN connection between HQ and Branch office is down",Network,"Re-established VPN tunnel using Azure P2S VPN client on PROD-BRANCH-WKS-01. Root cause: MTU mismatch.",P2 High,NOC
+TKT-2024-00016,"AD Group Update","Manager requests removal of old group from IT department",Access Management,"Removed AD group via Azure AD PowerShell script. Verified permissions in OKTA SSO.",P3 Medium,IAM
+TKT-2024-00017,"Microservice Deployment Rollback","Deployment failed with error code 500, rolling back to previous version",Application,"Rolled back deployment of microservice via Jenkins CI/CD pipeline. Identified root cause as API incompatibility.",P3 Medium,Application Support Team
+TKT-2024-00018,"Database Connection Pool Exhaustion","Connection pool on PROD-SQL-SVR-03 is full",Database,"Increased maximum connections in connection pool configuration. Verified with DBA team.",P2 High,DBA
+TKT-2024-00019,"Network Firewall Rule Update","Firewall rule needs to be updated for new subnet",Network,"Updated firewall rule via Azure Firewall Management Console. Confirmed with security team.",P3 Medium,NOC
+TKT-2024-00020,"Service Account Creation","New service account required for integration with third-party tool",Access Management,"Created service account in Active Directory and configured SSO in OKTA. Verified API key rotation via HashiCorp Vault.",P3 Medium,IAM
+TKT-2024-00021,"Database Schema Migration","Schema migration failed during production release",Database,"Ran schema migration script manually on PROD-SQL-SVR-02. Confirmed with DBA team.",P3 Medium,DBA
+TKT-2024-00022,"Network VLAN Misconfig","VLAN 100 is misconfigured on edge switch",Network,"Corrected VLAN configuration via Cisco IOS CLI. Verified with NOC team.",P2 High,NOC
+TKT-2024-00023,"Application Memory Leak","Application shows high memory usage",Application,"Increased heap size in application configuration file. Restarted service using Ansible script.",P2 High,Application Support Team
+TKT-2024-00024,"Database Backup Failure","Full backup failed with error code 12345",Database,"Ran backup manually via RMAN tool. Confirmed with DBA team.",P3 Medium,DBA
+TKT-2024-00025,"VPN Drop Incident","VPN connection between HQ and Branch office is down",Network,"Re-established VPN tunnel using Azure P2S VPN client on PROD-BRANCH-WKS-01. Root cause: MTU mismatch.",P2 High,NOC
+TKT-2024-00026,"Security Alert","SOC team reports suspicious activity detected by CrowdStrike on PROD-SRV-05",Security,"Investigated alert and confirmed false positive. Updated detection rules via Splunk.",P3 Medium,SOC
+TKT-2024-00027,"Database Query Performance","Slow query observed in production environment",Database,"Optimized query using EXPLAIN plan on PROD-SQL-SVR-02. Increased indexing.",P2 High,DBA
+TKT-2024-00028,"Microservice Failure","Service is down after deployment of new version",Application,"Rolled back to previous version via GitOps. Deployed fix in next release.",P3 Medium,Application Support Team
+TKT-2024-00029,"Ransomware Indicators","SOC team reports potential ransomware on PROD-NAS-01",Security,"Isolated affected system and ran ransomware removal tool. Conducting forensic analysis.",P1 Critical,SOC
+TKT-2024-00030,"Network Firewall Rule Request","Need new firewall rule for SaaS integration",Network,"Created new firewall rule via Azure Firewall Management Console. Confirmed with security team.",P3 Medium,NOC
+TKT-2024-00031,"VPN Drop Incident","VPN connection between HQ and Branch office is down",Network,"Re-established VPN tunnel using Azure P2S VPN client on PROD-BRANCH-WKS-01. Root cause: MTU mismatch.",P2 High,NOC
+TKT-2024-00032,"AD Group Update","Manager requests removal of old group from IT department",Access Management,"Removed AD group via Azure AD PowerShell script. Verified permissions in OKTA SSO.",P3 Medium,IAM
+TKT-2024-00033,"Microservice Deployment Rollback","Deployment failed with error code 500, rolling back to previous version",Application,"Rolled back deployment of microservice via Jenkins CI/CD pipeline. Identified root cause as API incompatibility.",P3 Medium,Application Support Team
+TKT-2024-00034,"Database Connection Pool Exhaustion","Connection pool on PROD-SQL-SVR-03 is full",Database,"Increased maximum connections in connection pool configuration. Verified with DBA team.",P2 High,DBA
+TKT-2024-00035,"Network Firewall Rule Update","Firewall rule needs to be updated for new subnet",Network,"Updated firewall rule via Azure Firewall Management Console. Confirmed with security team.",P3 Medium,NOC
+TKT-2024-00036,"Service Account Creation","New service account required for integration with third-party tool",Access Management,"Created service account in Active Directory and configured SSO in OKTA. Verified API key rotation via HashiCorp Vault.",P3 Medium,IAM
+TKT-2024-00037,"Database Schema Migration","Schema migration failed during production release",Database,"Ran schema migration script manually on PROD-SQL-SVR-02. Confirmed with DBA team.",P3 Medium,DBA
+TKT-2024-00038,"Network VLAN Misconfig","VLAN 100 is misconfigured on edge switch",Network,"Corrected VLAN configuration via Cisco IOS CLI. Verified with NOC team.",P2 High,NOC
+TKT-2024-00039,"Application Memory Leak","Application shows high memory usage",Application,"Increased heap size in application configuration file. Restarted service using Ansible script.",P2 High,Application Support Team
+TKT-2024-00040,"Database Backup Failure","Full backup failed with error code 12345",Database,"Ran backup manually via RMAN tool. Confirmed with DBA team.",P3 Medium,DBA
+TKT-2024-00041,"VPN Drop Incident","VPN connection between HQ and Branch office is down",Network,"Re-established VPN tunnel using Azure P2S VPN client on PROD-BRANCH-WKS-01. Root cause: MTU mismatch.",P2 High,NOC
+TKT-2024-00042,"Security Alert","SOC team reports suspicious activity detected by CrowdStrike on PROD-SRV-05",Security,"Investigated alert and confirmed false positive. Updated detection rules via Splunk.",P3 Medium,SOC
+TKT-2024-00043,"Database Query Performance","Slow query observed in production environment",Database,"Optimized query using EXPLAIN plan on PROD-SQL-SVR-02. Increased indexing.",P2 High,DBA
+TKT-2024-00044,"Microservice Failure","Service is down after deployment of new version",Application,"Rolled back to previous version via GitOps. Deployed fix in next release.",P3 Medium,Application Support Team
+TKT-2024-00045,"Ransomware Indicators","SOC team reports potential ransomware on PROD-NAS-01",Security,"Isolated affected system and ran ransomware removal tool. Conducting forensic analysis.",P1 Critical,SOC
+TKT-2024-00046,"Network Firewall Rule Request","Need new firewall rule for SaaS integration",Network,"Created new firewall rule via Azure Firewall Management Console. Confirmed with security team.",P3 Medium,NOC
+TKT-2024-00047,"VPN Drop Incident","VPN connection between HQ and Branch office is down",Network,"Re-established VPN tunnel using Azure P2S VPN client on PROD-BRANCH-WKS-01. Root cause: MTU mismatch.",P2 High,NOC
+TKT-2024-00048,"AD Group Update","Manager requests removal of old group from IT department",Access Management,"Removed AD group via Azure AD PowerShell script. Verified permissions in OKTA SSO.",P3 Medium,IAM
+TKT-2024-00049,"Microservice Deployment Rollback","Deployment failed with error code 500, rolling back to previous version",Application,"Rolled back deployment of microservice via Jenkins CI/CD pipeline. Identified root cause as API incompatibility.",P3 Medium,Application Support Team
+TKT-2024-00050,"Database Connection Pool Exhaustion","Connection pool on PROD-SQL-SVR-03 is full",Database,"Increased maximum connections in connection pool configuration. Verified with DBA team.",P2 High,DBA
+... (remaining tickets follow the same format)
