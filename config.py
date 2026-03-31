@@ -15,7 +15,7 @@ GROQ_MODEL = "llama3-70b-8192"
 
 # Ollama specific
 OLLAMA_MODEL = "qwen2.5-gpu:latest" 
-OLLAMA_BASE_URL = "http://192.168.137.1:11434"
+OLLAMA_BASE_URL = "http://192.168.1.10:11434"
 
 # --- Embedding Configurations ---
 EMBEDDING_MODEL_NAME = 'all-MiniLM-L6-v2'
