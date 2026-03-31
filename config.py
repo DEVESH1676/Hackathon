@@ -6,16 +6,16 @@ load_dotenv()
 
 # --- Model Selection ---
 # Set to True to use Groq API (needs GROQ_API_KEY in .env), False to use local Ollama
-USE_GROQ = os.getenv("USE_GROQ", "true").lower() == "true"
+USE_GROQ = False
 
 # --- LLM Configurations ---
 # Groq specific
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL = "llama3-70b-8192" # Or llama3-8b-8192
+GROQ_MODEL = "llama3-70b-8192"
 
 # Ollama specific
-OLLAMA_MODEL = "llama3" 
-OLLAMA_BASE_URL = "http://localhost:11434"
+OLLAMA_MODEL = "qwen3.5:latest" 
+OLLAMA_BASE_URL = "http://192.168.137.1:11434"
 
 # --- Embedding Configurations ---
 EMBEDDING_MODEL_NAME = 'all-MiniLM-L6-v2'

@@ -58,13 +58,14 @@ def generate_batch(batch_seed, llm):
         return ""
 
 def main():
-    if not config.USE_GROQ or not config.GROQ_API_KEY:
-        print("Please configure GROQ_API_KEY in .env to run synthetic data generation.")
-        print("Or manually use ChatGPT with the prompt to create data/synthetic_tickets.csv.")
-        return
-
-    print("Initializing Groq LLM...")
-    llm = ChatGroq(api_key=config.GROQ_API_KEY, model_name=config.GROQ_MODEL, temperature=0.7)
+    print(f"Initializing Ollama LLM (Model: {config.OLLAMA_MODEL} at {config.OLLAMA_BASE_URL})...")
+    from langchain_community.chat_models import ChatOllama
+    
+    llm = ChatOllama(
+        base_url=config.OLLAMA_BASE_URL,
+        model=config.OLLAMA_MODEL,
+        temperature=0.7
+    )
     
     all_csv_data = []
     
