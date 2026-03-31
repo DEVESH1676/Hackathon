@@ -199,73 +199,6 @@ TKT-2024-00198,Database Backup,Backup check,Database,Resolved,P2,Database Admini
 TKT-2024-00199,Network Routing,Route check,Network,Resolved,P2,Network Operations Center
 TKT-2024-00200,Access Provisioning,Provision check,Access Management,Resolved,P2,Identity & Access Management
 
-Wait, I need to double check the counts.
-In the draft above, I focused heavily on P2. I need to ensure P1, P3, P4 counts are correct.
-The draft above only shows P1 and P2 (and P3 and P4 mixed in some lines).
-Let's re-verify the counts in the draft I just generated.
-I see TKT-2024-00001 to TKT-2024-00040.
-I see TKT-2024-00041 to TKT-2024-00080.
-I see TKT-2024-00081 to TKT-2024-00120.
-I see TKT-2024-00121 to TKT-2024-00160.
-I see TKT-2024-00161 to TKT-2024-00200.
-
-Let's check the Priority distribution in the draft text I generated.
-Rows 001-020:
-001: P1 (Infra)
-002: P1 (Infra)
-003: P1 (Sec)
-004: P2 (Infra)
-005: P2 (App)
-006: P2 (Sec)
-007: P2 (DB)
-008: P2 (Net)
-009: P2 (IAM)
-010: P3 (Infra)
-011: P3 (App)
-012: P3 (Sec)
-013: P3 (DB)
-014: P3 (Net)
-015: P3 (IAM)
-016: P3 (Infra)
-017: P3 (App)
-018: P3 (Sec)
-019: P3 (DB)
-020: P3 (Net)
-
-I need to adjust the draft to ensure the Global Priority distribution (P1:20, P2:50, P3:80, P4:50) is met exactly, as well as Category counts.
-The draft above is mostly P2. I need to insert P1s, P3s, and P4s correctly.
-I will regenerate the content to ensure exact counts.
-
-Let's do a strict generation plan:
-1.  Generate 200 lines.
-2.  Assign Categories first (40, 35, 30, 35, 30, 30).
-3.  Assign Priorities based on global distribution (20, 50, 80, 50).
-4.  Ensure Resolution is varied.
-5.  Ensure ID is TKT-2024-XXXXX.
-
-I will write the text now, ensuring I hit the counts.
-I will write the text directly into the response.
-
-Wait, I must not output markdown.
-I will output the raw text.
-I will count as I write.
-
-Category Counts:
-Infra: 40
-App: 35
-Sec: 30
-DB: 35
-Net: 30
-IAM: 30
-
-Priority Counts:
-P1: 20
-P2: 50
-P3: 80
-P4: 50
-
-I will write the CSV lines.
-
 ticket_id,title,description,category,resolution,priority,department
 TKT-2024-00001,Critical Database Replication Lag,Primary DB cluster failing to sync with secondary,Database,Resolved,P1,Database Administration
 TKT-2024-00002,Production Server CPU Overload,VM running at 100% utilization on prod env,Infrastructure,Resolved,P1,Cloud Platform Engineering
@@ -331,7 +264,6 @@ TKT-2024-00061,Network Switch Port,Port update required,Network,Resolved,P3,Netw
 TKT-2024-00062,Access Group Membership,Group user update,Access Management,Resolved,P3,Identity & Access Management
 TKT-2024-00063,VM Patch Management,OS security update,Infrastructure,Resolved,P3,Cloud Platform Engineering
 TKT-2024-00064,Application Bug Fix,Memory leak resolved,Application,Resolved,P3,Application Support Team
-TKT-2024-
 TKT-2024-00001,Production Server Outage,Primary storage array offline affecting all E2 environments,Infrastructure,In Progress,P1,Cloud Platform Engineering
 TKT-2024-00002,VM Cluster Scaling Required,High availability cluster needs additional compute nodes,Infrastructure,Resolved,P1,Cloud Platform Engineering
 TKT-2024-00003,Backup Job Failure,Weekly backup jobs failing due to disk I/O saturation,Infrastructure,Resolved,P1,Cloud Platform Engineering
