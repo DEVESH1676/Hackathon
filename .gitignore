@@ -1,0 +1,27 @@
+# Python Environments
+venv/
+env/
+.env
+
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Vector Database (Do not upload!)
+chroma_db/
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary logs / scripts
+*.log
+output.txt
+
+# Depending on your preference, you could also ignore the dataset.
+# Uncomment the line below if the CSV gets too large (>100MB) for GitHub.
+# data/*.csv
