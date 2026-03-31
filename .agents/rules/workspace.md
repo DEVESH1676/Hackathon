@@ -19,8 +19,6 @@ Before ANY file operation (read, write, edit, delete), you **MUST** verify the s
     ```bash
     # Get a quick overview of a directory
     ls -la /path/to/dir/
-    # Get a recursive view of a directory
-    ls -laR /path/to/dir/
     ```
 
 *   **Verify Existence Before Acting:**
@@ -32,35 +30,26 @@ Before ANY file operation (read, write, edit, delete), you **MUST** verify the s
     ```
 
 *   **Project Path Conventions:**
-    *   Project Root: `/home/devesh/pihacking/1pass/`
-    *   Working Directory: `/home/devesh/pihacking/1pass/1pass/`
-    *   Recon Outputs: `/home/devesh/pihacking/1pass/1pass/recon/`
-    *   Credentials: `/home/devesh/pihacking/1pass/1pass/creds/`
-    *   Tools: `/home/devesh/pihacking/1pass/1pass/tools/`
+    *   Project Root: `/home/devesh/Hackathon/`
+    *   Python Virtual Env: `/home/devesh/Hackathon/venv/`
+    *   Core Logic: `/home/devesh/Hackathon/core/`
+    *   Dataset Storage: `/home/devesh/Hackathon/data/`
+    *   Vector DB: `/home/devesh/Hackathon/chroma_db/`
 
-### 3. Command Execution Protocol
+### 3. Python Execution Protocol
 
-Before running any command, you **MUST** perform these checks:
-
-*   **Verify Tool Installation:**
-    ```bash
-    which <tool_name> && <tool_name> --version
-    ```
-*   **Ensure Output Directories Exist:**
-    ```bash
-    test -d /path/for/output || mkdir -p /path/for/output
-    ```
-
-After running a command that creates a file, you **MUST** verify its creation:
+Before running python files, you **MUST** activate the virtual environment:
 ```bash
-# Example
-some_command > expected_output.txt
-test -f expected_output.txt && echo "SUCCESS" || echo "FAILED"
+source venv/bin/activate && python script.py
 ```
 
 ### 4. Error Handling
 
 If a file or directory is missing when it should exist:
 1.  Document the missing path in `tillnow.md`.
-2.  Note the impact on the current phase.
+2.  Note the impact on the current execution.
 3.  Suggest recovery steps or request user intervention.
+
+---
+### **Changelog**
+- **2026-03-31:** Updated environment paths to the Hackathon structure (venv, core, data, chroma_db).
