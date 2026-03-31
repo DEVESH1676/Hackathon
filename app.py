@@ -35,15 +35,14 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: sticky;
+        top: 0;
         z-index: 999;
     }
     .top-header h1 {
         margin: 0; font-size: 1.5rem; color: #f8fafc;
         background: linear-gradient(90deg, #60a5fa, #a78bfa);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .top-header {
-        position: relative; /* Fixed sticky overlay issues with chat layout */
     }
     
     /* Main Background */
@@ -54,18 +53,9 @@ st.markdown("""
         background-color: transparent;
         padding: 1.5rem;
         border-bottom: 1px solid #1e293b;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        white-space: pre-wrap;
     }
     div[data-testid="stChatMessage"]:nth-child(even) {
         background-color: rgba(30, 41, 59, 0.4);
-    }
-    
-    /* Global text wrapping for markdown */
-    .stMarkdown p, .stMarkdown div {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
     }
     
     /* Classification Badges in Chat */
@@ -181,98 +171,71 @@ with chat_container:
                                 st.caption(f"Ref {i+1}: {doc[:100]}...")
 
 
-# ── Chat Input & Processing ──────────────────────────────────
+# ── Chat Input ───────────────────────────────────────────────
 prompt = st.chat_input("Describe your IT issue (Title | Description)...")
 
 if prompt:
-    # 1. Parse user input
+    # 1. Add user message
     parts = prompt.split("|", 1)
     if len(parts) > 1:
         title, desc = parts[0].strip(), parts[1].strip()
     else:
         title, desc = "IT Request", prompt.strip()
         
-    user_msg = {"role": "user", "title": title, "content": desc}
-    st.session_state.messages.append(user_msg)
+    st.session_state.messages.append({"role": "user", "title": title, "content": desc})
     
-    # Render user message exactly where it should be
-    with chat_container:
-        with st.chat_message("user", avatar="👤"):
-            st.markdown(f"**{title}**\n\n{desc}")
-            
-        # 2. Process Assistant Response
-        with st.chat_message("assistant", avatar="⚡"):
-            with st.status("Analyzing routing vectors...", expanded=True) as status:
-                st.write("Extracting semantic embeddings...")
-                clf = load_classifier()
-                classification = clf.classify(title, desc)
-                
-                st.write("Evaluating policy engines...")
-                agent = load_agent()
-                agent_result = agent.process(title, desc, classification)
-                
-                rag_result = None
-                if generate_res:
-                    st.write("Synthesizing resolution from RAG...")
-                    rag = load_rag_engine()
-                    rag_result = rag.suggest_resolution(title, desc)
-                
-                status.update(label="Analysis Complete", state="complete", expanded=False)
-            
-            # Build assistant response object
-            response_data = {
-                "role": "assistant",
-                "type": "analysis",
-                "content": "",
-                "cat": classification["category"],
-                "dept": classification["department"],
-                "conf": classification["confidence"],
-                "pri": classification["priority_suggestion"],
-                "escalated": agent_result.get("requires_human", False),
-                "automation": agent_result.get("suggests_automation", False)
-            }
-            
-            if response_data["escalated"]:
-                response_data["escalation_reason"] = [a['reason'] for a in agent_result['agent_actions'] if a['type'] == 'ESCALATE'][0]
-            
-            if response_data["automation"]:
-                response_data["automation_reason"] = [a['reason'] for a in agent_result['agent_actions'] if a['type'] == 'SUGGEST_AUTOMATION'][0]
-            
-            if rag_result:
-                response_data["resolution"] = rag_result['suggested_resolution']
-                response_data["context"] = rag_result['context_docs']
-                
-            # Draw beautiful analysis block
-            html_badges = f"""
-            <div style="margin-top: 10px; margin-bottom: 15px;">
-                <span class="chat-badge badge-cat">📁 {response_data['cat']}</span>
-                <span class="chat-badge badge-dept">🏢 {response_data['dept']}</span>
-                <span class="chat-badge badge-conf">🎯 {response_data['conf']:.1%} Conf</span>
-            """
-            if "P1" in response_data['pri'] or "Critical" in response_data['pri']:
-                html_badges += f'<span class="chat-badge badge-warn">🔥 {response_data["pri"]}</span>'
-            else:
-                html_badges += f'<span class="chat-badge badge-cat">✅ {response_data["pri"]}</span>'
-            html_badges += "</div>"
-            
-            st.markdown(html_badges, unsafe_allow_html=True)
-            
-            # Escalation Flags
-            if response_data.get('escalated'):
-                st.error(f"🚨 **Escalation Triggered:** {response_data['escalation_reason']}")
-            
-            if response_data.get('automation'):
-                st.info(f"🤖 **Runbook Triggered:** {response_data['automation_reason']}")
-            
-            # Generative Resolution
-            if response_data.get('resolution'):
-                st.markdown("### 🛠️ Suggested Resolution Action")
-                st.markdown(f"><span style='color:#e2e8f0;'> {response_data['resolution']} </span>", unsafe_allow_html=True)
-                
-                with st.expander("View Reference Data"):
-                    for i, doc in enumerate(response_data['context']):
-                        st.caption(f"Ref {i+1}: {doc[:100]}...")
-            
-            # Save assistant message to state so it persists on next app reload
-            st.session_state.messages.append(response_data)
+    # Force redraw before processing
+    st.rerun()
 
+# ── Process Latest User Message ──────────────────────────────
+if st.session_state.messages[-1]["role"] == "user" and "processed" not in st.session_state.messages[-1]:
+    
+    # Mark as processed immediately to prevent loop
+    st.session_state.messages[-1]["processed"] = True
+    
+    title = st.session_state.messages[-1]["title"]
+    desc = st.session_state.messages[-1]["content"]
+    
+    with st.chat_message("assistant", avatar="⚡"):
+        with st.status("Analyzing routing vectors...", expanded=True) as status:
+            st.write("Extracting semantic embeddings...")
+            clf = load_classifier()
+            classification = clf.classify(title, desc)
+            
+            st.write("Evaluating policy engines...")
+            agent = load_agent()
+            agent_result = agent.process(title, desc, classification)
+            
+            rag_result = None
+            if generate_res:
+                st.write("Synthesizing resolution from RAG...")
+                rag = load_rag_engine()
+                rag_result = rag.suggest_resolution(title, desc)
+            
+            status.update(label="Analysis Complete", state="complete", expanded=False)
+        
+        # Build assistant response object
+        response_data = {
+            "role": "assistant",
+            "type": "analysis",
+            "content": "",
+            "cat": classification["category"],
+            "dept": classification["department"],
+            "conf": classification["confidence"],
+            "pri": classification["priority_suggestion"],
+            "escalated": agent_result.get("requires_human", False),
+            "automation": agent_result.get("suggests_automation", False)
+        }
+        
+        if response_data["escalated"]:
+            response_data["escalation_reason"] = [a['reason'] for a in agent_result['agent_actions'] if a['type'] == 'ESCALATE'][0]
+        
+        if response_data["automation"]:
+            response_data["automation_reason"] = [a['reason'] for a in agent_result['agent_actions'] if a['type'] == 'SUGGEST_AUTOMATION'][0]
+        
+        if rag_result:
+            response_data["resolution"] = rag_result['suggested_resolution']
+            response_data["context"] = rag_result['context_docs']
+            
+        st.session_state.messages.append(response_data)
+        st.rerun()
