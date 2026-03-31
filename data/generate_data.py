@@ -1,6 +1,6 @@
 import os
 import sys
-import pandas as pd
+import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
@@ -44,8 +44,35 @@ CRITICAL REALISM RULES:
 Output ONLY the CSV data starting with the header row. No explanations, no markdown, no code blocks. Properly escape any commas in text fields using double quotes.
 """
 
+TARGET_TICKETS = 1000
+
+def print_progress(current, total, start_time, bar_width=40):
+    """Print a live progress bar to terminal."""
+    pct = current / total
+    filled = int(bar_width * pct)
+    bar = '█' * filled + '░' * (bar_width - filled)
+    
+    elapsed = time.time() - start_time
+    if current > 0:
+        eta = (elapsed / current) * (total - current)
+        eta_str = f"{int(eta//60)}m {int(eta%60)}s"
+    else:
+        eta_str = "calculating..."
+    
+    rate = current / elapsed if elapsed > 0 else 0
+    
+    sys.stdout.write(f"\r  [{bar}] {current}/{total} tickets ({pct*100:.1f}%) | {rate:.1f} tickets/s | ETA: {eta_str}  ")
+    sys.stdout.flush()
+
 def main():
-    print(f"Initializing Ollama LLM (Model: {config.OLLAMA_MODEL} at {config.OLLAMA_BASE_URL})...")
+    print(f"╔══════════════════════════════════════════════════════╗")
+    print(f"║  Synthetic Ticket Generator                        ║")
+    print(f"║  Model: {config.OLLAMA_MODEL:<43}║")
+    print(f"║  Host:  {config.OLLAMA_BASE_URL:<43}║")
+    print(f"║  Target: {TARGET_TICKETS} tickets                              ║")
+    print(f"╚══════════════════════════════════════════════════════╝")
+    print()
+    
     from langchain_community.chat_models import ChatOllama
     from langchain_core.messages import HumanMessage
     
@@ -53,15 +80,42 @@ def main():
         base_url=config.OLLAMA_BASE_URL,
         model=config.OLLAMA_MODEL,
         temperature=0.7,
-        num_predict=65536,  # Max output tokens - we need a LOT for 1000 rows
+        num_predict=65536,
     )
     
-    print("Generating 1000 tickets in a single call... This will take a while.")
-    print("Model: qwen2.5-gpu (no thinking overhead)")
+    output_path = os.path.join(os.path.dirname(__file__), 'synthetic_tickets.csv')
+    
+    print("[1/3] Sending prompt to Ollama... (waiting for first token)")
+    start_time = time.time()
+    
+    # Use streaming to track progress in real-time
+    collected_chunks = []
+    ticket_count = 0
+    header_seen = False
     
     try:
-        response = llm.invoke([HumanMessage(content=PROMPT)])
-        content = response.content.strip()
+        for chunk in llm.stream([HumanMessage(content=PROMPT)]):
+            text = chunk.content
+            collected_chunks.append(text)
+            
+            # Count newlines = new CSV rows = new tickets
+            newlines = text.count('\n')
+            if newlines > 0:
+                if not header_seen:
+                    header_seen = True
+                    ticket_count += (newlines - 1)  # first newline is after header
+                else:
+                    ticket_count += newlines
+                
+                if ticket_count > 0:
+                    print_progress(min(ticket_count, TARGET_TICKETS), TARGET_TICKETS, start_time)
+        
+        print()  # newline after progress bar
+        elapsed = time.time() - start_time
+        print(f"\n[2/3] Stream complete in {int(elapsed//60)}m {int(elapsed%60)}s")
+        
+        # Join all chunks and clean
+        content = ''.join(collected_chunks).strip()
         
         # Strip markdown code blocks if present
         if content.startswith("```csv"):
@@ -72,19 +126,32 @@ def main():
             content = content[:-3]
         content = content.strip()
         
-        output_path = os.path.join(os.path.dirname(__file__), 'synthetic_tickets.csv')
+        # Write to file
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        # Quick validation
-        lines = content.split('\n')
-        non_empty = [l for l in lines if l.strip()]
-        print(f"\nGeneration complete!")
-        print(f"Total lines written: {len(non_empty)} (header + {len(non_empty)-1} tickets)")
-        print(f"Saved to: {output_path}")
+        # Final validation
+        lines = [l for l in content.split('\n') if l.strip()]
+        actual_tickets = len(lines) - 1  # minus header
+        
+        print(f"\n[3/3] Validation:")
+        print(f"  ✓ File saved: {output_path}")
+        print(f"  ✓ Total lines: {len(lines)} (header + {actual_tickets} tickets)")
+        
+        if actual_tickets < TARGET_TICKETS:
+            print(f"  ⚠ Warning: Got {actual_tickets}/{TARGET_TICKETS} tickets (model may have hit context limit)")
+            print(f"    → {actual_tickets} tickets is still usable for the hackathon prototype")
+        else:
+            print(f"  ✓ Target reached: {actual_tickets}/{TARGET_TICKETS}")
+        
+        print(f"\n  Time: {int(elapsed//60)}m {int(elapsed%60)}s")
+        print(f"  Rate: {actual_tickets/elapsed:.1f} tickets/second")
+        print(f"\n{'='*55}")
+        print(f"  DONE. Run `core/embeddings.py` next to ingest into ChromaDB.")
+        print(f"{'='*55}")
         
     except Exception as e:
-        print(f"Error during generation: {e}")
+        print(f"\n\n✗ Error during generation: {e}")
 
 if __name__ == "__main__":
     main()
