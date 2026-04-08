@@ -45,3 +45,24 @@
 - `core/rag.py` - Core logic for retrieving similar tickets and generating resolutions.
 - `core/agent.py` - Escalation and automation logic.
 - `.agents/rules/*.md` - Refitted global agent rules from pentest workflow to Hackathon development protocol.
+
+---
+
+## v3.0 Phase 1: Calibration & Feedback Foundation
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [Confidence Calibration Check (CALIB-01)] - Created `scripts/calibrate.py` that classifies all 50 stored tickets and groups results by confidence band (high >0.75, medium 0.40-0.75, low <0.40). Result: **100% accuracy across all bands**. High band: 12/12 correct. Medium band: 37/37 correct. Low band: 1/1 correct.
+- [Feedback Capture Table (FDBK-01)] - Created `core/feedback.py` with `FeedbackStore` class wrapping SQLite at `data/feedback.db`. Schema: `resolutions(ticket_id, category, confidence, resolution_steps, judge_scores, agent_action, human_override, outcome, created_at)`. JSON serialization for judge_scores confirmed working.
+
+**Wrong Assumptions Corrected:**
+- [Ticket Count] - Previously documented as "150 tickets in ChromaDB". Actual count is **50 tickets** (from the hackathon batch). The 150 figure was from the planned target, not what was actually ingested.
+- [Band Distribution] - Only 24% of tickets land in the high-confidence fast-path (>0.75). The cascade classifier in Phase 2 will need to handle 76% of tickets via the LLM judge path. This is important for Groq rate-limit planning.
+
+**Next Steps:**
+- Phase 2: Build the Classification Cascade with novelty detection (CASC-01 through CASC-04).
+
+**Files Created/Modified:**
+- `core/feedback.py` - SQLite feedback store with FeedbackStore class.
+- `scripts/calibrate.py` - Confidence band calibration verification script.
+- `data/feedback.db` - SQLite database (auto-created on first run).

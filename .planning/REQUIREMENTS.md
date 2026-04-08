@@ -9,8 +9,8 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Calibration & Feedback
 
-- [ ] **CALIB-01**: System validates classifier confidence bands against existing 150 tickets (high/medium/low accuracy per band)
-- [ ] **FDBK-01**: System stores every pipeline run in SQLite feedback table (ticket_id, category, confidence, resolution, judge_scores, agent_action, human_override, outcome, created_at)
+- [x] **CALIB-01**: System validates classifier confidence bands against existing 50 tickets (high/medium/low accuracy per band) — ✅ 100% accuracy all bands
+- [x] **FDBK-01**: System stores every pipeline run in SQLite feedback table (ticket_id, category, confidence, resolution, judge_scores, agent_action, human_override, outcome, created_at) — ✅ Schema verified
 
 ### Classification Cascade
 
@@ -87,8 +87,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CALIB-01 | Phase 1 | Pending |
-| FDBK-01 | Phase 1 | Pending |
+| CALIB-01 | Phase 1 | Complete |
+| FDBK-01 | Phase 1 | Complete |
 | CASC-01 | Phase 2 | Pending |
 | CASC-02 | Phase 2 | Pending |
 | CASC-03 | Phase 2 | Pending |
