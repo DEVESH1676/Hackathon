@@ -6,7 +6,7 @@ load_dotenv()
 
 # --- Model Selection ---
 # Set to True to use Groq API (needs GROQ_API_KEY in .env), False to use local Ollama
-USE_GROQ = False
+USE_GROQ = True
 
 # --- LLM Configurations ---
 # Groq specific
