@@ -254,7 +254,7 @@ with tab_submit:
                 clf = load_classifier()
                 time.sleep(0.4)
                 
-                st.write("Matching vector centroids & historical data...")
+                st.write("Running classification cascade...")
                 classification = clf.classify(ticket_title, ticket_desc)
                 time.sleep(0.3)
                 
@@ -298,6 +298,41 @@ with tab_submit:
                         <br>
                         """, unsafe_allow_html=True)
             
+            # ── Cascade Path Badge ──
+            cascade_method = classification.get("method", "centroid")
+            is_novel = classification.get("is_novel", False)
+            llm_rationale = classification.get("llm_rationale")
+
+            cascade_badges = {
+                "centroid": ("⚡ FAST PATH", "#22c55e", "rgba(34,197,94,0.15)"),
+                "llm_judge": ("🧠 LLM JUDGE", "#f59e0b", "rgba(245,158,11,0.15)"),
+                "escalated": ("🚨 ESCALATED", "#ef4444", "rgba(239,68,68,0.15)"),
+                "novel_ticket": ("🆕 NOVEL TICKET", "#a855f7", "rgba(168,85,247,0.15)"),
+                "similarity_search": ("🔍 SIMILARITY", "#3b82f6", "rgba(59,130,246,0.15)"),
+            }
+            badge_text, badge_color, badge_bg = cascade_badges.get(
+                cascade_method, ("❓ UNKNOWN", "#94a3b8", "rgba(148,163,184,0.15)")
+            )
+
+            st.markdown(f"""
+            <div style="text-align:center; margin-bottom:12px;">
+                <span style="background:{badge_bg}; color:{badge_color}; border:1px solid {badge_color};
+                             padding:6px 18px; border-radius:24px; font-weight:700; font-size:0.95rem;
+                             letter-spacing:1px;">
+                    {badge_text}
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+
+            if llm_rationale:
+                st.markdown(f"""
+                <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
+                            border-radius:8px; padding:10px 14px; margin-bottom:12px;
+                            color:#fde68a; font-size:0.88rem;">
+                    <strong>LLM Judge Rationale:</strong> {llm_rationale}
+                </div>
+                """, unsafe_allow_html=True)
+
             # ── Beautiful Classification Result Box ──
             st.markdown(f"""
             <div class="glass-panel">
@@ -313,6 +348,10 @@ with tab_submit:
                 <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
                     <span style="color:#94a3b8;">System Confidence</span>
                     <strong style="color:{confidence_color(conf)}; font-size:1.1rem;">{conf:.1%}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+                    <span style="color:#94a3b8;">Cascade Path</span>
+                    <strong style="color:{badge_color};">{badge_text}</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between;">
                     <span style="color:#94a3b8;">Urgency Class</span>
@@ -380,6 +419,8 @@ with tab_submit:
                 "department": dept,
                 "confidence": conf,
                 "priority": pri,
+                "method": cascade_method,
+                "is_novel": is_novel,
                 "escalated": agent_result.get("requires_human", False)
             })
             
