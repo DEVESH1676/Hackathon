@@ -93,10 +93,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CASC-02 | Phase 2 | Complete |
 | CASC-03 | Phase 2 | Complete |
 | CASC-04 | Phase 2 | Complete |
-| RANK-01 | Phase 3 | Pending |
-| RANK-02 | Phase 3 | Pending |
-| MHOP-01 | Phase 3 | Pending |
-| MHOP-02 | Phase 3 | Pending |
+| RANK-01 | Phase 3 | Complete |
+| RANK-02 | Phase 3 | Complete |
+| MHOP-01 | Phase 3 | Complete |
+| MHOP-02 | Phase 3 | Complete |
 | TRIAGE-01 | Phase 4 | Pending |
 | TRIAGE-02 | Phase 4 | Pending |
 | RESOLVE-01 | Phase 4 | Pending |
