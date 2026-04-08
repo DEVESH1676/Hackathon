@@ -202,7 +202,11 @@ Reply ONLY with valid JSON (no markdown, no explanation):
                 sum(1 for c in top_categories_from_search[:3] if c == best_category)
                 / min(3, len(top_categories_from_search))
             )
-            adjusted_confidence = (best_score * 0.6) + (search_agreement * 0.4)
+            # Shortcut: if we have a near-perfect vector match (literal copy), force high confidence (CASC-01)
+            if best_match_similarity > 0.95:
+                adjusted_confidence = 0.98
+            else:
+                adjusted_confidence = (best_score * 0.6) + (search_agreement * 0.4)
         else:
             adjusted_confidence = best_score
 
