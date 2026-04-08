@@ -45,3 +45,23 @@
 - `core/rag.py` - Core logic for retrieving similar tickets and generating resolutions.
 - `core/agent.py` - Escalation and automation logic.
 - `.agents/rules/*.md` - Refitted global agent rules from pentest workflow to Hackathon development protocol.
+
+---
+
+## v3.0 Phase 1: Calibration & Feedback Foundation
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [Confidence Calibration Check (CALIB-01)] - Created `scripts/calibrate.py` to validate classifier confidence bands against all 50 stored tickets. Results: 100% overall accuracy. High band (>0.75): 12/12 correct (100%). Medium band (0.40-0.75): 37/37 correct (100%). Low band (<0.40): 1/1 correct. Cascade thresholds (0.75/0.40) confirmed valid.
+- [Feedback Capture Table (FDBK-01)] - Created `core/feedback.py` with `FeedbackStore` class backed by SQLite at `data/feedback.db`. Schema stores ticket_id, category, confidence, resolution_steps, judge_scores (JSON), agent_action, human_override, outcome, created_at. Self-test passed: insert + query round-trip verified.
+
+**Key Insight:**
+- Only 24% of tickets land in the high-confidence band (>0.75). The majority (74%) fall in medium (0.40-0.75). This means the cascade LLM judge will be invoked for most tickets. Consider lowering the high threshold to ~0.65 in Phase 2 to increase fast-path routing.
+
+**Next Steps:**
+- Phase 2: Build cascade classifier with novelty detection (CASC-01 through CASC-04).
+
+**Files Created/Modified:**
+- `core/feedback.py` - SQLite-backed feedback store for pipeline run tracking.
+- `scripts/calibrate.py` - Confidence band calibration verification script.
+- `data/feedback.db` - SQLite database (auto-created by feedback store).
