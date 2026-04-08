@@ -23,7 +23,10 @@ CHROMA_DB_DIR = "./chroma_db"
 COLLECTION_NAME = "tickets"
 
 # --- Agentic Layer Thresholds ---
-CONFIDENCE_THRESHOLD = 0.75
+CONFIDENCE_THRESHOLD = 0.75          # Above this → fast centroid path (no LLM)
+MEDIUM_CONFIDENCE_THRESHOLD = 0.40   # Below this → direct escalation (no LLM)
+                                     # Between 0.40–0.75 → LLM judge re-classifies
+NOVELTY_SIMILARITY_THRESHOLD = 0.20  # If best-match similarity < this → NOVEL_TICKET
 REPEAT_THRESHOLD = 3        # Number of similar tickets to trigger automation suggestion
 REPEAT_WINDOW_DAYS = 7      # Time window for repeat detection
 SIMILARITY_THRESHOLD = 0.85 # Cosine similarity score to consider tickets "similar"
