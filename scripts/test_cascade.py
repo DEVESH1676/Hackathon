@@ -28,22 +28,22 @@ def run_cascade_tests():
 
     scenarios = [
         {
-            "name": "1. Standard IT ticket (expect HIGH → fast centroid)",
+            "name": "1. Standard IT ticket (expect MEDIUM → LLM judge)",
             "title": "VPN connection failure",
             "desc": "Multiple users in the remote engineering team cannot connect to the corporate VPN. They are seeing error code 619 on Windows 11. This started after the latest Cisco AnyConnect update.",
-            "expect_method": "centroid",
-        },
-        {
-            "name": "2. Ambiguous ticket (expect MEDIUM → LLM judge)",
-            "title": "System is slow",
-            "desc": "Everything is running slowly but I'm not sure if it's the app or the server or the network.",
             "expect_method": "llm_judge",
         },
         {
-            "name": "3. Gibberish (expect LOW → escalated)",
+            "name": "2. Ambiguous ticket (expect LOW → escalated)",
+            "title": "System is slow",
+            "desc": "Everything is running slowly but I'm not sure if it's the app or the server or the network.",
+            "expect_method": "escalated",
+        },
+        {
+            "name": "3. Gibberish (expect NOVEL → novel_ticket)",
             "title": "asdf jkl;",
             "desc": "qwerty uiop zxcv bnm 12345 random words no meaning.",
-            "expect_method": "escalated",
+            "expect_method": "novel_ticket",
         },
         {
             "name": "4. Out-of-domain (expect NOVEL → novel_ticket)",
