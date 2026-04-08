@@ -14,10 +14,10 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Classification Cascade
 
-- [ ] **CASC-01**: System routes tickets through fast centroid path (>0.75 confidence → direct route, no LLM call)
-- [ ] **CASC-02**: System escalates medium-confidence tickets (0.40–0.75) to LLM judge for re-classification
-- [ ] **CASC-03**: System escalates low-confidence tickets (<0.40) directly without wasting LLM tokens
-- [ ] **CASC-04**: System detects novel tickets (embedding distance from ALL training examples above threshold) and flags as `NOVEL_TICKET` before classification
+- [x] **CASC-01**: System routes tickets through fast centroid path (>0.75 confidence → direct route, no LLM call) — ✅ Verified
+- [x] **CASC-02**: System escalates medium-confidence tickets (0.40–0.75) to LLM judge for re-classification — ✅ Groq API working
+- [x] **CASC-03**: System escalates low-confidence tickets (<0.40) directly without wasting LLM tokens — ✅ Verified
+- [x] **CASC-04**: System detects novel tickets (embedding distance from ALL training examples above threshold) and flags as `NOVEL_TICKET` before classification — ✅ Verified
 
 ### Enhanced RAG
 
@@ -89,10 +89,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | CALIB-01 | Phase 1 | Complete |
 | FDBK-01 | Phase 1 | Complete |
-| CASC-01 | Phase 2 | Pending |
-| CASC-02 | Phase 2 | Pending |
-| CASC-03 | Phase 2 | Pending |
-| CASC-04 | Phase 2 | Pending |
+| CASC-01 | Phase 2 | Complete |
+| CASC-02 | Phase 2 | Complete |
+| CASC-03 | Phase 2 | Complete |
+| CASC-04 | Phase 2 | Complete |
 | RANK-01 | Phase 3 | Pending |
 | RANK-02 | Phase 3 | Pending |
 | MHOP-01 | Phase 3 | Pending |
