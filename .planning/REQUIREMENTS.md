@@ -21,10 +21,10 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Enhanced RAG
 
-- [ ] **RANK-01**: System scores retrieved chunks on 3 axes: semantic similarity (60%), recency (20%), outcome success (20%)
-- [ ] **RANK-02**: System returns ranked results instead of raw ChromaDB order
-- [ ] **MHOP-01**: System performs second ChromaDB query using category/metadata from initial retrieval to fetch linked KB articles
-- [ ] **MHOP-02**: System feeds both retrieval hops as combined context to LLM for resolution generation
+- [x] **RANK-01**: System scores retrieved chunks on 3 axes: semantic similarity (60%), recency (20%), outcome success (20%) — ✅ Verified
+- [x] **RANK-02**: System returns ranked results instead of raw ChromaDB order — ✅ Verified
+- [x] **MHOP-01**: System performs second ChromaDB query using category/metadata from initial retrieval to fetch linked KB articles — ✅ Verified
+- [x] **MHOP-02**: System feeds both retrieval hops as combined context to LLM for resolution generation — ✅ Verified
 
 ### Agentic Workflows
 
