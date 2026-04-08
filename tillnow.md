@@ -66,3 +66,31 @@
 - `core/feedback.py` - SQLite feedback store with FeedbackStore class.
 - `scripts/calibrate.py` - Confidence band calibration verification script.
 - `data/feedback.db` - SQLite database (auto-created on first run).
+
+---
+
+## v3.0 Phase 2: Classification Cascade
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [Cascade Architecture (CASC-01 through CASC-04)] - Refactored `core/classifier.py` into a 4-tier confidence cascade:
+  - **Novelty Detection (CASC-04):** If best-match similarity < 0.20 → flagged as `NOVEL_TICKET`, routed to General Support L1.
+  - **Low-Confidence Escalation (CASC-03):** If adjusted confidence < 0.40 → direct escalation, zero LLM tokens spent.
+  - **LLM Judge (CASC-02):** If 0.40 ≤ confidence < 0.75 → Groq API classifies with rationale JSON output. Correctly re-classified VPN ticket as "Network" in testing.
+  - **Fast Centroid Path (CASC-01):** If confidence ≥ 0.75 → instant routing via centroid similarity, no LLM call.
+- [Config Updates] - Added `MEDIUM_CONFIDENCE_THRESHOLD = 0.40` and `NOVELTY_SIMILARITY_THRESHOLD = 0.20` to `config.py`.
+- [UI Cascade Badges] - Updated `app.py` to display color-coded cascade path badges (⚡ FAST PATH / 🧠 LLM JUDGE / 🚨 ESCALATED / 🆕 NOVEL TICKET) and LLM judge rationale callout.
+- [Test Script] - Created `scripts/test_cascade.py` exercising all 4 cascade paths. Result: **4/4 PASS**.
+
+**Wrong Assumptions Corrected:**
+- [Confidence Expectations] - Standard IT tickets like "VPN connection failure" do NOT hit the high-confidence fast path with only 50 training tickets. They land in the medium band (46.5%) and use the LLM judge. This is expected — the cascade adds significant value precisely because training data is limited.
+- [Gibberish vs Novel] - Gibberish input ("asdf jkl;") is correctly detected as NOVEL (similarity 15.1% < 20% threshold) rather than just "low confidence". The novelty check fires before the confidence bands.
+
+**Next Steps:**
+- Phase 3: Enhanced RAG with context ranking and multi-hop retrieval (RANK-01 through MHOP-02).
+
+**Files Created/Modified:**
+- `config.py` - Added MEDIUM_CONFIDENCE_THRESHOLD and NOVELTY_SIMILARITY_THRESHOLD.
+- `core/classifier.py` - Complete cascade rewrite with Groq/Ollama LLM judge integration.
+- `app.py` - Cascade path badges and LLM rationale display in classification panel.
+- `scripts/test_cascade.py` - 4-scenario cascade verification test.
