@@ -98,3 +98,21 @@
 - `core/classifier.py` - Complete cascade rewrite with Groq/Ollama LLM judge integration.
 - `app.py` - Cascade path badges and LLM rationale display in classification panel.
 - `scripts/test_cascade.py` - 4-scenario cascade verification test.
+
+## Phase 3: Enhanced RAG — Context Ranking + Multi-Hop
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [Context Ranking] - Updated `suggest_resolution` in `core/rag.py` to rank retrieved chunks using a weighted scoring model: Semantic Similarity (60%), Recency (20%), and Outcome Success (20%).
+- [Multi-Hop Knowledge] - Implemented a second ChromaDB vector hop to retrieve broader KB insights based on the initially predicted top-level category (`MHOP-01`).
+- [RAG Integration] - Pipelined both the ranked past tickets (Hop 1) and the category KB context (Hop 2) directly into LLM prompts (`MHOP-02`) for highly contextualized generations.
+
+**Wrong Assumptions Corrected:**
+- [No Dedicated KB Database] - We initially anticipated retrieving articles from a separate 'KB_Articles' collection but found only 'tickets' ingested. The multi-hop dynamically uses standard ticket resolutions matching the overall `top_category` as the KB equivalent, preserving zero-cost infrastructure without schema inflation.
+
+**Next Steps:**
+- Phase 4: Agentic Workflows. Decouple existing agentic logic into three exact paths: `TriageAgent`, `ResolutionAgent`, and `AutomationDiscoveryAgent`.
+
+**Files Created/Modified:**
+- `/home/devesh/Hackathon/core/rag.py` - Core RAG engine updated for context-ranking and multi-hop queries.
+- `/home/devesh/Hackathon/.planning/phases/3/3-UAT.md` - Phase 3 validation guidelines.
