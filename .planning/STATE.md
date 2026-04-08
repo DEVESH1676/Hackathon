@@ -2,10 +2,10 @@
 
 ## Current Position
 
-Phase: 1 — Calibration & Feedback Foundation
+Phase: 2 — Classification Cascade
 Plan: 01-PLAN.md
 Status: COMPLETE
-Last activity: 2026-04-08 — Phase 1 executed (both tasks passed)
+Last activity: 2026-04-08 — Phase 2 executed (all 4 cascade paths verified)
 
 ## Project Reference
 
@@ -19,18 +19,24 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ### From Hackathon MVP (v1.0)
 - All 4 original phases COMPLETE (Data → Classification → RAG → Agent+UI)
 - 50 synthetic tickets in ChromaDB (6 categories, 4 priority levels)
-- Classifier achieves 100% on 6 manual test cases (untested at scale)
 - RAG uses direct Ollama REST calls (LangChain bypassed due to stability issues)
 - Agent layer detects low-confidence + repeat patterns
 - Streamlit 3-tab dashboard functional
 
 ### From Phase 1: Calibration & Feedback (v3.0)
-- **Calibration result:** 100% accuracy across ALL confidence bands on 50 tickets
+- **Calibration result:** 100% accuracy in high-confidence band (12/12)
 - **Band distribution:** 12 high (>0.75), 37 medium (0.40-0.75), 1 low (<0.40)
-- **Insight:** Only 24% of tickets land in high-confidence band — cascade will route 76% to LLM judge
-- **Thresholds validated:** 0.75 / 0.40 confirmed as valid cascade boundaries
-- **Feedback table:** SQLite `data/feedback.db` with `resolutions` schema operational
-- **Data correction:** ChromaDB has 50 tickets (not 150 as previously noted)
+- **Feedback table:** SQLite `data/feedback.db` operational
+
+### From Phase 2: Classification Cascade (v3.0)
+- **Cascade implemented:** 4-tier routing (Novel → Escalated → LLM Judge → Fast Path)
+- **Novelty Detection (CASC-04):** If best-match similarity < 0.20 → flagged as NOVEL_TICKET
+- **Low-Confidence Escalation (CASC-03):** If confidence < 0.40 → direct escalation, no LLM tokens
+- **LLM Judge (CASC-02):** If 0.40 ≤ confidence < 0.75 → Groq API re-classifies with rationale
+- **Fast Path (CASC-01):** If confidence ≥ 0.75 → centroid routing, zero LLM cost
+- **Test results:** 4/4 scenarios pass. LLM judge correctly classified VPN ticket as "Network"
+- **Key insight:** With only 50 training tickets, most new tickets fall into medium band. Cascade LLM judge adds significant value.
+- **UI updated:** Cascade path badges shown in classification results panel
 
 ### Known Technical Debt
 - `sys.path.append` hacks in every core module
