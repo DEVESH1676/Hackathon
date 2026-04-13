@@ -138,3 +138,26 @@
 **Files Created/Modified:**
 - `core/agent.py` - Complete rewrite: TriageAgent, ResolutionAgent, AutomationDiscoveryAgent + AgenticLayer wrapper.
 - `scripts/test_agents.py` - 15-case UAT verification suite for all 3 agents.
+
+---
+
+## v3.0 Phase 5: LLM-as-Judge Evaluation Framework
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [ResolutionJudge Class (JUDGE-01/02)] - Built `core/judge.py` with `ResolutionJudge` class that evaluates resolutions on a 4-axis rubric (correctness, completeness, safety, clarity) scored 1-5. Returns structured JSON with per-axis scores, overall average, and critique text.
+- [Safety Hard-Gate (JUDGE-03)] - Implemented `SAFETY_THRESHOLD = 3`. Resolutions scoring safety < 3 get `safety_gate = "BLOCKED"` and `auto_resolve_allowed = False`. Verified with a deliberately dangerous "DROP DATABASE" test case — correctly blocked.
+- [Groq Integration (JUDGE-04)] - Judge uses Groq API (`llama-3.3-70b-versatile`) with temperature 0.1 for reliable scoring. Ollama fallback available.
+- [FeedbackStore Integration] - Judge scores are written to the existing `data/feedback.db` via `FeedbackStore.log_run(judge_scores=...)`. Verified round-trip: write and read-back of structured JSON scores.
+- [UAT] - Created `scripts/test_judge.py` with 14 test cases. Result: **14/14 PASS**.
+
+**Wrong Assumptions Corrected:**
+- None. The FeedbackStore schema already had `judge_scores` column ready from Phase 1 planning.
+
+**Next Steps:**
+- Phase 6: Unified UI. Build the 5-tab Streamlit dashboard (Submit, Classification, RAG Evidence, Agent Decisions, Resolution + Judge).
+
+**Files Created/Modified:**
+- `core/judge.py` - NEW: LLM-as-Judge with 4-axis rubric and safety hard-gate.
+- `scripts/test_judge.py` - NEW: 14-case UAT verification suite.
+- `.planning/REQUIREMENTS.md` - JUDGE-01 through JUDGE-04 marked Complete.
