@@ -1,11 +1,11 @@
 """
 ⚡ Nexus AI Ticket Intelligence Platform — v3.0
-Streamlit Dashboard with 5-Tab Progressive Disclosure UI
+Streamlit Dashboard with 5-Tab Progressive Disclosure UI (Refined)
 
-Tab 1: 🎫 Submit Ticket — form input for title and description
+Tab 1: 🎫 Submit Ticket — pipeline control center
 Tab 2: 🧠 Classification — cascade result, confidence, novelty flag
 Tab 3: 🔍 RAG Evidence — ranked chunks with multi-hop results and scores
-Tab 4: 🤖 Agent Decisions — which agent fired, decision, rationale
+Tab 4: 🤖 Agent Decisions — triage routing, automation discovery
 Tab 5: ⚖️ Resolution + Judge — resolution steps, rubric scores, safety gate
 """
 import streamlit as st
@@ -15,176 +15,274 @@ import plotly.graph_objects as go
 import time
 import sys
 import os
+import json
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import config
 
 # ── Page Config ──────────────────────────────────────────────
 st.set_page_config(
-    page_title="Nexus AI Agent",
+    page_title="Nexus AI — Ticket Intelligence",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ── Custom Advanced CSS (Glassmorphism & Animations) ─────────
+# ── Premium CSS System ───────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
     
-    html, body, [class*="css"] { font-family: 'Outfit', sans-serif; }
+    html, body, [class*="css"] { font-family: 'Inter', -apple-system, sans-serif; }
     
     /* ── Background & Layout ── */
     .stApp {
-        background-color: #0f172a;
-        background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 400px),
-                          radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.1), transparent 400px);
+        background: #0a0e1a;
+        background-image: 
+            radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.04) 0%, transparent 60%);
     }
-    .block-container { padding-top: 2rem; padding-bottom: 2rem; }
+    .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 1200px; }
     
     /* ── Animations ── */
-    @keyframes slideUpFade {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     @keyframes pulseGlow {
-        0% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
-        50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
-        100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
+        0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.15); }
+        50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.35); }
     }
-
-    .animated-content { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    @keyframes borderPulse {
+        0%, 100% { border-color: rgba(99, 102, 241, 0.2); }
+        50% { border-color: rgba(99, 102, 241, 0.5); }
+    }
     
-    /* Prevent text overflow in markdown */
+    .animate-in { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    
+    /* ── Prevent overflow ── */
     .stMarkdown p, .stMarkdown div {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
+        word-wrap: break-word; overflow-wrap: break-word;
     }
 
-    /* ── Headers ── */
-    .hero-title {
-        font-size: 2.5rem; font-weight: 800;
-        background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        margin-bottom: 0.2rem; letter-spacing: -0.5px;
+    /* ── Section Headers ── */
+    .section-title {
+        font-size: 1.1rem; font-weight: 600; color: #e2e8f0;
+        letter-spacing: -0.02em; margin-bottom: 16px;
+        padding-bottom: 10px; border-bottom: 1px solid rgba(148,163,184,0.1);
     }
-    .hero-sub { color: #94a3b8; font-size: 1.05rem; margin-top: 0; font-weight: 400; }
+    .section-icon { margin-right: 8px; }
     
-    /* ── Glassmorphism Metric Cards ── */
+    /* ── Glass Cards ── */
+    .glass {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(148, 163, 184, 0.08);
+        border-radius: 14px; padding: 20px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+        transition: all 0.25s ease;
+    }
+    .glass:hover {
+        border-color: rgba(129, 140, 248, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+    .glass-accent {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        border-radius: 14px; padding: 20px;
+        box-shadow: 0 4px 24px rgba(99, 102, 241, 0.06);
+    }
+    
+    /* ── Metric Cards ── */
     .metric-card {
-        background: rgba(30, 41, 59, 0.6);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px; padding: 1.5rem; text-align: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 14px; padding: 20px 24px; text-align: center;
+        transition: all 0.3s ease;
+        position: relative; overflow: hidden;
     }
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(129, 140, 248, 0.3);
+    .metric-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(129,140,248,0.5), transparent);
+        opacity: 0; transition: opacity 0.3s ease;
     }
-    .metric-card h2 { color: #f8fafc; margin: 0; font-size: 2.2rem; font-weight: 700; }
-    .metric-card p  { color: #94a3b8; margin: 0; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+    .metric-card:hover { 
+        transform: translateY(-4px);
+        border-color: rgba(129, 140, 248, 0.2);
+    }
+    .metric-card:hover::before { opacity: 1; }
+    .metric-val { color: #f8fafc; margin: 0; font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+    .metric-label { color: #64748b; margin: 4px 0 0; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
     
-    /* ── Result & Data Boxes ── */
-    .glass-panel {
-        background: rgba(15, 23, 42, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* ── KV Row (Key-Value) ── */
+    .kv {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 0; border-bottom: 1px solid rgba(148,163,184,0.06);
     }
-    .glass-panel h4 { color: #f1f5f9; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-    
-    /* ── Badges ── */
-    .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
-    .badge-p1 { background: rgba(220, 38, 38, 0.2); color: #fca5a5; border: 1px solid #ef4444; }
-    .badge-p2 { background: rgba(249, 115, 22, 0.2); color: #fdba74; border: 1px solid #f97316; }
-    .badge-p3 { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid #3b82f6; }
-    .badge-p4 { background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid #22c55e; }
+    .kv:last-child { border-bottom: none; }
+    .kv-key { color: #64748b; font-size: 0.85rem; font-weight: 500; }
+    .kv-val { font-weight: 600; font-size: 0.9rem; }
 
-    /* ── Escalation Banners ── */
-    .escalation-banner {
-        background: linear-gradient(90deg, rgba(127, 29, 29, 0.8) 0%, rgba(153, 27, 27, 0.4) 100%);
-        border-left: 4px solid #ef4444; border-radius: 8px;
-        padding: 1.2rem; color: #fecaca; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.15);
-        animation: pulseGlow 3s infinite;
+    /* ── Badges ── */
+    .pill {
+        padding: 5px 14px; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 5px;
+        letter-spacing: 0.02em;
     }
-    .automation-banner {
-        background: linear-gradient(90deg, rgba(30, 58, 138, 0.8) 0%, rgba(30, 64, 175, 0.4) 100%);
-        border-left: 4px solid #3b82f6; border-radius: 8px;
-        padding: 1.2rem; color: #bfdbfe; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+    .pill-green { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .pill-amber { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .pill-red { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .pill-purple { background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.2); }
+    .pill-blue { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .pill-indigo { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+
+    /* ── Priority Badges ── */
+    .pri { padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .pri-p1 { background: rgba(220,38,38,0.15); color: #fca5a5; }
+    .pri-p2 { background: rgba(249,115,22,0.15); color: #fdba74; }
+    .pri-p3 { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .pri-p4 { background: rgba(34,197,94,0.15); color: #86efac; }
+
+    /* ── Banners ── */
+    .banner-danger {
+        background: linear-gradient(135deg, rgba(127,29,29,0.5), rgba(153,27,27,0.2));
+        border: 1px solid rgba(239,68,68,0.2); border-radius: 12px;
+        padding: 16px 20px; animation: borderPulse 3s infinite;
     }
-    .safety-pass {
-        background: linear-gradient(90deg, rgba(21, 128, 61, 0.6) 0%, rgba(22, 163, 74, 0.3) 100%);
-        border-left: 4px solid #22c55e; border-radius: 8px;
-        padding: 1rem; color: #bbf7d0;
+    .banner-info {
+        background: linear-gradient(135deg, rgba(30,58,138,0.4), rgba(30,64,175,0.2));
+        border: 1px solid rgba(59,130,246,0.2); border-radius: 12px;
+        padding: 16px 20px;
     }
-    .safety-blocked {
-        background: linear-gradient(90deg, rgba(153, 27, 27, 0.8) 0%, rgba(185, 28, 28, 0.4) 100%);
-        border-left: 4px solid #ef4444; border-radius: 8px;
-        padding: 1rem; color: #fca5a5;
-        animation: pulseGlow 2s infinite;
+    .banner-success {
+        background: linear-gradient(135deg, rgba(21,128,61,0.3), rgba(22,163,74,0.15));
+        border: 1px solid rgba(34,197,94,0.2); border-radius: 12px;
+        padding: 16px 20px;
     }
     
     /* ── User Inputs ── */
     .stTextInput input, .stTextArea textarea {
-        background-color: rgba(30, 41, 59, 0.5) !important;
-        border: 1px solid #334155 !important;
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(99,102,241,0.15) !important;
         color: #e2e8f0 !important; border-radius: 10px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.9rem !important;
+        transition: all 0.2s ease !important;
     }
     .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #818cf8 !important; box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2) !important;
+        border-color: rgba(99,102,241,0.4) !important;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.08) !important;
+        background: rgba(15, 23, 42, 0.95) !important;
+    }
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
+        color: #475569 !important;
     }
     
     /* ── Primary Button ── */
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
-        color: white !important; font-weight: 600 !important;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+        color: white !important; font-weight: 600 !important; font-size: 0.9rem !important;
         border: none !important; border-radius: 10px !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        padding: 12px 24px !important;
+        transition: all 0.25s ease !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.25) !important;
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4) !important;
+        box-shadow: 0 8px 24px rgba(99,102,241,0.4) !important;
     }
     
     /* ── Tabs ── */
-    .stTabs [data-baseweb="tab-list"] { gap: 8px; border-bottom: none; }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px; border-bottom: 1px solid rgba(148,163,184,0.08);
+        padding-bottom: 0;
+    }
     .stTabs [data-baseweb="tab"] {
-        background: rgba(30, 41, 59, 0.5); border-radius: 10px;
-        border: 1px solid transparent; color: #94a3b8; padding: 10px 20px; font-weight: 500;
-        transition: all 0.2s ease;
+        background: transparent; border-radius: 8px 8px 0 0;
+        border: none; color: #64748b; padding: 10px 18px; font-weight: 500;
+        font-size: 0.85rem; transition: all 0.2s ease;
+        border-bottom: 2px solid transparent; margin-bottom: -1px;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: #94a3b8; background: rgba(99,102,241,0.04);
     }
     .stTabs [aria-selected="true"] {
-        background: rgba(129, 140, 248, 0.1) !important;
-        color: #818cf8 !important; border: 1px solid rgba(129, 140, 248, 0.3);
+        background: rgba(99,102,241,0.06) !important;
+        color: #818cf8 !important;
+        border-bottom: 2px solid #818cf8 !important;
     }
     
-    /* ── Rubric Score Bars ── */
-    .rubric-bar {
-        height: 8px; border-radius: 4px; margin: 4px 0 12px 0;
+    /* ── Sidebar Overrides ── */
+    section[data-testid="stSidebar"] {
+        background: rgba(8, 12, 24, 0.95) !important;
+        border-right: 1px solid rgba(148,163,184,0.06) !important;
     }
-    .rubric-label {
-        display: flex; justify-content: space-between; color: #cbd5e1; font-size: 0.85rem;
+    section[data-testid="stSidebar"] .stMarkdown h4 {
+        color: #94a3b8 !important; font-size: 0.75rem !important;
+        text-transform: uppercase !important; letter-spacing: 0.1em !important;
+        font-weight: 600 !important;
+    }
+    
+    /* ── Expander ── */
+    .streamlit-expanderHeader { font-size: 0.85rem !important; font-weight: 500 !important; }
+    
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.3); }
+
+    /* ── Pipeline Step Indicator ── */
+    .step-flow {
+        display: flex; align-items: center; gap: 4px;
+        padding: 8px 0; flex-wrap: wrap;
+    }
+    .step {
+        padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+    .step-done { background: rgba(34,197,94,0.1); color: #4ade80; }
+    .step-active { background: rgba(99,102,241,0.15); color: #818cf8; animation: borderPulse 2s infinite; border: 1px solid rgba(99,102,241,0.3); }
+    .step-pending { background: rgba(51,65,85,0.3); color: #475569; }
+    .step-arrow { color: #334155; font-size: 0.7rem; }
+    
+    /* ── Score Ring ── */
+    .score-ring {
+        width: 80px; height: 80px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; font-weight: 700; margin: 0 auto 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ── Cached Model Loading ─────────────────────────────────────
-@st.cache_resource(show_spinner="Initializing Nexus Core...")
+@st.cache_resource(show_spinner="Initializing classification engine...")
 def load_classifier():
     from core.classifier import TicketClassifier
     return TicketClassifier()
 
-@st.cache_resource(show_spinner="Waking RAG engines...")
+@st.cache_resource(show_spinner="Loading RAG retrieval engine...")
 def load_rag_engine():
     from core.rag import ResolutionEngine
     return ResolutionEngine()
 
-@st.cache_resource(show_spinner="Loading agent reasoning...")
-def load_agent():
+@st.cache_resource(show_spinner="Spawning agent workers...")
+def load_agents():
     from core.agent import AgenticLayer, TriageAgent, ResolutionAgent, AutomationDiscoveryAgent
     return AgenticLayer(), TriageAgent(), ResolutionAgent(), AutomationDiscoveryAgent()
 
@@ -195,7 +293,6 @@ def load_judge():
 
 @st.cache_data(show_spinner=False)
 def load_ticket_data():
-    # Try merged file first, then fallback
     for fname in ["synthetic_tickets_merged.csv", "synthetic_tickets.csv"]:
         csv_path = os.path.join(os.path.dirname(__file__), "data", fname)
         if os.path.exists(csv_path):
@@ -203,7 +300,7 @@ def load_ticket_data():
     return pd.DataFrame()
 
 
-# ── Session State Init ───────────────────────────────────────
+# ── Session State ────────────────────────────────────────────
 if "history" not in st.session_state:
     st.session_state.history = []
 if "pipeline_result" not in st.session_state:
@@ -212,95 +309,132 @@ if "pipeline_result" not in st.session_state:
 
 # ── Sidebar ──────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<p class="hero-title">Nexus Agent</p>', unsafe_allow_html=True)
-    st.markdown('<p class="hero-sub">v3.0 — Agentic Intelligence</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="padding: 8px 0 16px;">
+        <div style="font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em;
+                    background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+                    -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Nexus AI
+        </div>
+        <div style="color: #475569; font-size: 0.8rem; font-weight: 500; margin-top: 2px;">
+            Ticket Intelligence Platform · v3.0
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.divider()
     
-    st.markdown("#### 🎛️ Agent Control Panel")
-    generate_resolution = st.toggle("🧠 Enable Generative RAG", value=True,
-        help="Run the full RAG + Resolution + Judge pipeline on submission."
+    st.markdown("#### Pipeline Controls")
+    generate_resolution = st.toggle("Enable Full Resolution", value=True,
+        help="Run Resolution Agent + LLM-as-Judge quality evaluation"
     )
     
     st.divider()
-    st.markdown("#### ⚡ Infrastructure")
-    llm_label = f"Groq ({config.GROQ_MODEL})" if config.USE_GROQ else f"Ollama ({config.OLLAMA_MODEL})"
-    st.markdown(f'<div style="color:#94a3b8; font-size:0.85rem;">'
-                f'<b>LLM:</b> {llm_label}<br>'
-                f'<b>Vectors:</b> {config.EMBEDDING_MODEL_NAME}<br>'
-                f'<b>Storage:</b> ChromaDB Local</div>', unsafe_allow_html=True)
+    
+    st.markdown("#### System Info")
+    llm_label = f"Groq · {config.GROQ_MODEL}" if config.USE_GROQ else f"Ollama · {config.OLLAMA_MODEL}"
+    st.markdown(f"""
+    <div style="font-size: 0.78rem; color: #475569; line-height: 1.8;">
+        <div><span style="color:#64748b;">LLM</span> <span style="color:#818cf8; font-weight:500;">{llm_label}</span></div>
+        <div><span style="color:#64748b;">Embed</span> <span style="color:#c084fc; font-weight:500;">{config.EMBEDDING_MODEL_NAME}</span></div>
+        <div><span style="color:#64748b;">Vector DB</span> <span style="color:#4ade80; font-weight:500;">ChromaDB Local</span></div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.divider()
-    st.caption("Nexus AI · v3.0 Milestone · Deployed Local")
+    
+    # Session stats
+    session_count = len(st.session_state.history)
+    if session_count > 0:
+        escalated = sum(1 for h in st.session_state.history if h.get("escalated"))
+        st.markdown(f"""
+        <div style="font-size: 0.78rem; color: #475569; line-height: 1.8;">
+            <div>Tickets analyzed: <span style="color:#e2e8f0; font-weight:600;">{session_count}</span></div>
+            <div>Escalations: <span style="color:#f87171; font-weight:600;">{escalated}</span></div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # ── Helper Functions ─────────────────────────────────────────
-def priority_badge(priority: str) -> str:
+def priority_pill(priority: str) -> str:
     p = priority.lower()
-    if "p1" in p or "critical" in p: return f'<span class="badge badge-p1">🔥 {priority}</span>'
-    if "p2" in p or "high" in p:     return f'<span class="badge badge-p2">⚡ {priority}</span>'
-    if "p3" in p or "medium" in p:   return f'<span class="badge badge-p3">⚠️ {priority}</span>'
-    return f'<span class="badge badge-p4">✅ {priority}</span>'
+    if "p1" in p or "critical" in p: return f'<span class="pri pri-p1">P1 Critical</span>'
+    if "p2" in p or "high" in p:     return f'<span class="pri pri-p2">P2 High</span>'
+    if "p3" in p or "medium" in p:   return f'<span class="pri pri-p3">P3 Medium</span>'
+    return f'<span class="pri pri-p4">P4 Low</span>'
 
-def confidence_color(conf: float) -> str:
-    if conf >= 0.8: return "#4ade80"
-    if conf >= 0.6: return "#fb923c"
+def conf_color(c: float) -> str:
+    if c >= 0.8: return "#4ade80"
+    if c >= 0.6: return "#fbbf24"
     return "#f87171"
 
-def rubric_color(score: int) -> str:
-    if score >= 4: return "#4ade80"
-    if score >= 3: return "#fbbf24"
+def score_color(s) -> str:
+    s = float(s) if s else 0
+    if s >= 4: return "#4ade80"
+    if s >= 3: return "#fbbf24"
     return "#f87171"
 
-def rubric_bar(label: str, score: int, max_score: int = 5) -> str:
-    pct = (score / max_score) * 100
-    color = rubric_color(score)
+def cascade_pill(method: str) -> str:
+    pills = {
+        "centroid": ("FAST PATH", "pill-green"),
+        "llm_judge": ("LLM JUDGE", "pill-amber"),
+        "escalated": ("ESCALATED", "pill-red"),
+        "novel_ticket": ("NOVEL", "pill-purple"),
+        "similarity_search": ("SIMILARITY", "pill-blue"),
+    }
+    text, cls = pills.get(method, ("UNKNOWN", "pill-blue"))
+    return f'<span class="pill {cls}">{text}</span>'
+
+def decision_pill(decision: str) -> str:
+    pills = {
+        "AUTO_ROUTE": "pill-green",
+        "ROUTE_WITH_LLM_ASSIST": "pill-amber",
+        "ESCALATE_LOW_CONFIDENCE": "pill-red",
+        "ESCALATE_NOVEL": "pill-purple",
+    }
+    cls = pills.get(decision, "pill-blue")
+    return f'<span class="pill {cls}">{decision}</span>'
+
+def render_rubric_bar(label: str, score, max_s: int = 5) -> str:
+    s = int(score) if score else 0
+    pct = (s / max_s) * 100
+    color = score_color(s)
     return f"""
-    <div class="rubric-label">
-        <span>{label}</span>
-        <span style="color:{color}; font-weight:600;">{score}/{max_score}</span>
-    </div>
-    <div style="background:rgba(51,65,85,0.6); border-radius:4px; overflow:hidden;">
-        <div class="rubric-bar" style="width:{pct}%; background:{color};"></div>
+    <div style="margin-bottom: 14px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+            <span style="color:#94a3b8; font-size:0.82rem; font-weight:500;">{label}</span>
+            <span style="color:{color}; font-weight:700; font-size:0.85rem; font-family:'JetBrains Mono';">{s}/{max_s}</span>
+        </div>
+        <div style="background:rgba(51,65,85,0.4); border-radius:6px; overflow:hidden; height:6px;">
+            <div style="width:{pct}%; height:100%; background:linear-gradient(90deg, {color}, {color}88);
+                        border-radius:6px; transition: width 0.5s ease;"></div>
+        </div>
     </div>
     """
 
-CASCADE_BADGES = {
-    "centroid": ("⚡ FAST PATH", "#22c55e", "rgba(34,197,94,0.15)"),
-    "llm_judge": ("🧠 LLM JUDGE", "#f59e0b", "rgba(245,158,11,0.15)"),
-    "escalated": ("🚨 ESCALATED", "#ef4444", "rgba(239,68,68,0.15)"),
-    "novel_ticket": ("🆕 NOVEL TICKET", "#a855f7", "rgba(168,85,247,0.15)"),
-    "similarity_search": ("🔍 SIMILARITY", "#3b82f6", "rgba(59,130,246,0.15)"),
-}
 
-
-# ── FULL PIPELINE EXECUTION ──────────────────────────────────
+# ── Full Pipeline ────────────────────────────────────────────
 def run_full_pipeline(title: str, desc: str, enable_rag: bool):
-    """Run the complete intelligence pipeline and store results in session."""
     result = {}
     
-    with st.status("🔗 Nexus AI initializing analysis...", expanded=True) as status:
-        # Stage 1: Classification
-        st.write("🔄 Running classification cascade...")
+    with st.status("Running intelligence pipeline...", expanded=True) as status:
+        st.write("⬡ Extracting semantic embeddings...")
         clf = load_classifier()
         classification = clf.classify(title, desc)
         result["classification"] = classification
-        time.sleep(0.3)
+        time.sleep(0.2)
         
-        # Stage 2: Triage Agent
-        st.write("🔄 Engaging TriageAgent...")
-        agents = load_agent()
-        agentric_layer, triage_agent, res_agent, auto_agent = agents
+        st.write("⬡ Triage agent routing...")
+        _, triage_agent, res_agent, auto_agent = load_agents()
         ticket = {"title": title, "description": desc}
         triage_result = triage_agent.run(ticket, classification)
         result["triage"] = triage_result
-        time.sleep(0.2)
+        time.sleep(0.15)
         
-        # Stage 3: RAG retrieval + ranking
-        st.write("🔄 Retrieving & ranking evidence...")
+        st.write("⬡ Retrieving & ranking historical evidence...")
         rag = load_rag_engine()
         rag_result = rag.suggest_resolution(title, desc)
         result["rag"] = rag_result
-        # Also get ranked chunks separately for ResolutionAgent
         query_embedding = rag.embedding_model.encode(f"{title} {desc}").tolist()
         raw_results = rag.collection.query(
             query_embeddings=[query_embedding], n_results=6,
@@ -308,17 +442,15 @@ def run_full_pipeline(title: str, desc: str, enable_rag: bool):
         )
         ranked_chunks = rag._rank_retrieved_chunks(raw_results)[:3]
         result["ranked_chunks"] = ranked_chunks
-        time.sleep(0.2)
+        time.sleep(0.15)
         
         if enable_rag:
-            # Stage 4: Resolution Agent
-            st.write("🔄 ResolutionAgent generating structured fix...")
+            st.write("⬡ Resolution agent generating fix...")
             res_result = res_agent.run(ticket, ranked_chunks)
             result["resolution"] = res_result
-            time.sleep(0.2)
+            time.sleep(0.15)
             
-            # Stage 5: Judge
-            st.write("🔄 LLM-as-Judge evaluating resolution quality...")
+            st.write("⬡ Quality judge evaluating resolution...")
             judge = load_judge()
             resolution_text = "\n".join(res_result.get("resolution_steps", []))
             judge_result = judge.judge(
@@ -326,10 +458,9 @@ def run_full_pipeline(title: str, desc: str, enable_rag: bool):
                 resolution_text
             )
             result["judge"] = judge_result
-            time.sleep(0.2)
+            time.sleep(0.15)
             
-            # Stage 6: Automation Discovery (post-resolution)
-            st.write("🔄 AutomationDiscoveryAgent scanning patterns...")
+            st.write("⬡ Scanning for automation patterns...")
             auto_result = auto_agent.run({
                 "title": title, "description": desc,
                 "category": classification.get("category", "Unknown"),
@@ -339,7 +470,6 @@ def run_full_pipeline(title: str, desc: str, enable_rag: bool):
         else:
             result["resolution"] = None
             result["judge"] = None
-            # Still run automation discovery
             auto_result = auto_agent.run({
                 "title": title, "description": desc,
                 "category": classification.get("category", "Unknown"),
@@ -347,74 +477,99 @@ def run_full_pipeline(title: str, desc: str, enable_rag: bool):
             })
             result["automation"] = auto_result
         
-        status.update(label="✅ Full Pipeline Complete", state="complete", expanded=False)
+        status.update(label="Pipeline complete", state="complete", expanded=False)
     
     result["title"] = title
     result["description"] = desc
     return result
 
 
-# ── Main Content: 5 Tabs ─────────────────────────────────────
+# ── 5-Tab Layout ─────────────────────────────────────────────
 tab_submit, tab_classify, tab_rag, tab_agent, tab_judge = st.tabs([
-    "🎫 Submit Ticket", "🧠 Classification", "🔍 RAG Evidence",
-    "🤖 Agent Decisions", "⚖️ Resolution + Judge"
+    "Submit Ticket", "Classification", "RAG Evidence",
+    "Agent Decisions", "Resolution + Judge"
 ])
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 1: SUBMIT TICKET (UI-01)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━ TAB 1: SUBMIT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_submit:
     st.markdown("<br>", unsafe_allow_html=True)
     
-    col_input, col_status = st.columns([1.2, 1], gap="large")
+    col_input, col_result = st.columns([1.3, 1], gap="large")
     
     with col_input:
-        st.markdown('<h4>Describe the Issue</h4>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title"><span class="section-icon">📝</span>New Ticket</div>', unsafe_allow_html=True)
+        
         with st.form("ticket_form", clear_on_submit=False):
             ticket_title = st.text_input(
-                "Subject Line",
-                placeholder="e.g., VPN connection drops after 5 minutes with error 619"
+                "Subject",
+                placeholder="VPN connection drops after 5 minutes with error 619"
             )
             ticket_desc = st.text_area(
-                "Issue Details",
-                placeholder="Provide context: error messages, affected users, timestamps, logs...",
-                height=220
+                "Description",
+                placeholder="Provide full context: error messages, affected users, timestamps, recent changes...",
+                height=200
             )
-            submitted = st.form_submit_button("⚡ Engage Full AI Pipeline", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("Run Pipeline", use_container_width=True, type="primary")
     
-    with col_status:
+    with col_result:
         if submitted and ticket_title and ticket_desc:
             result = run_full_pipeline(ticket_title, ticket_desc, generate_resolution)
             st.session_state.pipeline_result = result
             
-            # Quick summary card
             clf = result["classification"]
+            judge = result.get("judge", {})
+            triage = result.get("triage", {})
+            
+            # Pipeline summary card
+            gate = judge.get("safety_gate", "N/A") if judge else "N/A"
+            gate_color = "#4ade80" if gate == "PASS" else ("#f87171" if gate == "BLOCKED" else "#64748b")
+            
             st.markdown(f"""
-            <div class="glass-panel animated-content">
-                <h4>⚡ Pipeline Summary</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="color:#94a3b8;">Category</span>
-                    <strong style="color:#c084fc;">{clf.get('category', 'N/A')}</strong>
+            <div class="glass-accent animate-in" style="margin-bottom: 16px;">
+                <div class="section-title" style="margin-bottom: 14px; border: none; padding: 0;">
+                    <span class="section-icon">⚡</span>Pipeline Result
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="color:#94a3b8;">Confidence</span>
-                    <strong style="color:{confidence_color(clf.get('confidence', 0))};">{clf.get('confidence', 0):.1%}</strong>
+                <div class="kv">
+                    <span class="kv-key">Category</span>
+                    <span class="kv-val" style="color:#c084fc;">{clf.get('category', 'N/A')}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="color:#94a3b8;">Route To</span>
-                    <strong style="color:#e2e8f0;">{clf.get('department', 'N/A')}</strong>
+                <div class="kv">
+                    <span class="kv-key">Confidence</span>
+                    <span class="kv-val" style="color:{conf_color(clf.get('confidence', 0))}; font-family:'JetBrains Mono';">
+                        {clf.get('confidence', 0):.1%}
+                    </span>
                 </div>
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#94a3b8;">Safety Gate</span>
-                    <strong style="color:{'#4ade80' if result.get('judge', {}).get('safety_gate') == 'PASS' else '#f87171'};">
-                        {result.get('judge', {}).get('safety_gate', 'N/A')}
-                    </strong>
+                <div class="kv">
+                    <span class="kv-key">Route To</span>
+                    <span class="kv-val" style="color:#e2e8f0;">{clf.get('department', 'N/A')}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Cascade</span>
+                    {cascade_pill(clf.get('method', 'centroid'))}
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Triage</span>
+                    {decision_pill(triage.get('decision', 'N/A'))}
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Safety Gate</span>
+                    <span class="kv-val" style="color:{gate_color}; font-weight:700;">{gate}</span>
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
-            st.info("👉 Navigate to the other tabs to inspect each pipeline stage in detail.")
+            # Pipeline step indicator
+            steps_html = ""
+            stages = ["Classify", "Triage", "RAG", "Resolve", "Judge", "Auto"]
+            for i, s in enumerate(stages):
+                steps_html += f'<span class="step step-done">{s}</span>'
+                if i < len(stages) - 1:
+                    steps_html += '<span class="step-arrow">→</span>'
+            
+            st.markdown(f'<div class="step-flow" style="margin-top:8px;">{steps_html}</div>', unsafe_allow_html=True)
+            
+            st.markdown('<p style="color:#475569; font-size:0.8rem; margin-top:12px;">Navigate tabs to inspect each stage →</p>', unsafe_allow_html=True)
             
             # Save to history
             st.session_state.history.append({
@@ -424,27 +579,56 @@ with tab_submit:
                 "confidence": clf.get("confidence"),
                 "priority": clf.get("priority_suggestion", "P3 Medium"),
                 "method": clf.get("method"),
-                "safety_gate": result.get("judge", {}).get("safety_gate", "N/A"),
-                "escalated": result.get("triage", {}).get("escalate", False),
+                "safety_gate": gate,
+                "escalated": triage.get("escalate", False),
             })
-            
-            st.toast("Pipeline complete! Check all tabs.", icon="✅")
+            st.toast("Pipeline complete", icon="✅")
             
         elif submitted:
-            st.error("⚠️ Please provide both a Subject and Issue Details.")
+            st.error("Please provide both a subject and description.")
         
         elif st.session_state.pipeline_result is None:
             st.markdown("""
-            <div class="glass-panel" style="text-align:center; padding:3rem;">
-                <p style="color:#64748b; font-size:1.1rem;">Submit a ticket to see the full pipeline in action</p>
-                <p style="color:#475569; font-size:0.9rem;">Classification → RAG → Agents → Resolution → Judge</p>
+            <div class="glass" style="text-align:center; padding: 48px 24px;">
+                <div style="font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4;">⚡</div>
+                <p style="color:#64748b; font-size: 0.9rem; font-weight: 500; margin: 0;">
+                    Submit a ticket to engage the pipeline
+                </p>
+                <p style="color:#334155; font-size: 0.78rem; margin-top: 8px;">
+                    Classify → Triage → RAG → Resolve → Judge → Automate
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Show previous result
+            clf = st.session_state.pipeline_result["classification"]
+            judge = st.session_state.pipeline_result.get("judge", {})
+            triage = st.session_state.pipeline_result.get("triage", {})
+            gate = judge.get("safety_gate", "N/A") if judge else "N/A"
+            gate_color = "#4ade80" if gate == "PASS" else ("#f87171" if gate == "BLOCKED" else "#64748b")
+            
+            st.markdown(f"""
+            <div class="glass-accent">
+                <div class="section-title" style="margin-bottom: 14px; border: none; padding: 0;">
+                    <span class="section-icon">⚡</span>Last Pipeline Result
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Category</span>
+                    <span class="kv-val" style="color:#c084fc;">{clf.get('category', 'N/A')}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Confidence</span>
+                    <span class="kv-val" style="color:{conf_color(clf.get('confidence', 0))}; font-family:'JetBrains Mono';">{clf.get('confidence', 0):.1%}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Safety Gate</span>
+                    <span class="kv-val" style="color:{gate_color}; font-weight:700;">{gate}</span>
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 2: CLASSIFICATION (UI-02)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━ TAB 2: CLASSIFICATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_classify:
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
@@ -455,102 +639,86 @@ with tab_classify:
         clf = pr["classification"]
         conf = clf.get("confidence", 0)
         cat = clf.get("category", "Unknown")
-        dept = clf.get("department", "N/A")
         method = clf.get("method", "centroid")
         is_novel = clf.get("is_novel", False)
-        pri = clf.get("priority_suggestion", "P3 Medium")
         
-        # Cascade path badge
-        badge_text, badge_color, badge_bg = CASCADE_BADGES.get(
-            method, ("❓ UNKNOWN", "#94a3b8", "rgba(148,163,184,0.15)")
-        )
+        # Top cascade badge
+        st.markdown(f'<div style="text-align:center; margin-bottom:20px;">{cascade_pill(method)}</div>', unsafe_allow_html=True)
         
-        st.markdown(f"""
-        <div style="text-align:center; margin-bottom:16px;">
-            <span style="background:{badge_bg}; color:{badge_color}; border:1px solid {badge_color};
-                         padding:8px 24px; border-radius:24px; font-weight:700; font-size:1.1rem;
-                         letter-spacing:1px;">
-                {badge_text}
-            </span>
-        </div>
-        """, unsafe_allow_html=True)
+        col1, col2 = st.columns([1, 1], gap="large")
         
-        col_clf1, col_clf2 = st.columns([1, 1], gap="large")
-        
-        with col_clf1:
-            # Classification details
+        with col1:
             st.markdown(f"""
-            <div class="glass-panel">
-                <h4>🎯 Classification Result</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span style="color:#94a3b8;">Predicted Category</span>
-                    <strong style="color:#c084fc; font-size:1.1rem;">{cat}</strong>
+            <div class="glass">
+                <div class="section-title"><span class="section-icon">🎯</span>Classification Result</div>
+                <div class="kv">
+                    <span class="kv-key">Category</span>
+                    <span class="kv-val" style="color:#c084fc;">{cat}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span style="color:#94a3b8;">Target Department</span>
-                    <strong style="color:#e2e8f0;">{dept}</strong>
+                <div class="kv">
+                    <span class="kv-key">Department</span>
+                    <span class="kv-val" style="color:#e2e8f0;">{clf.get('department', 'N/A')}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span style="color:#94a3b8;">System Confidence</span>
-                    <strong style="color:{confidence_color(conf)}; font-size:1.1rem;">{conf:.1%}</strong>
+                <div class="kv">
+                    <span class="kv-key">Confidence</span>
+                    <span class="kv-val" style="color:{conf_color(conf)}; font-family:'JetBrains Mono';">{conf:.1%}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span style="color:#94a3b8;">Cascade Path</span>
-                    <strong style="color:{badge_color};">{badge_text}</strong>
+                <div class="kv">
+                    <span class="kv-key">Cascade Path</span>
+                    {cascade_pill(method)}
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <span style="color:#94a3b8;">Novel Ticket?</span>
-                    <strong style="color:{'#a855f7' if is_novel else '#4ade80'};">{'🆕 YES' if is_novel else '✅ NO'}</strong>
+                <div class="kv">
+                    <span class="kv-key">Novel Ticket</span>
+                    <span class="kv-val" style="color:{'#c084fc' if is_novel else '#4ade80'};">{'Yes' if is_novel else 'No'}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#94a3b8;">Priority Suggestion</span>
-                    {priority_badge(pri)}
+                <div class="kv">
+                    <span class="kv-key">Priority</span>
+                    {priority_pill(clf.get('priority_suggestion', 'P3 Medium'))}
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
-            # LLM Judge rationale (if medium-confidence path was taken)
             llm_rationale = clf.get("llm_rationale")
             if llm_rationale:
                 st.markdown(f"""
-                <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
-                            border-radius:8px; padding:10px 14px; margin-top:8px;
-                            color:#fde68a; font-size:0.88rem;">
-                    <strong>LLM Judge Rationale:</strong> {llm_rationale}
+                <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.12);
+                            border-radius:10px; padding:14px 16px; margin-top:12px;
+                            color:#fde68a; font-size:0.84rem; line-height:1.6;">
+                    <strong style="color:#fbbf24;">LLM Judge Rationale</strong><br>
+                    <span style="color:#cbd5e1;">{llm_rationale}</span>
                 </div>
                 """, unsafe_allow_html=True)
         
-        with col_clf2:
-            # Category scores bar chart
+        with col2:
             scores = clf.get("all_scores", {})
             if scores:
-                fig_scores = go.Figure(go.Bar(
-                    x=list(scores.values()),
-                    y=list(scores.keys()),
+                sorted_scores = dict(sorted(scores.items(), key=lambda x: x[1]))
+                
+                fig = go.Figure(go.Bar(
+                    x=list(sorted_scores.values()),
+                    y=list(sorted_scores.keys()),
                     orientation='h',
                     marker=dict(
-                        color=['#c084fc' if k == cat else '#334155' for k in scores.keys()],
+                        color=['rgba(192,132,252,0.8)' if k == cat else 'rgba(51,65,85,0.5)' for k in sorted_scores.keys()],
                         line=dict(width=0)
                     ),
-                    text=[f"{v:.1%}" for v in scores.values()],
+                    text=[f"{v:.0%}" for v in sorted_scores.values()],
                     textposition='outside',
-                    textfont=dict(color='#e2e8f0')
+                    textfont=dict(color='#94a3b8', size=12, family="JetBrains Mono")
                 ))
-                fig_scores.update_layout(
-                    height=280, margin=dict(l=0, r=40, t=10, b=0),
+                fig.update_layout(
+                    height=260, margin=dict(l=0, r=50, t=8, b=0),
                     paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(color='#94a3b8', size=11, family="Outfit"),
+                    font=dict(color='#94a3b8', size=12, family="Inter"),
                     xaxis=dict(showgrid=False, range=[0, 1], visible=False),
-                    yaxis=dict(showgrid=False, tickfont=dict(size=12))
+                    yaxis=dict(showgrid=False, tickfont=dict(size=13, family="Inter"))
                 )
-                st.markdown('<div class="glass-panel"><h4>📊 Category Confidence Scores</h4>', unsafe_allow_html=True)
-                st.plotly_chart(fig_scores, use_container_width=True, config={'displayModeBar': False})
+                st.markdown('<div class="glass"><div class="section-title"><span class="section-icon">📊</span>Confidence Scores</div>', unsafe_allow_html=True)
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 3: RAG EVIDENCE (UI-03)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━ TAB 3: RAG EVIDENCE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_rag:
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
@@ -559,13 +727,12 @@ with tab_rag:
         st.info("Submit a ticket first to see RAG evidence.")
     else:
         ranked_chunks = pr.get("ranked_chunks", [])
-        rag_result = pr.get("rag", {})
         
         if not ranked_chunks:
             st.warning("No similar tickets found in the vector store.")
         else:
-            st.markdown("### 🏆 Hop 1 — Ranked Evidence Chunks")
-            st.caption("Chunks ranked by: **Semantic (60%)** + **Recency (20%)** + **Outcome (20%)**")
+            st.markdown('<div class="section-title"><span class="section-icon">🏆</span>Ranked Evidence — Hop 1</div>', unsafe_allow_html=True)
+            st.markdown('<p style="color:#475569; font-size:0.78rem; margin-top:-10px; margin-bottom:16px;">Scoring: Semantic (60%) · Recency (20%) · Outcome (20%)</p>', unsafe_allow_html=True)
             
             for i, chunk in enumerate(ranked_chunks):
                 sem = chunk.get("semantic", 0)
@@ -574,52 +741,43 @@ with tab_rag:
                 final = chunk.get("final_score", 0)
                 meta = chunk.get("metadata", {})
                 
+                sc = score_color(final * 5)  # normalize 0-1 to 0-5 scale for color
+                
                 st.markdown(f"""
-                <div class="glass-panel">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <h4 style="margin:0; border:none; padding:0;">#{i+1} — {chunk.get('id', 'N/A')}</h4>
-                        <span style="background:rgba(129,140,248,0.15); color:#818cf8; padding:4px 14px;
-                                     border-radius:20px; font-weight:700; font-size:0.95rem;">
-                            Score: {final:.2f}
+                <div class="glass" style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <span style="color:#e2e8f0; font-weight:600; font-size:0.9rem;">
+                            #{i+1} · {chunk.get('id', 'N/A')}
+                        </span>
+                        <span class="pill pill-indigo" style="font-family:'JetBrains Mono';">
+                            {final:.2f}
                         </span>
                     </div>
-                    <div style="display:flex; gap:16px; margin-bottom:12px;">
-                        <span style="color:#94a3b8; font-size:0.82rem;">
-                            🎯 Semantic: <strong style="color:#c084fc;">{sem:.2f}</strong>
-                        </span>
-                        <span style="color:#94a3b8; font-size:0.82rem;">
-                            📅 Recency: <strong style="color:#fbbf24;">{rec:.2f}</strong>
-                        </span>
-                        <span style="color:#94a3b8; font-size:0.82rem;">
-                            ✅ Outcome: <strong style="color:#4ade80;">{out:.2f}</strong>
-                        </span>
+                    <div style="display:flex; gap:16px; margin-bottom:14px;">
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(192,132,252,0.06); border-radius:8px;">
+                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Semantic</div>
+                            <div style="color:#c084fc; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{sem:.2f}</div>
+                        </div>
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(251,191,36,0.06); border-radius:8px;">
+                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Recency</div>
+                            <div style="color:#fbbf24; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{rec:.2f}</div>
+                        </div>
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(74,222,128,0.06); border-radius:8px;">
+                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Outcome</div>
+                            <div style="color:#4ade80; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{out:.2f}</div>
+                        </div>
                     </div>
-                    <div style="color:#cbd5e1; font-size:0.9rem; margin-bottom:8px;">
-                        <strong>Issue:</strong> {chunk.get('document', '')[:250]}
+                    <div style="color:#cbd5e1; font-size:0.84rem; line-height:1.6; margin-bottom:10px;">
+                        {chunk.get('document', '')[:280]}
                     </div>
-                    <div style="color:#94a3b8; font-size:0.85rem; border-top:1px solid #334155; padding-top:8px;">
-                        <strong>Past Resolution:</strong> {meta.get('resolution', 'N/A')[:300]}
+                    <div style="color:#64748b; font-size:0.8rem; border-top:1px solid rgba(148,163,184,0.06); padding-top:10px;">
+                        <span style="color:#94a3b8; font-weight:500;">Past fix:</span> {meta.get('resolution', 'N/A')[:250]}
                     </div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        # Hop 2 — Multi-hop KB context
-        context = rag_result.get("context_used", "")
-        if "Hop 2" in context:
-            hop2_text = context.split("## Linked Category DB Insight (Hop 2):")[1].strip() if "## Linked Category DB Insight (Hop 2):" in context else ""
-            if hop2_text and "No additional" not in hop2_text:
-                st.markdown("### 🔗 Hop 2 — Category KB Cross-Reference")
-                st.markdown(f"""
-                <div class="glass-panel" style="border-left:3px solid #a855f7;">
-                    <h4 style="color:#c084fc;">Linked Knowledge Base Insights</h4>
-                    <div style="color:#cbd5e1; font-size:0.9rem; white-space:pre-wrap;">{hop2_text}</div>
                 </div>
                 """, unsafe_allow_html=True)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 4: AGENT DECISIONS (UI-04)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━ TAB 4: AGENT DECISIONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_agent:
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
@@ -630,91 +788,98 @@ with tab_agent:
         triage = pr.get("triage", {})
         auto = pr.get("automation", {})
         
-        # ── Triage Agent ──
-        st.markdown("### 🏥 TriageAgent")
-        decision = triage.get("decision", "N/A")
-        escalate = triage.get("escalate", False)
-        urgency = triage.get("urgency_boost", False)
+        col_t, col_a = st.columns([1, 1], gap="large")
         
-        decision_colors = {
-            "AUTO_ROUTE": ("#22c55e", "rgba(34,197,94,0.1)"),
-            "ROUTE_WITH_LLM_ASSIST": ("#f59e0b", "rgba(245,158,11,0.1)"),
-            "ESCALATE_LOW_CONFIDENCE": ("#ef4444", "rgba(239,68,68,0.1)"),
-            "ESCALATE_NOVEL": ("#a855f7", "rgba(168,85,247,0.1)"),
-        }
-        d_color, d_bg = decision_colors.get(decision, ("#94a3b8", "rgba(148,163,184,0.1)"))
-        
-        st.markdown(f"""
-        <div class="glass-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h4 style="margin:0; border:none; padding:0;">Routing Decision</h4>
-                <span style="background:{d_bg}; color:{d_color}; border:1px solid {d_color};
-                             padding:6px 16px; border-radius:20px; font-weight:700;">
-                    {decision}
-                </span>
-            </div>
-            <div style="color:#cbd5e1; font-size:0.9rem; margin-bottom:10px;">
-                <strong>Rationale:</strong> {triage.get('rationale', 'N/A')}
-            </div>
-            <div style="display:flex; gap:20px;">
-                <span style="color:#94a3b8;">Route To: <strong style="color:#e2e8f0;">{triage.get('route_to', 'N/A')}</strong></span>
-                <span style="color:#94a3b8;">Escalate: <strong style="color:{'#ef4444' if escalate else '#4ade80'};">{'YES' if escalate else 'NO'}</strong></span>
-                <span style="color:#94a3b8;">Urgency Boost: <strong style="color:{'#f59e0b' if urgency else '#4ade80'};">{'⚠ YES' if urgency else 'NO'}</strong></span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if urgency:
-            keywords = triage.get("urgency_keywords", [])
+        with col_t:
+            decision = triage.get("decision", "N/A")
+            escalate = triage.get("escalate", False)
+            urgency = triage.get("urgency_boost", False)
+            
             st.markdown(f"""
-            <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
-                        border-radius:8px; padding:10px 14px; color:#fde68a; font-size:0.88rem;">
-                <strong>⚠ Urgency Keywords Detected:</strong> {', '.join(keywords)}
+            <div class="glass">
+                <div class="section-title"><span class="section-icon">🏥</span>TriageAgent</div>
+                <div class="kv">
+                    <span class="kv-key">Decision</span>
+                    {decision_pill(decision)}
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Route To</span>
+                    <span class="kv-val" style="color:#e2e8f0;">{triage.get('route_to', 'N/A')}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Escalate</span>
+                    <span class="kv-val" style="color:{'#f87171' if escalate else '#4ade80'};">{'Yes' if escalate else 'No'}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Urgency Boost</span>
+                    <span class="kv-val" style="color:{'#fbbf24' if urgency else '#4ade80'};">{'Yes' if urgency else 'No'}</span>
+                </div>
+                <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(148,163,184,0.06);">
+                    <div style="color:#64748b; font-size:0.78rem; font-weight:500; margin-bottom:4px;">Rationale</div>
+                    <div style="color:#cbd5e1; font-size:0.84rem; line-height:1.6;">{triage.get('rationale', 'N/A')}</div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
+            
+            if escalate:
+                st.markdown(f"""
+                <div class="banner-danger" style="margin-top:12px;">
+                    <div style="color:#fca5a5; font-weight:700; font-size:0.85rem; margin-bottom:4px;">🚨 Escalation Triggered</div>
+                    <div style="color:#fecaca; font-size:0.82rem;">{triage.get('rationale', '')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            if urgency:
+                keywords = triage.get("urgency_keywords", [])
+                st.markdown(f"""
+                <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.12);
+                            border-radius:10px; padding:12px; margin-top:10px;">
+                    <span style="color:#fbbf24; font-size:0.8rem; font-weight:600;">⚡ Urgency keywords:</span>
+                    <span style="color:#fde68a; font-size:0.8rem;"> {', '.join(keywords)}</span>
+                </div>
+                """, unsafe_allow_html=True)
         
-        if escalate:
+        with col_a:
+            should_auto = auto.get("should_automate", False)
+            pattern_count = auto.get("pattern_count", 0)
+            
             st.markdown(f"""
-            <div class="escalation-banner" style="margin-top:12px;">
-                <h4 style="margin:0;color:#fca5a5;">🚨 ESCALATION PROTOCOL INITIATED</h4>
-                <p style="margin:5px 0 0 0;font-size:0.9rem;">{triage.get('rationale', '')}</p>
+            <div class="glass">
+                <div class="section-title"><span class="section-icon">🤖</span>AutomationDiscovery</div>
+                <div class="kv">
+                    <span class="kv-key">Pattern Match</span>
+                    <span class="pill {'pill-blue' if should_auto else 'pill-green'}">
+                        {'AUTOMATE' if should_auto else 'NO PATTERN'}
+                    </span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Similar Tickets</span>
+                    <span class="kv-val" style="color:#e2e8f0; font-family:'JetBrains Mono';">{pattern_count}</span>
+                </div>
+                <div class="kv">
+                    <span class="kv-key">Threshold</span>
+                    <span class="kv-val" style="color:#64748b; font-family:'JetBrains Mono';">{config.REPEAT_THRESHOLD}</span>
+                </div>
             </div>
             """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        # ── Automation Discovery Agent ──
-        st.markdown("### 🤖 AutomationDiscoveryAgent")
-        should_auto = auto.get("should_automate", False)
-        pattern_count = auto.get("pattern_count", 0)
-        
-        st.markdown(f"""
-        <div class="glass-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h4 style="margin:0; border:none; padding:0;">Pattern Detection</h4>
-                <span style="background:{'rgba(59,130,246,0.15)' if should_auto else 'rgba(34,197,94,0.1)'};
-                             color:{'#3b82f6' if should_auto else '#4ade80'};
-                             border:1px solid {'#3b82f6' if should_auto else '#4ade80'};
-                             padding:6px 16px; border-radius:20px; font-weight:700;">
-                    {'🤖 AUTOMATION SUGGESTED' if should_auto else '✅ NO PATTERN'}
-                </span>
-            </div>
-            <div style="color:#94a3b8;">Similar tickets found: <strong style="color:#e2e8f0;">{pattern_count}</strong> (threshold: {config.REPEAT_THRESHOLD})</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if should_auto:
-            st.markdown(f"""
-            <div class="automation-banner">
-                <h4 style="margin:0;color:#93c5fd;">🤖 RUNBOOK AUTOMATION TRIGGERED</h4>
-                <p style="margin:5px 0 0 0;font-size:0.9rem;">{auto.get('suggested_runbook', 'N/A')}</p>
-            </div>
-            """, unsafe_allow_html=True)
+            
+            if should_auto:
+                st.markdown(f"""
+                <div class="banner-info" style="margin-top:12px;">
+                    <div style="color:#93c5fd; font-weight:700; font-size:0.85rem; margin-bottom:6px;">🤖 Runbook Suggested</div>
+                    <div style="color:#bfdbfe; font-size:0.82rem; line-height:1.6;">{auto.get('suggested_runbook', 'N/A')}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown("""
+                <div style="padding: 24px; text-align: center; margin-top: 12px;">
+                    <div style="color:#334155; font-size:2rem; margin-bottom:8px;">✓</div>
+                    <p style="color:#475569; font-size:0.82rem;">No recurring pattern detected. This appears to be a unique or low-frequency issue.</p>
+                </div>
+                """, unsafe_allow_html=True)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 5: RESOLUTION + JUDGE (UI-05)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ━━━ TAB 5: RESOLUTION + JUDGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_judge:
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
@@ -722,81 +887,99 @@ with tab_judge:
     if pr is None:
         st.info("Submit a ticket first to see resolution and judge results.")
     elif pr.get("resolution") is None:
-        st.warning("Enable **🧠 Generative RAG** in the sidebar and resubmit to see resolution + judge.")
+        st.warning("Enable **Full Resolution** in the sidebar and resubmit.")
     else:
         res = pr["resolution"]
         judge = pr.get("judge", {})
         
-        col_res, col_judge = st.columns([1.2, 1], gap="large")
+        col_res, col_jdg = st.columns([1.2, 1], gap="large")
         
         with col_res:
-            st.markdown("### 🔧 Resolution Steps")
             steps = res.get("resolution_steps", [])
             res_conf = res.get("confidence", 0)
             
             st.markdown(f"""
-            <div class="glass-panel">
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                    <h4 style="margin:0; border:none; padding:0;">AI-Generated Resolution</h4>
-                    <span style="color:{confidence_color(res_conf)}; font-weight:600;">
-                        Confidence: {res_conf:.0%}
+            <div class="glass">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <div class="section-title" style="margin:0; border:none; padding:0;">
+                        <span class="section-icon">🔧</span>Resolution Steps
+                    </div>
+                    <span style="color:{conf_color(res_conf)}; font-weight:600; font-size:0.82rem; font-family:'JetBrains Mono';">
+                        {res_conf:.0%} conf
                     </span>
                 </div>
             """, unsafe_allow_html=True)
             
             for i, step in enumerate(steps):
                 st.markdown(f"""
-                <div style="background:rgba(30,41,59,0.5); border-radius:8px; padding:10px 14px;
-                            margin-bottom:8px; border-left:3px solid #818cf8; color:#e2e8f0; font-size:0.9rem;">
-                    {step}
+                <div style="display:flex; gap:12px; margin-bottom:10px; align-items:flex-start;">
+                    <div style="min-width:24px; height:24px; border-radius:6px; background:rgba(99,102,241,0.12);
+                                color:#818cf8; font-size:0.75rem; font-weight:700; display:flex; align-items:center;
+                                justify-content:center; margin-top:2px;">{i+1}</div>
+                    <div style="color:#cbd5e1; font-size:0.85rem; line-height:1.65; flex:1;">{step}</div>
                 </div>
                 """, unsafe_allow_html=True)
             
             st.markdown("</div>", unsafe_allow_html=True)
             
-            # Source tickets
             source_ids = res.get("source_ids", [])
             if source_ids:
-                st.caption(f"📚 Evidence sources: {', '.join(source_ids)}")
+                st.markdown(f'<p style="color:#475569; font-size:0.75rem; margin-top:8px;">Sources: {", ".join(source_ids)}</p>', unsafe_allow_html=True)
         
-        with col_judge:
-            st.markdown("### ⚖️ Quality Rubric")
-            
+        with col_jdg:
             if not judge:
-                st.warning("Judge results not available.")
+                st.warning("Judge results unavailable.")
             else:
-                # Safety gate banner
                 gate = judge.get("safety_gate", "PASS")
+                overall = float(judge.get("overall", 0))
+                
+                # Safety gate banner
                 if gate == "PASS":
                     st.markdown("""
-                    <div class="safety-pass">
-                        <strong>🛡️ SAFETY GATE: PASS</strong> — Resolution is safe for auto-deployment.
+                    <div class="banner-success" style="margin-bottom: 16px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.2rem;">🛡️</span>
+                            <div>
+                                <div style="color:#4ade80; font-weight:700; font-size:0.85rem;">SAFETY GATE: PASS</div>
+                                <div style="color:#86efac; font-size:0.78rem;">Safe for auto-deployment</div>
+                            </div>
+                        </div>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown("""
-                    <div class="safety-blocked">
-                        <strong>🚫 SAFETY GATE: BLOCKED</strong> — Resolution flagged as potentially dangerous. Requires human review.
+                    <div class="banner-danger" style="margin-bottom: 16px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.2rem;">🚫</span>
+                            <div>
+                                <div style="color:#f87171; font-weight:700; font-size:0.85rem;">SAFETY GATE: BLOCKED</div>
+                                <div style="color:#fca5a5; font-size:0.78rem;">Requires human review</div>
+                            </div>
+                        </div>
                     </div>
                     """, unsafe_allow_html=True)
                 
-                st.markdown("<br>", unsafe_allow_html=True)
-                
-                # Rubric scores
+                # Overall score ring
+                ring_color = score_color(overall)
                 st.markdown(f"""
-                <div class="glass-panel">
-                    <h4>📊 4-Axis Evaluation</h4>
-                    {rubric_bar("Correctness", judge.get("correctness", 0))}
-                    {rubric_bar("Completeness", judge.get("completeness", 0))}
-                    {rubric_bar("Safety", judge.get("safety", 0))}
-                    {rubric_bar("Clarity", judge.get("clarity", 0))}
-                    <div style="border-top:1px solid #334155; padding-top:10px; margin-top:8px;
-                                display:flex; justify-content:space-between;">
-                        <span style="color:#94a3b8; font-weight:600;">Overall Score</span>
-                        <span style="color:{rubric_color(int(judge.get('overall', 0)))}; font-size:1.3rem; font-weight:700;">
-                            {judge.get('overall', 0):.1f}/5.0
-                        </span>
+                <div class="glass" style="text-align:center; padding:20px; margin-bottom:16px;">
+                    <div class="score-ring" style="border: 3px solid {ring_color}; color:{ring_color};">
+                        {overall:.1f}
                     </div>
+                    <div style="color:#64748b; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
+                        Overall Score
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Rubric bars
+                st.markdown(f"""
+                <div class="glass">
+                    <div class="section-title" style="margin-bottom:12px;"><span class="section-icon">📊</span>Quality Rubric</div>
+                    {render_rubric_bar("Correctness", judge.get("correctness", 0))}
+                    {render_rubric_bar("Completeness", judge.get("completeness", 0))}
+                    {render_rubric_bar("Safety", judge.get("safety", 0))}
+                    {render_rubric_bar("Clarity", judge.get("clarity", 0))}
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -804,8 +987,9 @@ with tab_judge:
                 critique = judge.get("critique", "")
                 if critique:
                     st.markdown(f"""
-                    <div class="glass-panel" style="border-left:3px solid #f59e0b;">
-                        <h4 style="color:#fde68a;">💬 Judge Critique</h4>
-                        <p style="color:#cbd5e1; font-size:0.9rem;">{critique}</p>
+                    <div style="background:rgba(245,158,11,0.04); border:1px solid rgba(245,158,11,0.1);
+                                border-radius:10px; padding:14px; margin-top:12px;">
+                        <div style="color:#fbbf24; font-size:0.78rem; font-weight:600; margin-bottom:6px;">Judge Critique</div>
+                        <div style="color:#94a3b8; font-size:0.82rem; line-height:1.6;">{critique}</div>
                     </div>
                     """, unsafe_allow_html=True)
