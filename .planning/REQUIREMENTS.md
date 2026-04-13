@@ -37,10 +37,10 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Evaluation (LLM-as-Judge)
 
-- [ ] **JUDGE-01**: System evaluates resolutions on 4 rubric axes: correctness (1-5), completeness (1-5), safety (1-5), clarity (1-5)
-- [ ] **JUDGE-02**: System returns structured JSON with per-axis scores, overall score, and critique
-- [ ] **JUDGE-03**: Safety hard-gate blocks resolutions with safety < 3 from auto-resolve path
-- [ ] **JUDGE-04**: System uses Groq free tier for judge calls (separate from resolution LLM)
+- [x] **JUDGE-01**: System evaluates resolutions on 4 rubric axes: correctness (1-5), completeness (1-5), safety (1-5), clarity (1-5) — ✅ Verified
+- [x] **JUDGE-02**: System returns structured JSON with per-axis scores, overall score, and critique — ✅ All 8 keys verified
+- [x] **JUDGE-03**: Safety hard-gate blocks resolutions with safety < 3 from auto-resolve path — ✅ DROP DATABASE blocked
+- [x] **JUDGE-04**: System uses Groq free tier for judge calls (separate from resolution LLM) — ✅ Groq API verified
 
 ### Unified UI
 
@@ -103,10 +103,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RESOLVE-02 | Phase 4 | Complete |
 | AUTODISC-01 | Phase 4 | Complete |
 | AUTODISC-02 | Phase 4 | Complete |
-| JUDGE-01 | Phase 5 | Pending |
-| JUDGE-02 | Phase 5 | Pending |
-| JUDGE-03 | Phase 5 | Pending |
-| JUDGE-04 | Phase 5 | Pending |
+| JUDGE-01 | Phase 5 | Complete |
+| JUDGE-02 | Phase 5 | Complete |
+| JUDGE-03 | Phase 5 | Complete |
+| JUDGE-04 | Phase 5 | Complete |
 | UI-01 | Phase 6 | Pending |
 | UI-02 | Phase 6 | Pending |
 | UI-03 | Phase 6 | Pending |
