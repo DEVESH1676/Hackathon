@@ -1,6 +1,12 @@
 """
-🎫 Intelligent Ticket Routing & Resolution Agent
-Streamlit Dashboard — Hackathon Demo (Premium Version)
+⚡ Nexus AI Ticket Intelligence Platform — v3.0
+Streamlit Dashboard with 5-Tab Progressive Disclosure UI
+
+Tab 1: 🎫 Submit Ticket — form input for title and description
+Tab 2: 🧠 Classification — cascade result, confidence, novelty flag
+Tab 3: 🔍 RAG Evidence — ranked chunks with multi-hop results and scores
+Tab 4: 🤖 Agent Decisions — which agent fired, decision, rationale
+Tab 5: ⚖️ Resolution + Judge — resolution steps, rubric scores, safety gate
 """
 import streamlit as st
 import pandas as pd
@@ -109,6 +115,17 @@ st.markdown("""
         border-left: 4px solid #3b82f6; border-radius: 8px;
         padding: 1.2rem; color: #bfdbfe; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
     }
+    .safety-pass {
+        background: linear-gradient(90deg, rgba(21, 128, 61, 0.6) 0%, rgba(22, 163, 74, 0.3) 100%);
+        border-left: 4px solid #22c55e; border-radius: 8px;
+        padding: 1rem; color: #bbf7d0;
+    }
+    .safety-blocked {
+        background: linear-gradient(90deg, rgba(153, 27, 27, 0.8) 0%, rgba(185, 28, 28, 0.4) 100%);
+        border-left: 4px solid #ef4444; border-radius: 8px;
+        padding: 1rem; color: #fca5a5;
+        animation: pulseGlow 2s infinite;
+    }
     
     /* ── User Inputs ── */
     .stTextInput input, .stTextArea textarea {
@@ -133,15 +150,23 @@ st.markdown("""
     }
     
     /* ── Tabs ── */
-    .stTabs [data-baseweb="tab-list"] { gap: 12px; border-bottom: none; }
+    .stTabs [data-baseweb="tab-list"] { gap: 8px; border-bottom: none; }
     .stTabs [data-baseweb="tab"] {
         background: rgba(30, 41, 59, 0.5); border-radius: 10px;
-        border: 1px solid transparent; color: #94a3b8; padding: 10px 24px; font-weight: 500;
+        border: 1px solid transparent; color: #94a3b8; padding: 10px 20px; font-weight: 500;
         transition: all 0.2s ease;
     }
     .stTabs [aria-selected="true"] {
         background: rgba(129, 140, 248, 0.1) !important;
         color: #818cf8 !important; border: 1px solid rgba(129, 140, 248, 0.3);
+    }
+    
+    /* ── Rubric Score Bars ── */
+    .rubric-bar {
+        height: 8px; border-radius: 4px; margin: 4px 0 12px 0;
+    }
+    .rubric-label {
+        display: flex; justify-content: space-between; color: #cbd5e1; font-size: 0.85rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -160,47 +185,52 @@ def load_rag_engine():
 
 @st.cache_resource(show_spinner="Loading agent reasoning...")
 def load_agent():
-    from core.agent import AgenticLayer
-    return AgenticLayer()
+    from core.agent import AgenticLayer, TriageAgent, ResolutionAgent, AutomationDiscoveryAgent
+    return AgenticLayer(), TriageAgent(), ResolutionAgent(), AutomationDiscoveryAgent()
+
+@st.cache_resource(show_spinner="Initializing quality judge...")
+def load_judge():
+    from core.judge import ResolutionJudge
+    return ResolutionJudge()
 
 @st.cache_data(show_spinner=False)
 def load_ticket_data():
-    csv_path = os.path.join(os.path.dirname(__file__), "data", "synthetic_tickets.csv")
-    if os.path.exists(csv_path):
-        return pd.read_csv(csv_path)
+    # Try merged file first, then fallback
+    for fname in ["synthetic_tickets_merged.csv", "synthetic_tickets.csv"]:
+        csv_path = os.path.join(os.path.dirname(__file__), "data", fname)
+        if os.path.exists(csv_path):
+            return pd.read_csv(csv_path)
     return pd.DataFrame()
 
 
 # ── Session State Init ───────────────────────────────────────
 if "history" not in st.session_state:
     st.session_state.history = []
+if "pipeline_result" not in st.session_state:
+    st.session_state.pipeline_result = None
 
 
 # ── Sidebar ──────────────────────────────────────────────────
 with st.sidebar:
     st.markdown('<p class="hero-title">Nexus Agent</p>', unsafe_allow_html=True)
-    st.markdown('<p class="hero-sub">L1 Support Automation</p>', unsafe_allow_html=True)
+    st.markdown('<p class="hero-sub">v3.0 — Agentic Intelligence</p>', unsafe_allow_html=True)
     st.divider()
     
     st.markdown("#### 🎛️ Agent Control Panel")
-    confidence_threshold = st.slider(
-        "Human Escalation Threshold", 0.0, 1.0, config.CONFIDENCE_THRESHOLD, 0.05,
-        help="Tickets falling below this confidence score bypass the AI and route immediately to Human L2 Triage."
-    )
-    similarity_threshold = st.slider(
-        "Automation Trigger Threshold", 0.0, 1.0, config.SIMILARITY_THRESHOLD, 0.05,
-        help="If >3 past tickets match a new issue above this similarity, an automated runbook is attached."
-    )
-    generate_resolution = st.toggle("🧠 Enable Generative RAG", value=False,
-        help="Forces Ollama/Groq to compose a final step-by-step resolution synthesized from past fixes."
+    generate_resolution = st.toggle("🧠 Enable Generative RAG", value=True,
+        help="Run the full RAG + Resolution + Judge pipeline on submission."
     )
     
     st.divider()
     st.markdown("#### ⚡ Infrastructure")
-    st.markdown(f'<div style="color:#94a3b8; font-size:0.85rem;"><b>Reasoning:</b> {config.OLLAMA_MODEL}<br><b>Vectors:</b> {config.EMBEDDING_MODEL_NAME}<br><b>Storage:</b> ChromaDB Enterprise</div>', unsafe_allow_html=True)
+    llm_label = f"Groq ({config.GROQ_MODEL})" if config.USE_GROQ else f"Ollama ({config.OLLAMA_MODEL})"
+    st.markdown(f'<div style="color:#94a3b8; font-size:0.85rem;">'
+                f'<b>LLM:</b> {llm_label}<br>'
+                f'<b>Vectors:</b> {config.EMBEDDING_MODEL_NAME}<br>'
+                f'<b>Storage:</b> ChromaDB Local</div>', unsafe_allow_html=True)
     
     st.divider()
-    st.caption("Hackathon MVP Build · Deployed Local")
+    st.caption("Nexus AI · v3.0 Milestone · Deployed Local")
 
 
 # ── Helper Functions ─────────────────────────────────────────
@@ -216,152 +246,283 @@ def confidence_color(conf: float) -> str:
     if conf >= 0.6: return "#fb923c"
     return "#f87171"
 
+def rubric_color(score: int) -> str:
+    if score >= 4: return "#4ade80"
+    if score >= 3: return "#fbbf24"
+    return "#f87171"
 
-# ── Main Content ─────────────────────────────────────────────
-tab_submit, tab_dashboard, tab_history = st.tabs([
-    "🚀 Submit Ticket", "📊 Nexus Analytics", "📋 Agent Log"
+def rubric_bar(label: str, score: int, max_score: int = 5) -> str:
+    pct = (score / max_score) * 100
+    color = rubric_color(score)
+    return f"""
+    <div class="rubric-label">
+        <span>{label}</span>
+        <span style="color:{color}; font-weight:600;">{score}/{max_score}</span>
+    </div>
+    <div style="background:rgba(51,65,85,0.6); border-radius:4px; overflow:hidden;">
+        <div class="rubric-bar" style="width:{pct}%; background:{color};"></div>
+    </div>
+    """
+
+CASCADE_BADGES = {
+    "centroid": ("⚡ FAST PATH", "#22c55e", "rgba(34,197,94,0.15)"),
+    "llm_judge": ("🧠 LLM JUDGE", "#f59e0b", "rgba(245,158,11,0.15)"),
+    "escalated": ("🚨 ESCALATED", "#ef4444", "rgba(239,68,68,0.15)"),
+    "novel_ticket": ("🆕 NOVEL TICKET", "#a855f7", "rgba(168,85,247,0.15)"),
+    "similarity_search": ("🔍 SIMILARITY", "#3b82f6", "rgba(59,130,246,0.15)"),
+}
+
+
+# ── FULL PIPELINE EXECUTION ──────────────────────────────────
+def run_full_pipeline(title: str, desc: str, enable_rag: bool):
+    """Run the complete intelligence pipeline and store results in session."""
+    result = {}
+    
+    with st.status("🔗 Nexus AI initializing analysis...", expanded=True) as status:
+        # Stage 1: Classification
+        st.write("🔄 Running classification cascade...")
+        clf = load_classifier()
+        classification = clf.classify(title, desc)
+        result["classification"] = classification
+        time.sleep(0.3)
+        
+        # Stage 2: Triage Agent
+        st.write("🔄 Engaging TriageAgent...")
+        agents = load_agent()
+        agentric_layer, triage_agent, res_agent, auto_agent = agents
+        ticket = {"title": title, "description": desc}
+        triage_result = triage_agent.run(ticket, classification)
+        result["triage"] = triage_result
+        time.sleep(0.2)
+        
+        # Stage 3: RAG retrieval + ranking
+        st.write("🔄 Retrieving & ranking evidence...")
+        rag = load_rag_engine()
+        rag_result = rag.suggest_resolution(title, desc)
+        result["rag"] = rag_result
+        # Also get ranked chunks separately for ResolutionAgent
+        query_embedding = rag.embedding_model.encode(f"{title} {desc}").tolist()
+        raw_results = rag.collection.query(
+            query_embeddings=[query_embedding], n_results=6,
+            include=["documents", "metadatas", "distances"]
+        )
+        ranked_chunks = rag._rank_retrieved_chunks(raw_results)[:3]
+        result["ranked_chunks"] = ranked_chunks
+        time.sleep(0.2)
+        
+        if enable_rag:
+            # Stage 4: Resolution Agent
+            st.write("🔄 ResolutionAgent generating structured fix...")
+            res_result = res_agent.run(ticket, ranked_chunks)
+            result["resolution"] = res_result
+            time.sleep(0.2)
+            
+            # Stage 5: Judge
+            st.write("🔄 LLM-as-Judge evaluating resolution quality...")
+            judge = load_judge()
+            resolution_text = "\n".join(res_result.get("resolution_steps", []))
+            judge_result = judge.judge(
+                {"title": title, "description": desc, "category": classification.get("category", "Unknown")},
+                resolution_text
+            )
+            result["judge"] = judge_result
+            time.sleep(0.2)
+            
+            # Stage 6: Automation Discovery (post-resolution)
+            st.write("🔄 AutomationDiscoveryAgent scanning patterns...")
+            auto_result = auto_agent.run({
+                "title": title, "description": desc,
+                "category": classification.get("category", "Unknown"),
+                "resolution": resolution_text,
+            })
+            result["automation"] = auto_result
+        else:
+            result["resolution"] = None
+            result["judge"] = None
+            # Still run automation discovery
+            auto_result = auto_agent.run({
+                "title": title, "description": desc,
+                "category": classification.get("category", "Unknown"),
+                "resolution": "",
+            })
+            result["automation"] = auto_result
+        
+        status.update(label="✅ Full Pipeline Complete", state="complete", expanded=False)
+    
+    result["title"] = title
+    result["description"] = desc
+    return result
+
+
+# ── Main Content: 5 Tabs ─────────────────────────────────────
+tab_submit, tab_classify, tab_rag, tab_agent, tab_judge = st.tabs([
+    "🎫 Submit Ticket", "🧠 Classification", "🔍 RAG Evidence",
+    "🤖 Agent Decisions", "⚖️ Resolution + Judge"
 ])
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 1: SUBMIT TICKET
+# TAB 1: SUBMIT TICKET (UI-01)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_submit:
     st.markdown("<br>", unsafe_allow_html=True)
     
-    col_input, col_result = st.columns([1.2, 1], gap="large")
+    col_input, col_status = st.columns([1.2, 1], gap="large")
     
     with col_input:
         st.markdown('<h4>Describe the Issue</h4>', unsafe_allow_html=True)
         with st.form("ticket_form", clear_on_submit=False):
             ticket_title = st.text_input(
                 "Subject Line",
-                placeholder="e.g., Critical database latency on primary US-East cluster"
+                placeholder="e.g., VPN connection drops after 5 minutes with error 619"
             )
             ticket_desc = st.text_area(
                 "Issue Details",
-                placeholder="Provide as much context as possible. Output from logs, application errors, impacted users...",
+                placeholder="Provide context: error messages, affected users, timestamps, logs...",
                 height=220
             )
-            submitted = st.form_submit_button("⚡ Engage AI Analysis", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("⚡ Engage Full AI Pipeline", use_container_width=True, type="primary")
     
-    with col_result:
+    with col_status:
         if submitted and ticket_title and ticket_desc:
+            result = run_full_pipeline(ticket_title, ticket_desc, generate_resolution)
+            st.session_state.pipeline_result = result
             
-            # Interactive Status Loading
-            with st.status("🔗 Nexus AI initializing analysis...", expanded=True) as status:
-                st.write("Extracting semantic embeddings...")
-                clf = load_classifier()
-                time.sleep(0.4)
-                
-                st.write("Running classification cascade...")
-                classification = clf.classify(ticket_title, ticket_desc)
-                time.sleep(0.3)
-                
-                st.write("Evaluating escalation and automation pathways...")
-                agent = load_agent()
-                agent_result = agent.process(ticket_title, ticket_desc, classification)
-                time.sleep(0.3)
-                
-                status.update(label="✅ Analysis Complete", state="complete", expanded=False)
-            
-            # Display Results in Animated Div
-            st.markdown('<div class="animated-content">', unsafe_allow_html=True)
-            
-            conf = classification["confidence"]
-            cat = classification["category"]
-            dept = classification["department"]
-            pri = classification["priority_suggestion"]
-            
-            # ── Agent Actions (High Priority Visuals) ──
-            if agent_result.get("requires_human"):
-                for action in agent_result["agent_actions"]:
-                    if action["type"] == "ESCALATE":
-                        st.markdown(f"""
-                        <div class="escalation-banner">
-                            <h4 style="margin:0;color:#fca5a5;">🚨 ESCALATION PROTOCOL INITIATED</h4>
-                            <p style="margin:5px 0 0 0;font-size:0.9rem;">{action['reason']}</p>
-                            <p style="margin:5px 0 0 0;font-size:0.85rem;opacity:0.8;">Action: {action['action']}</p>
-                        </div>
-                        <br>
-                        """, unsafe_allow_html=True)
-            
-            if agent_result.get("suggests_automation"):
-                for action in agent_result["agent_actions"]:
-                    if action["type"] == "SUGGEST_AUTOMATION":
-                        st.markdown(f"""
-                        <div class="automation-banner">
-                            <h4 style="margin:0;color:#93c5fd;">🤖 RUNBOOK AUTOMATION TRIGGERED</h4>
-                            <p style="margin:5px 0 0 0;font-size:0.9rem;">{action['reason']}</p>
-                            <p style="margin:5px 0 0 0;font-size:0.85rem;opacity:0.8;">Action: {action['action']}</p>
-                        </div>
-                        <br>
-                        """, unsafe_allow_html=True)
-            
-            # ── Cascade Path Badge ──
-            cascade_method = classification.get("method", "centroid")
-            is_novel = classification.get("is_novel", False)
-            llm_rationale = classification.get("llm_rationale")
-
-            cascade_badges = {
-                "centroid": ("⚡ FAST PATH", "#22c55e", "rgba(34,197,94,0.15)"),
-                "llm_judge": ("🧠 LLM JUDGE", "#f59e0b", "rgba(245,158,11,0.15)"),
-                "escalated": ("🚨 ESCALATED", "#ef4444", "rgba(239,68,68,0.15)"),
-                "novel_ticket": ("🆕 NOVEL TICKET", "#a855f7", "rgba(168,85,247,0.15)"),
-                "similarity_search": ("🔍 SIMILARITY", "#3b82f6", "rgba(59,130,246,0.15)"),
-            }
-            badge_text, badge_color, badge_bg = cascade_badges.get(
-                cascade_method, ("❓ UNKNOWN", "#94a3b8", "rgba(148,163,184,0.15)")
-            )
-
+            # Quick summary card
+            clf = result["classification"]
             st.markdown(f"""
-            <div style="text-align:center; margin-bottom:12px;">
-                <span style="background:{badge_bg}; color:{badge_color}; border:1px solid {badge_color};
-                             padding:6px 18px; border-radius:24px; font-weight:700; font-size:0.95rem;
-                             letter-spacing:1px;">
-                    {badge_text}
-                </span>
+            <div class="glass-panel animated-content">
+                <h4>⚡ Pipeline Summary</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span style="color:#94a3b8;">Category</span>
+                    <strong style="color:#c084fc;">{clf.get('category', 'N/A')}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span style="color:#94a3b8;">Confidence</span>
+                    <strong style="color:{confidence_color(clf.get('confidence', 0))};">{clf.get('confidence', 0):.1%}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span style="color:#94a3b8;">Route To</span>
+                    <strong style="color:#e2e8f0;">{clf.get('department', 'N/A')}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:#94a3b8;">Safety Gate</span>
+                    <strong style="color:{'#4ade80' if result.get('judge', {}).get('safety_gate') == 'PASS' else '#f87171'};">
+                        {result.get('judge', {}).get('safety_gate', 'N/A')}
+                    </strong>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.info("👉 Navigate to the other tabs to inspect each pipeline stage in detail.")
+            
+            # Save to history
+            st.session_state.history.append({
+                "title": ticket_title,
+                "category": clf.get("category"),
+                "department": clf.get("department"),
+                "confidence": clf.get("confidence"),
+                "priority": clf.get("priority_suggestion", "P3 Medium"),
+                "method": clf.get("method"),
+                "safety_gate": result.get("judge", {}).get("safety_gate", "N/A"),
+                "escalated": result.get("triage", {}).get("escalate", False),
+            })
+            
+            st.toast("Pipeline complete! Check all tabs.", icon="✅")
+            
+        elif submitted:
+            st.error("⚠️ Please provide both a Subject and Issue Details.")
+        
+        elif st.session_state.pipeline_result is None:
+            st.markdown("""
+            <div class="glass-panel" style="text-align:center; padding:3rem;">
+                <p style="color:#64748b; font-size:1.1rem;">Submit a ticket to see the full pipeline in action</p>
+                <p style="color:#475569; font-size:0.9rem;">Classification → RAG → Agents → Resolution → Judge</p>
             </div>
             """, unsafe_allow_html=True)
 
-            if llm_rationale:
-                st.markdown(f"""
-                <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
-                            border-radius:8px; padding:10px 14px; margin-bottom:12px;
-                            color:#fde68a; font-size:0.88rem;">
-                    <strong>LLM Judge Rationale:</strong> {llm_rationale}
-                </div>
-                """, unsafe_allow_html=True)
 
-            # ── Beautiful Classification Result Box ──
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# TAB 2: CLASSIFICATION (UI-02)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+with tab_classify:
+    st.markdown("<br>", unsafe_allow_html=True)
+    pr = st.session_state.pipeline_result
+    
+    if pr is None:
+        st.info("Submit a ticket first to see classification results.")
+    else:
+        clf = pr["classification"]
+        conf = clf.get("confidence", 0)
+        cat = clf.get("category", "Unknown")
+        dept = clf.get("department", "N/A")
+        method = clf.get("method", "centroid")
+        is_novel = clf.get("is_novel", False)
+        pri = clf.get("priority_suggestion", "P3 Medium")
+        
+        # Cascade path badge
+        badge_text, badge_color, badge_bg = CASCADE_BADGES.get(
+            method, ("❓ UNKNOWN", "#94a3b8", "rgba(148,163,184,0.15)")
+        )
+        
+        st.markdown(f"""
+        <div style="text-align:center; margin-bottom:16px;">
+            <span style="background:{badge_bg}; color:{badge_color}; border:1px solid {badge_color};
+                         padding:8px 24px; border-radius:24px; font-weight:700; font-size:1.1rem;
+                         letter-spacing:1px;">
+                {badge_text}
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col_clf1, col_clf2 = st.columns([1, 1], gap="large")
+        
+        with col_clf1:
+            # Classification details
             st.markdown(f"""
             <div class="glass-panel">
-                <h4>🎯 Routing Vectors</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+                <h4>🎯 Classification Result</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <span style="color:#94a3b8;">Predicted Category</span>
                     <strong style="color:#c084fc; font-size:1.1rem;">{cat}</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <span style="color:#94a3b8;">Target Department</span>
                     <strong style="color:#e2e8f0;">{dept}</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <span style="color:#94a3b8;">System Confidence</span>
                     <strong style="color:{confidence_color(conf)}; font-size:1.1rem;">{conf:.1%}</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                     <span style="color:#94a3b8;">Cascade Path</span>
                     <strong style="color:{badge_color};">{badge_text}</strong>
                 </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <span style="color:#94a3b8;">Novel Ticket?</span>
+                    <strong style="color:{'#a855f7' if is_novel else '#4ade80'};">{'🆕 YES' if is_novel else '✅ NO'}</strong>
+                </div>
                 <div style="display:flex; justify-content:space-between;">
-                    <span style="color:#94a3b8;">Urgency Class</span>
+                    <span style="color:#94a3b8;">Priority Suggestion</span>
                     {priority_badge(pri)}
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
-            # ── Category Scores Bar ──
-            scores = classification.get("all_scores", {})
+            # LLM Judge rationale (if medium-confidence path was taken)
+            llm_rationale = clf.get("llm_rationale")
+            if llm_rationale:
+                st.markdown(f"""
+                <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
+                            border-radius:8px; padding:10px 14px; margin-top:8px;
+                            color:#fde68a; font-size:0.88rem;">
+                    <strong>LLM Judge Rationale:</strong> {llm_rationale}
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with col_clf2:
+            # Category scores bar chart
+            scores = clf.get("all_scores", {})
             if scores:
                 fig_scores = go.Figure(go.Bar(
                     x=list(scores.values()),
@@ -376,164 +537,275 @@ with tab_submit:
                     textfont=dict(color='#e2e8f0')
                 ))
                 fig_scores.update_layout(
-                    height=200, margin=dict(l=0, r=30, t=10, b=0),
+                    height=280, margin=dict(l=0, r=40, t=10, b=0),
                     paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
                     font=dict(color='#94a3b8', size=11, family="Outfit"),
                     xaxis=dict(showgrid=False, range=[0, 1], visible=False),
                     yaxis=dict(showgrid=False, tickfont=dict(size=12))
                 )
+                st.markdown('<div class="glass-panel"><h4>📊 Category Confidence Scores</h4>', unsafe_allow_html=True)
                 st.plotly_chart(fig_scores, use_container_width=True, config={'displayModeBar': False})
+                st.markdown('</div>', unsafe_allow_html=True)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# TAB 3: RAG EVIDENCE (UI-03)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+with tab_rag:
+    st.markdown("<br>", unsafe_allow_html=True)
+    pr = st.session_state.pipeline_result
+    
+    if pr is None:
+        st.info("Submit a ticket first to see RAG evidence.")
+    else:
+        ranked_chunks = pr.get("ranked_chunks", [])
+        rag_result = pr.get("rag", {})
+        
+        if not ranked_chunks:
+            st.warning("No similar tickets found in the vector store.")
+        else:
+            st.markdown("### 🏆 Hop 1 — Ranked Evidence Chunks")
+            st.caption("Chunks ranked by: **Semantic (60%)** + **Recency (20%)** + **Outcome (20%)**")
             
-            # ── RAG UI (Chatbot style) ──
-            if generate_resolution:
-                st.markdown('<h4 style="color:#f1f5f9; margin-top:20px;">🤖 Synthesized Resolution</h4>', unsafe_allow_html=True)
-                with st.spinner("Compiling past data points..."):
-                    rag = load_rag_engine()
-                    rag_result = rag.suggest_resolution(ticket_title, ticket_desc)
+            for i, chunk in enumerate(ranked_chunks):
+                sem = chunk.get("semantic", 0)
+                rec = chunk.get("recency", 0)
+                out = chunk.get("outcome", 0)
+                final = chunk.get("final_score", 0)
+                meta = chunk.get("metadata", {})
                 
-                with st.chat_message("assistant", avatar="✨"):
-                    st.markdown(rag_result['suggested_resolution'])
-                    with st.expander("📚 View Reference Vectors", expanded=False):
-                        for i, doc in enumerate(rag_result['context_docs']):
-                            st.caption(f"**Doc {i+1}:** {doc[:150]}...")
-            
-            # ── Similar Tickets ──
-            similar = classification.get("similar_tickets", [])
-            if similar and not generate_resolution:
-                with st.expander("🔍 Explore Historical Matches based on Cosine Similarity", expanded=False):
-                    for i, t in enumerate(similar):
-                        st.markdown(f"""
-                        <div style="padding:10px; background:rgba(30,41,59,0.3); border-radius:8px; margin-bottom:8px; border-left:3px solid #818cf8;">
-                            <strong>{i+1}.</strong> {priority_badge(t['priority'])} <span style="color:#94a3b8;">({t['category']})</span><br>
-                            <span style="font-size:0.85rem; color:#cbd5e1;">Match: {t['similarity']:.1%}</span><br>
-                            <div style="font-size:0.85rem; margin-top:5px;"><em>"{t['document'][:140]}..."</em></div>
-                        </div>
-                        """, unsafe_allow_html=True)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            # ── Save to History ──
-            st.session_state.history.append({
-                "title": ticket_title,
-                "category": cat,
-                "department": dept,
-                "confidence": conf,
-                "priority": pri,
-                "method": cascade_method,
-                "is_novel": is_novel,
-                "escalated": agent_result.get("requires_human", False)
-            })
-            
-            # Success Toast
-            st.toast('Analysis processed successfully!', icon='✅')
-            if conf > 0.90:
-                st.balloons()
-            
-        elif submitted:
-            st.error("⚠️ Diagnostics halted. Please input both Subject and Details.")
+                st.markdown(f"""
+                <div class="glass-panel">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <h4 style="margin:0; border:none; padding:0;">#{i+1} — {chunk.get('id', 'N/A')}</h4>
+                        <span style="background:rgba(129,140,248,0.15); color:#818cf8; padding:4px 14px;
+                                     border-radius:20px; font-weight:700; font-size:0.95rem;">
+                            Score: {final:.2f}
+                        </span>
+                    </div>
+                    <div style="display:flex; gap:16px; margin-bottom:12px;">
+                        <span style="color:#94a3b8; font-size:0.82rem;">
+                            🎯 Semantic: <strong style="color:#c084fc;">{sem:.2f}</strong>
+                        </span>
+                        <span style="color:#94a3b8; font-size:0.82rem;">
+                            📅 Recency: <strong style="color:#fbbf24;">{rec:.2f}</strong>
+                        </span>
+                        <span style="color:#94a3b8; font-size:0.82rem;">
+                            ✅ Outcome: <strong style="color:#4ade80;">{out:.2f}</strong>
+                        </span>
+                    </div>
+                    <div style="color:#cbd5e1; font-size:0.9rem; margin-bottom:8px;">
+                        <strong>Issue:</strong> {chunk.get('document', '')[:250]}
+                    </div>
+                    <div style="color:#94a3b8; font-size:0.85rem; border-top:1px solid #334155; padding-top:8px;">
+                        <strong>Past Resolution:</strong> {meta.get('resolution', 'N/A')[:300]}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Hop 2 — Multi-hop KB context
+        context = rag_result.get("context_used", "")
+        if "Hop 2" in context:
+            hop2_text = context.split("## Linked Category DB Insight (Hop 2):")[1].strip() if "## Linked Category DB Insight (Hop 2):" in context else ""
+            if hop2_text and "No additional" not in hop2_text:
+                st.markdown("### 🔗 Hop 2 — Category KB Cross-Reference")
+                st.markdown(f"""
+                <div class="glass-panel" style="border-left:3px solid #a855f7;">
+                    <h4 style="color:#c084fc;">Linked Knowledge Base Insights</h4>
+                    <div style="color:#cbd5e1; font-size:0.9rem; white-space:pre-wrap;">{hop2_text}</div>
+                </div>
+                """, unsafe_allow_html=True)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 2: ANALYTICS DASHBOARD
+# TAB 4: AGENT DECISIONS (UI-04)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-with tab_dashboard:
+with tab_agent:
     st.markdown("<br>", unsafe_allow_html=True)
-    df = load_ticket_data()
+    pr = st.session_state.pipeline_result
     
-    if df.empty:
-        st.warning("Database empty. Vectorize data before visualizing analytics.")
+    if pr is None:
+        st.info("Submit a ticket first to see agent decisions.")
     else:
-        # ── Glassmorphism Metric Row ──
-        m1, m2, m3, m4 = st.columns(4)
-        m1.markdown(f"""<div class="metric-card">
-            <h2>{len(df)}</h2><p>Tickets Processed</p></div>""", unsafe_allow_html=True)
+        triage = pr.get("triage", {})
+        auto = pr.get("automation", {})
         
-        m2.markdown(f"""<div class="metric-card">
-            <h2>{df['category'].nunique()}</h2><p>Clusters</p></div>""", unsafe_allow_html=True)
+        # ── Triage Agent ──
+        st.markdown("### 🏥 TriageAgent")
+        decision = triage.get("decision", "N/A")
+        escalate = triage.get("escalate", False)
+        urgency = triage.get("urgency_boost", False)
         
-        p1_count = len(df[df['priority'].str.contains('P1', case=False, na=False)])
-        m3.markdown(f"""<div class="metric-card">
-            <h2 style="color:#fca5a5;">{p1_count}</h2><p>Critical P1</p></div>""", unsafe_allow_html=True)
+        decision_colors = {
+            "AUTO_ROUTE": ("#22c55e", "rgba(34,197,94,0.1)"),
+            "ROUTE_WITH_LLM_ASSIST": ("#f59e0b", "rgba(245,158,11,0.1)"),
+            "ESCALATE_LOW_CONFIDENCE": ("#ef4444", "rgba(239,68,68,0.1)"),
+            "ESCALATE_NOVEL": ("#a855f7", "rgba(168,85,247,0.1)"),
+        }
+        d_color, d_bg = decision_colors.get(decision, ("#94a3b8", "rgba(148,163,184,0.1)"))
         
-        session_count = len(st.session_state.history)
-        escalated = sum(1 for h in st.session_state.history if h.get("escalated"))
-        rate = f"{escalated/session_count:.0%}" if session_count > 0 else "N/A"
-        m4.markdown(f"""<div class="metric-card">
-            <h2 style="color:#93c5fd;">{rate}</h2><p>L2 Escalation Rate</p></div>""", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="glass-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="margin:0; border:none; padding:0;">Routing Decision</h4>
+                <span style="background:{d_bg}; color:{d_color}; border:1px solid {d_color};
+                             padding:6px 16px; border-radius:20px; font-weight:700;">
+                    {decision}
+                </span>
+            </div>
+            <div style="color:#cbd5e1; font-size:0.9rem; margin-bottom:10px;">
+                <strong>Rationale:</strong> {triage.get('rationale', 'N/A')}
+            </div>
+            <div style="display:flex; gap:20px;">
+                <span style="color:#94a3b8;">Route To: <strong style="color:#e2e8f0;">{triage.get('route_to', 'N/A')}</strong></span>
+                <span style="color:#94a3b8;">Escalate: <strong style="color:{'#ef4444' if escalate else '#4ade80'};">{'YES' if escalate else 'NO'}</strong></span>
+                <span style="color:#94a3b8;">Urgency Boost: <strong style="color:{'#f59e0b' if urgency else '#4ade80'};">{'⚠ YES' if urgency else 'NO'}</strong></span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("<br><br>", unsafe_allow_html=True)
+        if urgency:
+            keywords = triage.get("urgency_keywords", [])
+            st.markdown(f"""
+            <div style="background:rgba(245,158,11,0.08); border-left:3px solid #f59e0b;
+                        border-radius:8px; padding:10px 14px; color:#fde68a; font-size:0.88rem;">
+                <strong>⚠ Urgency Keywords Detected:</strong> {', '.join(keywords)}
+            </div>
+            """, unsafe_allow_html=True)
         
-        # ── Charts Row ──
-        chart1, chart2 = st.columns(2)
+        if escalate:
+            st.markdown(f"""
+            <div class="escalation-banner" style="margin-top:12px;">
+                <h4 style="margin:0;color:#fca5a5;">🚨 ESCALATION PROTOCOL INITIATED</h4>
+                <p style="margin:5px 0 0 0;font-size:0.9rem;">{triage.get('rationale', '')}</p>
+            </div>
+            """, unsafe_allow_html=True)
         
-        with chart1:
-            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
-            cat_counts = df['category'].value_counts()
-            fig_pie = px.pie(
-                values=cat_counts.values, names=cat_counts.index,
-                title="Semantic Distribution",
-                color_discrete_sequence=px.colors.sequential.PuRd_r,
-                hole=0.6
-            )
-            fig_pie.update_traces(textinfo='percent', hoverinfo='label+value', rotation=45)
-            fig_pie.update_layout(
-                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='#cbd5e1', family="Outfit"), height=320,
-                margin=dict(l=0, r=0, t=40, b=0), showlegend=True,
-                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.85)
-            )
-            st.plotly_chart(fig_pie, use_container_width=True, config={'displayModeBar': False})
-            st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        with chart2:
-            st.markdown('<div class="glass-panel">', unsafe_allow_html=True)
-            pri_counts = df['priority'].value_counts()
-            colors_map = {
-                'P1 Critical': '#ef4444', 'P2 High': '#f97316',
-                'P3 Medium': '#3b82f6', 'P4 Low': '#22c55e'
-            }
-            fig_bar = px.bar(
-                x=pri_counts.index, y=pri_counts.values,
-                title="Priority Heatmap",
-                color=pri_counts.index, color_discrete_map=colors_map,
-                text=pri_counts.values
-            )
-            fig_bar.update_layout(
-                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='#cbd5e1', family="Outfit"), height=320,
-                margin=dict(l=0, r=0, t=40, b=0),
-                xaxis=dict(showgrid=False, title=""), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title=""),
-                showlegend=False
-            )
-            fig_bar.update_traces(textposition='outside')
-            st.plotly_chart(fig_bar, use_container_width=True, config={'displayModeBar': False})
-            st.markdown('</div>', unsafe_allow_html=True)
+        # ── Automation Discovery Agent ──
+        st.markdown("### 🤖 AutomationDiscoveryAgent")
+        should_auto = auto.get("should_automate", False)
+        pattern_count = auto.get("pattern_count", 0)
+        
+        st.markdown(f"""
+        <div class="glass-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="margin:0; border:none; padding:0;">Pattern Detection</h4>
+                <span style="background:{'rgba(59,130,246,0.15)' if should_auto else 'rgba(34,197,94,0.1)'};
+                             color:{'#3b82f6' if should_auto else '#4ade80'};
+                             border:1px solid {'#3b82f6' if should_auto else '#4ade80'};
+                             padding:6px 16px; border-radius:20px; font-weight:700;">
+                    {'🤖 AUTOMATION SUGGESTED' if should_auto else '✅ NO PATTERN'}
+                </span>
+            </div>
+            <div style="color:#94a3b8;">Similar tickets found: <strong style="color:#e2e8f0;">{pattern_count}</strong> (threshold: {config.REPEAT_THRESHOLD})</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if should_auto:
+            st.markdown(f"""
+            <div class="automation-banner">
+                <h4 style="margin:0;color:#93c5fd;">🤖 RUNBOOK AUTOMATION TRIGGERED</h4>
+                <p style="margin:5px 0 0 0;font-size:0.9rem;">{auto.get('suggested_runbook', 'N/A')}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TAB 3: TICKET HISTORY
+# TAB 5: RESOLUTION + JUDGE (UI-05)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-with tab_history:
+with tab_judge:
     st.markdown("<br>", unsafe_allow_html=True)
+    pr = st.session_state.pipeline_result
     
-    if not st.session_state.history:
-        st.info("Log is empty. Submit a ticket in the main portal to populate the session ledger.")
+    if pr is None:
+        st.info("Submit a ticket first to see resolution and judge results.")
+    elif pr.get("resolution") is None:
+        st.warning("Enable **🧠 Generative RAG** in the sidebar and resubmit to see resolution + judge.")
     else:
-        st.markdown('<div class="glass-panel"><h4>Active Session Execution Log</h4>', unsafe_allow_html=True)
-        hist_df = pd.DataFrame(st.session_state.history)
+        res = pr["resolution"]
+        judge = pr.get("judge", {})
         
-        st.dataframe(
-            hist_df,
-            use_container_width=True, hide_index=True,
-            column_config={
-                "title": st.column_config.TextColumn("Ticket Subject", width="large"),
-                "category": st.column_config.TextColumn("Class"),
-                "confidence": st.column_config.ProgressColumn("Conf.", min_value=0, max_value=1, format="%.2f"),
-                "escalated": st.column_config.CheckboxColumn("Bypassed AI? (L2)")
-            }
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
+        col_res, col_judge = st.columns([1.2, 1], gap="large")
         
-        if st.button("🗑️ Purge Local Session Data"):
-            st.session_state.history = []
-            st.rerun()
+        with col_res:
+            st.markdown("### 🔧 Resolution Steps")
+            steps = res.get("resolution_steps", [])
+            res_conf = res.get("confidence", 0)
+            
+            st.markdown(f"""
+            <div class="glass-panel">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <h4 style="margin:0; border:none; padding:0;">AI-Generated Resolution</h4>
+                    <span style="color:{confidence_color(res_conf)}; font-weight:600;">
+                        Confidence: {res_conf:.0%}
+                    </span>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            for i, step in enumerate(steps):
+                st.markdown(f"""
+                <div style="background:rgba(30,41,59,0.5); border-radius:8px; padding:10px 14px;
+                            margin-bottom:8px; border-left:3px solid #818cf8; color:#e2e8f0; font-size:0.9rem;">
+                    {step}
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            # Source tickets
+            source_ids = res.get("source_ids", [])
+            if source_ids:
+                st.caption(f"📚 Evidence sources: {', '.join(source_ids)}")
+        
+        with col_judge:
+            st.markdown("### ⚖️ Quality Rubric")
+            
+            if not judge:
+                st.warning("Judge results not available.")
+            else:
+                # Safety gate banner
+                gate = judge.get("safety_gate", "PASS")
+                if gate == "PASS":
+                    st.markdown("""
+                    <div class="safety-pass">
+                        <strong>🛡️ SAFETY GATE: PASS</strong> — Resolution is safe for auto-deployment.
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown("""
+                    <div class="safety-blocked">
+                        <strong>🚫 SAFETY GATE: BLOCKED</strong> — Resolution flagged as potentially dangerous. Requires human review.
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.markdown("<br>", unsafe_allow_html=True)
+                
+                # Rubric scores
+                st.markdown(f"""
+                <div class="glass-panel">
+                    <h4>📊 4-Axis Evaluation</h4>
+                    {rubric_bar("Correctness", judge.get("correctness", 0))}
+                    {rubric_bar("Completeness", judge.get("completeness", 0))}
+                    {rubric_bar("Safety", judge.get("safety", 0))}
+                    {rubric_bar("Clarity", judge.get("clarity", 0))}
+                    <div style="border-top:1px solid #334155; padding-top:10px; margin-top:8px;
+                                display:flex; justify-content:space-between;">
+                        <span style="color:#94a3b8; font-weight:600;">Overall Score</span>
+                        <span style="color:{rubric_color(int(judge.get('overall', 0)))}; font-size:1.3rem; font-weight:700;">
+                            {judge.get('overall', 0):.1f}/5.0
+                        </span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Critique
+                critique = judge.get("critique", "")
+                if critique:
+                    st.markdown(f"""
+                    <div class="glass-panel" style="border-left:3px solid #f59e0b;">
+                        <h4 style="color:#fde68a;">💬 Judge Critique</h4>
+                        <p style="color:#cbd5e1; font-size:0.9rem;">{critique}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
