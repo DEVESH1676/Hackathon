@@ -116,3 +116,25 @@
 **Files Created/Modified:**
 - `/home/devesh/Hackathon/core/rag.py` - Core RAG engine updated for context-ranking and multi-hop queries.
 - `/home/devesh/Hackathon/.planning/phases/3/3-UAT.md` - Phase 3 validation guidelines.
+
+---
+
+## v3.0 Phase 4: Agentic Workflows
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [TriageAgent (TRIAGE-01/02)] - Built `TriageAgent` class with 4-way confidence-gated routing (AUTO_ROUTE, ROUTE_WITH_LLM_ASSIST, ESCALATE_LOW_CONFIDENCE, ESCALATE_NOVEL) plus urgency keyword sentiment detection for 13 escalation terms ("urgent", "critical", "down", "outage", etc.).
+- [ResolutionAgent (RESOLVE-01/02)] - Built `ResolutionAgent` class that accepts pre-ranked RAG chunks from Phase 3, calls Groq/Ollama for structured JSON resolution steps, and computes a resolution confidence score (average `final_score` of input evidence chunks).
+- [AutomationDiscoveryAgent (AUTODISC-01/02)] - Built `AutomationDiscoveryAgent` that runs strictly post-resolution (never during triage). Queries ChromaDB filtered by `category` for 3+ similar tickets (similarity ≥ 0.85) and generates runbook suggestions.
+- [Backward Compatibility] - Preserved `AgenticLayer` as a thin orchestrator wrapping all 3 agents. `app.py`'s `agent.process()` call works unchanged.
+- [UAT] - Created `scripts/test_agents.py` with 15 test cases. Result: **15/15 PASS**.
+
+**Wrong Assumptions Corrected:**
+- [Agent Coupling] - The original `AgenticLayer.process()` mixed escalation detection and repeat detection in one method. Decoupling into 3 agents revealed that AutomationDiscovery should filter by category (not just overall similarity), producing more precise automation suggestions.
+
+**Next Steps:**
+- Phase 5: LLM-as-Judge Evaluation Framework (JUDGE-01 through JUDGE-04).
+
+**Files Created/Modified:**
+- `core/agent.py` - Complete rewrite: TriageAgent, ResolutionAgent, AutomationDiscoveryAgent + AgenticLayer wrapper.
+- `scripts/test_agents.py` - 15-case UAT verification suite for all 3 agents.
