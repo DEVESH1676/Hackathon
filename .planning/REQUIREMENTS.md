@@ -44,11 +44,11 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Unified UI
 
-- [ ] **UI-01**: Tab 1 (🎫 Submit Ticket) provides form input for title and description
-- [ ] **UI-02**: Tab 2 (🧠 Classification) shows cascade result, confidence score, novelty flag
-- [ ] **UI-03**: Tab 3 (🔍 RAG Evidence) displays ranked chunks with multi-hop results and individual scores
-- [ ] **UI-04**: Tab 4 (🤖 Agent Decisions) shows which agent fired, its decision, and rationale
-- [ ] **UI-05**: Tab 5 (⚖️ Resolution + Judge) shows resolution steps, rubric scores, safety gate status
+- [x] **UI-01**: Tab 1 (🎫 Submit Ticket) provides form input for title and description — ✅ Full pipeline triggered on submit
+- [x] **UI-02**: Tab 2 (🧠 Classification) shows cascade result, confidence score, novelty flag — ✅ Badge + bar chart + LLM rationale
+- [x] **UI-03**: Tab 3 (🔍 RAG Evidence) displays ranked chunks with multi-hop results and individual scores — ✅ Semantic/Recency/Outcome scores per chunk
+- [x] **UI-04**: Tab 4 (🤖 Agent Decisions) shows which agent fired, its decision, and rationale — ✅ Triage + AutomationDiscovery panels
+- [x] **UI-05**: Tab 5 (⚖️ Resolution + Judge) shows resolution steps, rubric scores, safety gate status — ✅ 4-axis bars + PASS/BLOCKED gate
 
 ## v4.0 Requirements (Deferred)
 
@@ -107,11 +107,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | JUDGE-02 | Phase 5 | Complete |
 | JUDGE-03 | Phase 5 | Complete |
 | JUDGE-04 | Phase 5 | Complete |
-| UI-01 | Phase 6 | Pending |
-| UI-02 | Phase 6 | Pending |
-| UI-03 | Phase 6 | Pending |
-| UI-04 | Phase 6 | Pending |
-| UI-05 | Phase 6 | Pending |
+| UI-01 | Phase 6 | Complete |
+| UI-02 | Phase 6 | Complete |
+| UI-03 | Phase 6 | Complete |
+| UI-04 | Phase 6 | Complete |
+| UI-05 | Phase 6 | Complete |
 
 **Coverage:**
 - v3.0 requirements: 25 total
