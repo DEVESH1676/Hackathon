@@ -161,3 +161,36 @@
 - `core/judge.py` - NEW: LLM-as-Judge with 4-axis rubric and safety hard-gate.
 - `scripts/test_judge.py` - NEW: 14-case UAT verification suite.
 - `.planning/REQUIREMENTS.md` - JUDGE-01 through JUDGE-04 marked Complete.
+
+---
+
+## v3.0 Phase 6: Unified 5-Tab Streamlit UI
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [5-Tab Layout (UI-01 through UI-05)] - Complete rewrite of `app.py` from 3 tabs to 5 tabs with progressive pipeline disclosure:
+  - Tab 1 (🎫 Submit): Form input triggers full pipeline (classify → triage → RAG → resolve → judge → automation)
+  - Tab 2 (🧠 Classification): Cascade path badge, confidence bar chart, novelty flag, LLM judge rationale
+  - Tab 3 (🔍 RAG Evidence): Ranked chunks with per-chunk Semantic/Recency/Outcome scores + Hop 2 KB cross-reference
+  - Tab 4 (🤖 Agent Decisions): TriageAgent decision/rationale/urgency + AutomationDiscoveryAgent pattern detection
+  - Tab 5 (⚖️ Resolution + Judge): Structured resolution steps, 4-axis rubric bars, overall score, safety gate (PASS/BLOCKED), critique
+- [Glassmorphism Design] - Preserved premium dark theme with animated transitions, gradient badges, and glass panels.
+- [Session Pipeline State] - Full pipeline results stored in `st.session_state.pipeline_result` so all tabs can display results independently.
+- [Data File Fix] - CSV loader now tries `synthetic_tickets_merged.csv` before fallback to `synthetic_tickets.csv`.
+
+**Wrong Assumptions Corrected:**
+- [RAG Toggle Default] - Changed `generate_resolution` default from False to True since the full pipeline is now the primary user experience.
+
+**Files Created/Modified:**
+- `app.py` - Complete rewrite: 5-tab progressive disclosure UI with full pipeline integration.
+
+---
+
+## �� MILESTONE v3.0: COMPLETE
+**All 25 requirements across 6 phases verified and marked Complete.**
+- Phase 1: Calibration & Feedback (CALIB-01, FDBK-01)
+- Phase 2: Classification Cascade (CASC-01–04)
+- Phase 3: Enhanced RAG (RANK-01–02, MHOP-01–02)
+- Phase 4: Agentic Workflows (TRIAGE-01–02, RESOLVE-01–02, AUTODISC-01–02)
+- Phase 5: LLM-as-Judge (JUDGE-01–04)
+- Phase 6: Unified UI (UI-01–05)
