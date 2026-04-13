@@ -28,12 +28,12 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 
 ### Agentic Workflows
 
-- [ ] **TRIAGE-01**: TriageAgent class accepts ticket + classification → outputs routing decision with rationale
-- [ ] **TRIAGE-02**: TriageAgent applies confidence gates + sentiment check for escalation decisions
-- [ ] **RESOLVE-01**: ResolutionAgent class accepts ticket + ranked RAG chunks → outputs structured resolution steps
-- [ ] **RESOLVE-02**: ResolutionAgent exposes confidence score for its generated resolution
-- [ ] **AUTODISC-01**: AutomationDiscoveryAgent runs as post-resolution hook (not during triage)
-- [ ] **AUTODISC-02**: AutomationDiscoveryAgent checks ChromaDB for 3+ tickets with same category + root-cause → suggests automation
+- [x] **TRIAGE-01**: TriageAgent class accepts ticket + classification → outputs routing decision with rationale — ✅ 6/6 tests passed
+- [x] **TRIAGE-02**: TriageAgent applies confidence gates + sentiment check for escalation decisions — ✅ Urgency keyword detection verified
+- [x] **RESOLVE-01**: ResolutionAgent class accepts ticket + ranked RAG chunks → outputs structured resolution steps — ✅ Groq structured JSON output verified
+- [x] **RESOLVE-02**: ResolutionAgent exposes confidence score for its generated resolution — ✅ avg(final_score) calculation verified
+- [x] **AUTODISC-01**: AutomationDiscoveryAgent runs as post-resolution hook (not during triage) — ✅ Decoupled from TriageAgent
+- [x] **AUTODISC-02**: AutomationDiscoveryAgent checks ChromaDB for 3+ tickets with same category + root-cause → suggests automation — ✅ Category-filtered query verified
 
 ### Evaluation (LLM-as-Judge)
 
@@ -97,12 +97,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RANK-02 | Phase 3 | Complete |
 | MHOP-01 | Phase 3 | Complete |
 | MHOP-02 | Phase 3 | Complete |
-| TRIAGE-01 | Phase 4 | Pending |
-| TRIAGE-02 | Phase 4 | Pending |
-| RESOLVE-01 | Phase 4 | Pending |
-| RESOLVE-02 | Phase 4 | Pending |
-| AUTODISC-01 | Phase 4 | Pending |
-| AUTODISC-02 | Phase 4 | Pending |
+| TRIAGE-01 | Phase 4 | Complete |
+| TRIAGE-02 | Phase 4 | Complete |
+| RESOLVE-01 | Phase 4 | Complete |
+| RESOLVE-02 | Phase 4 | Complete |
+| AUTODISC-01 | Phase 4 | Complete |
+| AUTODISC-02 | Phase 4 | Complete |
 | JUDGE-01 | Phase 5 | Pending |
 | JUDGE-02 | Phase 5 | Pending |
 | JUDGE-03 | Phase 5 | Pending |
