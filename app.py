@@ -103,15 +103,14 @@ st.markdown("""
     }
 
     /* ═══════════════════════════════════════════════════════════
-       SECTION 3: ELITE FLOATING PILL NAVBAR
-       Ported from React/Tailwind — fixed centered glass pill
-       with ::before brand injection and ::after status badge
+       SECTION 3: ELITE FLOATING PILL NAVBAR (The "Glide" Edition)
+       Ported from React/Tailwind — High-fidelity floating glass
        ═══════════════════════════════════════════════════════════ */
     
-    /* ── 3A: The Global Pill Container ── */
+    /* ── 3A: The Global "Floating Pill" Container ── */
     div[data-testid="stTabs"] {
         position: fixed !important;
-        top: 16px !important;
+        top: 20px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         width: auto !important;
@@ -121,92 +120,94 @@ st.markdown("""
     }
     
     [data-baseweb="tab-list"] {
-        background: rgba(13, 14, 23, 0.55) !important;
+        background: rgba(13, 14, 23, 0.5) !important;
         backdrop-filter: blur(24px) saturate(150%) !important;
         -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 9999px !important;
-        padding: 6px 8px !important;
-        gap: 4px !important;
+        border-radius: 9999px !important; /* Full Pill */
+        padding: 6px 10px !important;
+        gap: 6px !important;
         box-shadow: 
-            0 10px 15px -3px rgba(0, 0, 0, 0.15),
-            0 4px 6px -2px rgba(0, 0, 0, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+            0 10px 15px -3px rgba(0, 0, 0, 0.1),
+            0 4px 6px -2px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
         border-bottom: none !important;
         display: flex !important;
         align-items: center !important;
         position: relative !important;
     }
     
-    /* ── 3B: Brand Injection via ::before ── */
+    /* ── 3B: Branding Injection (The Logo) ── */
     [data-baseweb="tab-list"]::before {
-        content: "⚡ Nexus AI" !important;
+        content: "Nexus AI" !important;
         color: #f8fafc !important;
-        font-weight: 700 !important;
-        font-size: 0.85rem !important;
+        font-weight: 800 !important;
+        font-size: 0.9rem !important;
         letter-spacing: -0.02em !important;
-        margin-right: 16px !important;
-        margin-left: 16px !important;
-        padding-right: 16px !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* ── 3C: Status Badge via ::after (Holographic Border) ── */
-    [data-baseweb="tab-list"]::after {
-        content: "v3.0" !important;
-        color: #a78bfa !important;
-        font-weight: 600 !important;
-        font-size: 0.7rem !important;
-        letter-spacing: 0.05em !important;
+        margin-right: 24px !important;
         margin-left: 12px !important;
-        margin-right: 14px !important;
-        padding: 4px 12px !important;
-        border-radius: 9999px !important;
-        background: rgba(15, 23, 42, 0.6) !important;
-        border: 1px solid transparent !important;
-        background-clip: padding-box !important;
-        box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.3), 0 0 8px rgba(168, 85, 247, 0.15) !important;
-        white-space: nowrap !important;
         flex-shrink: 0 !important;
-        text-transform: uppercase !important;
+        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     
-    /* ── 3D: Individual Nav Items (Inactive — "The Grip") ── */
+    /* ── 3C: Utility Injection (The "Status" Action) ── */
+    [data-baseweb="tab-list"]::after {
+        content: "Status: Online" !important;
+        color: #818cf8 !important;
+        font-weight: 600 !important;
+        font-size: 0.72rem !important;
+        margin-left: 20px !important;
+        margin-right: 10px !important;
+        padding: 6px 14px !important;
+        border-radius: 9999px !important;
+        background: #090a10 !important;
+        position: relative !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        cursor: pointer !important;
+        border: 1px solid transparent !important;
+        /* Holographic Border Hack */
+        background-image: linear-gradient(#090a10, #090a10), 
+                          linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+        background-origin: border-box !important;
+        background-clip: padding-box, border-box !important;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
+        white-space: nowrap !important;
+    }
+    
+    /* ── 3D: Navigation Items ("The Grip") ── */
     [data-baseweb="tab"] {
         background: transparent !important;
-        border: 1px solid transparent !important;
+        border: none !important;
         border-radius: 9999px !important;
         padding: 8px 20px !important;
         margin: 0 !important;
-        color: rgba(255, 255, 255, 0.6) !important;
+        color: rgba(255, 255, 255, 0.7) !important;
         font-weight: 500 !important;
         font-size: 0.82rem !important;
-        letter-spacing: 0.01em !important;
         transition: all 0.3s ease-in-out !important;
         white-space: nowrap !important;
+        height: auto !important;
     }
     
-    /* Hover: Subtle Surface Lift */
+    /* Inactive Hover */
     [data-baseweb="tab"]:hover {
-        background: rgba(255, 255, 255, 0.06) !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: #fff !important;
     }
     
     /* ── 3E: Active Tab ("The Glide") ── */
     [data-baseweb="tab"][aria-selected="true"] {
-        background: rgba(99, 102, 241, 0.12) !important;
-        color: #818cf8 !important;
+        background: rgba(59, 130, 246, 0.1) !important;
+        color: #3b82f6 !important;
         font-weight: 600 !important;
-        border: 1px solid rgba(129, 140, 248, 0.2) !important;
-        box-shadow: 0 0 12px rgba(99, 102, 241, 0.2), inset 0 0 8px rgba(99, 102, 241, 0.08) !important;
-        letter-spacing: 0.02em !important;
-        transform: none !important;
+        box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2) !important;
+        letter-spacing: 0.01em !important;
     }
     
-    /* ── 3F: Kill Default Streamlit Tab Decorations ── */
+    /* ── 3F: Cleaning the DOM (Removing Streamlit Defaults) ── */
     [data-baseweb="tab-highlight"] {
         display: none !important;
         height: 0px !important;
@@ -217,29 +218,28 @@ st.markdown("""
         height: 0px !important;
     }
     
-    /* ── 3G: Tab Panel — push content below fixed navbar ── */
+    /* ── 3G: Content Offset ── */
     [data-baseweb="tab-panel"] {
-        padding-top: 10px !important;
+        padding-top: 15px !important;
     }
     
-    /* ── 3H: Mobile Responsive Fallback ── */
+    /* ── 3H: Mobile Responsiveness Fix ── */
     @media (max-width: 768px) {
         div[data-testid="stTabs"] {
             position: relative !important;
-            top: auto !important;
-            left: auto !important;
+            top: 0 !important;
+            left: 0 !important;
             transform: none !important;
             width: 100% !important;
             max-width: 100% !important;
+            margin-bottom: 20px !important;
         }
         [data-baseweb="tab-list"] {
-            border-radius: 14px !important;
+            border-radius: 12px !important;
             flex-wrap: wrap !important;
             justify-content: center !important;
         }
-        [data-baseweb="tab-list"]::before {
-            display: none !important;
-        }
+        [data-baseweb="tab-list"]::before,
         [data-baseweb="tab-list"]::after {
             display: none !important;
         }
