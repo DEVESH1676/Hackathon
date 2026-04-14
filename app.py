@@ -1140,17 +1140,39 @@ with tab_rag:
         if not ranked_chunks:
             st.warning("No similar tickets found in the vector store.")
         else:
-            st.markdown('<div class="section-title"><span class="section-icon">🏆</span>Ranked Evidence — Hop 1</div>', unsafe_allow_html=True)
-            st.markdown('<p style="color:#475569; font-size:0.78rem; margin-top:-10px; margin-bottom:16px;">Scoring: Semantic (60%) · Recency (20%) · Outcome (20%)</p>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span class="section-icon">🏆</span>Ranked Evidence & Confidence Heatmap</div>', unsafe_allow_html=True)
+            
+            # --- RAG Heatmap ---
+            z_data = []
+            y_labels = []
+            for i, chunk in enumerate(ranked_chunks):
+                z_data.append([chunk.get("semantic", 0), chunk.get("recency", 0), chunk.get("outcome", 0)])
+                y_labels.append(f"#{i+1}")
+                
+            fig_hm = go.Figure(data=go.Heatmap(
+                z=z_data,
+                x=['Semantic', 'Recency', 'Outcome'],
+                y=y_labels,
+                colorscale=[[0, 'rgba(15,23,42,0)'], [0.5, 'rgba(99,102,241,0.5)'], [1.0, 'rgba(168,85,247,0.8)']],
+                hoverongaps=False,
+                text=z_data,
+                texttemplate="%{text:.2f}",
+                showscale=False
+            ))
+            fig_hm.update_layout(
+                height=180, margin=dict(l=40, r=20, t=30, b=10),
+                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='#94a3b8', family="Inter"),
+                xaxis=dict(side='top', showgrid=False),
+                yaxis=dict(autorange="reversed", showgrid=False)
+            )
+            st.markdown('<div class="glass animate-in delay-1" style="margin-bottom: 20px; padding: 10px;">', unsafe_allow_html=True)
+            st.plotly_chart(fig_hm, use_container_width=True, config={'displayModeBar': False})
+            st.markdown('</div>', unsafe_allow_html=True)
             
             for i, chunk in enumerate(ranked_chunks):
-                sem = chunk.get("semantic", 0)
-                rec = chunk.get("recency", 0)
-                out = chunk.get("outcome", 0)
                 final = chunk.get("final_score", 0)
                 meta = chunk.get("metadata", {})
-                
-                sc = score_color(final * 5)  # normalize 0-1 to 0-5 scale for color
                 
                 st.markdown(f"""
                 <div class="glass animate-in delay-{(i+1)%5 + 1}" style="margin-bottom:12px;">
@@ -1161,20 +1183,6 @@ with tab_rag:
                         <span class="pill pill-indigo" style="font-family:'JetBrains Mono';">
                             {final:.2f}
                         </span>
-                    </div>
-                    <div style="display:flex; gap:16px; margin-bottom:14px;">
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(168,85,247,0.1); border-radius:8px; border: 1px solid rgba(168,85,247,0.2);">
-                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Semantic</div>
-                            <div style="color:#c084fc; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{sem:.2f}</div>
-                        </div>
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(251,191,36,0.1); border-radius:8px; border: 1px solid rgba(251,191,36,0.2);">
-                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Recency</div>
-                            <div style="color:#fbbf24; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{rec:.2f}</div>
-                        </div>
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(74,222,128,0.1); border-radius:8px; border: 1px solid rgba(74,222,128,0.2);">
-                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Outcome</div>
-                            <div style="color:#4ade80; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{out:.2f}</div>
-                        </div>
                     </div>
                     <div style="color:#cbd5e1; font-size:0.84rem; line-height:1.6; margin-bottom:10px;">
                         {chunk.get('document', '')[:280]}
@@ -1345,26 +1353,18 @@ with tab_judge:
                 # Safety gate banner
                 if gate == "PASS":
                     st.markdown("""
-                    <div class="banner-success" style="margin-bottom: 16px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:1.2rem;">🛡️</span>
-                            <div>
-                                <div style="color:#4ade80; font-weight:700; font-size:0.85rem;">SAFETY GATE: PASS</div>
-                                <div style="color:#86efac; font-size:0.78rem;">Safe for auto-deployment</div>
-                            </div>
-                        </div>
+                    <div class="animate-in delay-2" style="background: rgba(34, 197, 94, 0.08); backdrop-filter: blur(24px); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px -10px rgba(34, 197, 94, 0.2); text-align: center; margin-bottom: 20px; transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🛡️</div>
+                        <div style="color:#4ade80; font-weight:800; font-size:1.1rem; letter-spacing: 0.05em;">SAFETY GATE: PASS</div>
+                        <div style="color:#86efac; font-size:0.85rem; margin-top: 4px;">Safe for auto-deployment</div>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown("""
-                    <div class="banner-danger" style="margin-bottom: 16px;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:1.2rem;">🚫</span>
-                            <div>
-                                <div style="color:#f87171; font-weight:700; font-size:0.85rem;">SAFETY GATE: BLOCKED</div>
-                                <div style="color:#fca5a5; font-size:0.78rem;">Requires human review</div>
-                            </div>
-                        </div>
+                    <div class="animate-in delay-2" style="background: rgba(220, 38, 38, 0.12); backdrop-filter: blur(24px); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 16px; padding: 24px; box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.1); text-align: center; margin-bottom: 20px; animation: pulseGlow 2s infinite;">
+                        <div style="font-size: 2.5rem; margin-bottom: 12px;">🚨</div>
+                        <div style="color:#fca5a5; font-weight:800; font-size:1.2rem; letter-spacing: 0.05em;">SAFETY GATE: BLOCKED</div>
+                        <div style="color:#fecaca; font-size:0.9rem; margin-top: 8px;">Requires human review before deployment</div>
                     </div>
                     """, unsafe_allow_html=True)
                 
