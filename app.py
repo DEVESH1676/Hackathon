@@ -55,7 +55,7 @@ st.markdown("""
     /* ── Header Overrides & Theme fix ── */
     [data-testid="stHeader"] { display: none !important; height: 0 !important; }
     .stApp > header { display: none !important; }
-    .block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1300px; }
+    .block-container { padding-top: 5rem !important; padding-bottom: 2rem; max-width: 1300px; }
     
     /* ═══════════════════════════════════════════════════════════
        SECTION 2: CORE GLASSMORPHISM MATERIAL (Task 7.1.2)
