@@ -175,22 +175,10 @@ st.markdown("""
         text-shadow: 0 0 20px rgba(129, 140, 248, 0.3);
     }
     
-    /* Status Badge */
+    /* Status Badge (Moved to dynamic block) */
     [data-baseweb="tab-list"]::after {
-        content: "STATUS: ONLINE" !important;
-        color: #818cf8 !important;
-        font-weight: 700 !important;
-        font-size: 0.7rem !important;
-        letter-spacing: 0.05em !important;
-        margin-left: 15px !important;
-        margin-right: 10px !important;
-        padding: 6px 16px !important;
-        border-radius: 9999px !important;
-        background: rgba(9, 10, 16, 0.8) !important;
-        border: 1px solid rgba(99, 102, 241, 0.3) !important;
-        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2) !important;
-        transition: all 0.3s ease !important;
-        text-transform: uppercase !important;
+        content: "" !important;
+        display: none !important;
     }
 
     
