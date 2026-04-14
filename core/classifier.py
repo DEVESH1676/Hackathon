@@ -136,7 +136,7 @@ Reply ONLY with valid JSON (no markdown, no explanation):
                 "stream": False,
                 "format": "json",
             },
-            timeout=30,
+            timeout=5,
         )
         resp.raise_for_status()
         content = resp.json()["response"].strip()
