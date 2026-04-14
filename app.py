@@ -38,6 +38,7 @@ st.markdown("""
     
     /* ── Header Overrides & Theme fix ── */
     [data-testid="stHeader"] { display: none !important; height: 0 !important; }
+    .stApp > header { display: none !important; }
 
     /* ── Background & Layout ── */
     .stApp {
@@ -47,7 +48,7 @@ st.markdown("""
             radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.04) 0%, transparent 60%);
     }
-    .block-container { padding-top: 3rem; padding-bottom: 2rem; max-width: 1200px; }
+    .block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1200px; }
     
     /* ── Animations ── */
     @keyframes slideUp {
@@ -100,14 +101,29 @@ st.markdown("""
         border-color: rgba(129, 140, 248, 0.15);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
-    .glass-accent {
-        background: rgba(15, 23, 42, 0.65);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(99, 102, 241, 0.15);
-        border-radius: 14px; padding: 20px;
-        box-shadow: 0 4px 24px rgba(99, 102, 241, 0.06);
+    .glass-accent, [data-testid="stForm"] {
+        background: rgba(15, 23, 42, 0.65) !important;
+        backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(99, 102, 241, 0.15) !important;
+        border-radius: 14px !important; 
+        padding: 24px !important;
+        box-shadow: 0 4px 24px rgba(99, 102, 241, 0.06) !important;
     }
     
+    /* ── Buttons ── */
+    [data-testid="stFormSubmitButton"] > button, .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        height: 3rem !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    [data-testid="stFormSubmitButton"] > button:hover, .stButton > button[kind="primary"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 16px -4px rgba(168, 85, 247, 0.4) !important;
+    }
     /* ── Metric Cards ── */
     .metric-card {
         background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
@@ -529,9 +545,9 @@ with tab_submit:
             ticket_desc = st.text_area(
                 "Description",
                 placeholder="Provide full context: error messages, affected users, timestamps, recent changes...",
-                height=200
+                height=265
             )
-            submitted = st.form_submit_button("Run Pipeline", use_container_width=True, type="primary")
+            submitted = st.form_submit_button("Launch Intelligence Pipeline", use_container_width=True, type="primary")
     
     with col_result:
         if submitted and ticket_title and ticket_desc:
