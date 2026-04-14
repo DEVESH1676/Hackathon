@@ -943,41 +943,6 @@ with tab_classify:
             )
             st.plotly_chart(sankey_fig, use_container_width=True, config={'displayModeBar': False})
             st.markdown('</div>', unsafe_allow_html=True)
-
-            # ── Sankey Flow Visualization ──
-            st.markdown('<div class="glass animate-in delay-3"><div class="section-title"><span class="section-icon">🌊</span>Intelligence Flow</div>', unsafe_allow_html=True)
-            
-            # Define nodes
-            nodes = ["Ticket", "Classifier", "Agent", "Resolution"]
-            node_colors = [PLOTLY_THEME["accent_cyan"], PLOTLY_THEME["accent_purple"], PLOTLY_THEME["accent_indigo"], PLOTLY_THEME["accent_green"]]
-            
-            # Define links
-            links = [
-                {"source": 0, "target": 1, "value": 1, "label": "Input"},
-                {"source": 1, "target": 2, "value": 1, "label": "Triage"},
-                {"source": 2, "target": 3, "value": 1, "label": "Solve"}
-            ]
-            
-            sankey_fig = go.Figure(data=[go.Sankey(
-                node=dict(
-                    pad=15, thickness=20, line=dict(color="black", width=0.5),
-                    label=nodes, color=node_colors
-                ),
-                link=dict(
-                    source=[l["source"] for l in links],
-                    target=[l["target"] for l in links],
-                    value=[l["value"] for l in links],
-                    color="rgba(99, 102, 241, 0.2)"
-                )
-            )])
-            
-            sankey_fig.update_layout(
-                height=200, margin=dict(l=0, r=0, t=0, b=0),
-                paper_bgcolor=PLOTLY_THEME["background"],
-                font=dict(color=PLOTLY_THEME["text"], size=10)
-            )
-            st.plotly_chart(sankey_fig, use_container_width=True, config={'displayModeBar': False})
-            st.markdown('</div>', unsafe_allow_html=True)
             
             llm_rationale = clf.get("llm_rationale")
             if llm_rationale:
