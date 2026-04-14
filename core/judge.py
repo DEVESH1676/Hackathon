@@ -102,7 +102,7 @@ Return ONLY valid JSON (no markdown fences, no explanation outside JSON):
                         "stream": False,
                         "options": {"temperature": 0.1},
                     },
-                    timeout=60,
+                    timeout=5,
                 )
                 if resp.status_code == 200:
                     return resp.json().get("message", {}).get("content", "").strip()
