@@ -42,51 +42,11 @@ st.markdown("""
 
     /* ── Background & Layout ── */
     .stApp {
-        background: radial-gradient(circle at top right, #1a1c2c, #0d0e17);
-    }
-    
-    /* 2. Glassmorphism for Containers/Cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    /* 3. Styling the 5 Upper Tabs as Glass Buttons */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background-color: transparent;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.05) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 10px 20px !important;
-        color: white !important;
-        backdrop-filter: blur(5px);
-    }
-
-    .stTabs [aria-selected="true"] {
-        background: rgba(255, 75, 75, 0.2) !important;
-        border-top: 2px solid #FF4B4B !important;
-    }
-
-    /* 4. Fix the Sidebar Expand Button */
-    button[kind="headerNoPadding"] {
-        background-color: rgba(255, 75, 75, 0.2) !important;
-        border-radius: 50% !important;
-        left: 10px !important;
-        z-index: 999999 !important;
-    }
-    section[data-testid="stSidebar"] + div {
-        background-color: #FF4B4B !important;
-        border-radius: 0 5px 5px 0;
+        background: #0a0e1a;
+        background-image: 
+            radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.04) 0%, transparent 60%);
     }
     .block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1200px; }
     
@@ -576,7 +536,6 @@ with tab_submit:
     col_input, col_result = st.columns([1.3, 1], gap="large")
     
     with col_input:
-        st.markdown('<div class="glass-card">', unsafe_allow_html=True)
         with st.form("ticket_form", clear_on_submit=False):
             st.markdown('<div class="section-title" style="margin-top:-10px;"><span class="section-icon">📝</span>New Ticket</div>', unsafe_allow_html=True)
             ticket_title = st.text_input(
@@ -589,7 +548,6 @@ with tab_submit:
                 height=265
             )
             submitted = st.form_submit_button("Launch Intelligence Pipeline", use_container_width=True, type="primary")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     with col_result:
         if submitted and ticket_title and ticket_desc:
@@ -662,7 +620,6 @@ with tab_submit:
                 "escalated": triage.get("escalate", False),
             })
             st.toast("Pipeline complete", icon="✅")
-            st.markdown('</div>', unsafe_allow_html=True)
             
         elif submitted:
             st.error("Please provide both a subject and description.")
@@ -681,14 +638,12 @@ with tab_submit:
             """, unsafe_allow_html=True)
         else:
             # Show previous result
-            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             clf = st.session_state.pipeline_result["classification"]
             judge = st.session_state.pipeline_result.get("judge", {})
             triage = st.session_state.pipeline_result.get("triage", {})
             gate = judge.get("safety_gate", "N/A") if judge else "N/A"
             gate_color = "#4ade80" if gate == "PASS" else ("#f87171" if gate == "BLOCKED" else "#64748b")
             
-            st.markdown('<div class="glass-card">', unsafe_allow_html=True)
             st.markdown(f"""
             <div class="glass-accent">
                 <div class="section-title" style="margin-bottom: 14px; border: none; padding: 0;">
@@ -708,12 +663,10 @@ with tab_submit:
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 2: CLASSIFICATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_classify:
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -800,12 +753,10 @@ with tab_classify:
                 st.markdown('<div class="glass"><div class="section-title"><span class="section-icon">📊</span>Confidence Scores</div>', unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 3: RAG EVIDENCE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_rag:
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -861,12 +812,10 @@ with tab_rag:
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 4: AGENT DECISIONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_agent:
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -965,12 +914,10 @@ with tab_agent:
                     <p style="color:#475569; font-size:0.82rem;">No recurring pattern detected. This appears to be a unique or low-frequency issue.</p>
                 </div>
                 """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 5: RESOLUTION + JUDGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_judge:
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -1083,5 +1030,3 @@ with tab_judge:
                         <div style="color:#94a3b8; font-size:0.82rem; line-height:1.6;">{critique}</div>
                     </div>
                     """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
