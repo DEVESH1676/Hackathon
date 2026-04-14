@@ -50,7 +50,7 @@ class ResolutionEngine:
                     "stream": False,
                     "options": {"temperature": 0.2} # Low temp for factual IT resolutions
                 }
-                response = requests.post(url, json=payload, timeout=60)
+                response = requests.post(url, json=payload, timeout=5)
                 if response.status_code == 200:
                     result = response.json()
                     return result.get('message', {}).get('content', "Error: No content returned").strip()
