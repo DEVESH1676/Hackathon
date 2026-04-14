@@ -118,6 +118,27 @@
 
 ---
 
+## Phase 7: Premium Glassmorphism UI Transformation
+
+**Goal:** Transform the Nexus AI dashboard from a functional Streamlit interface to a premium, futuristic SaaS-grade experience using Glassmorphism, dynamic motion, and floating tab navigation — rivaling tools like Linear and Vercel.
+
+**Requirements:** GLASS-01, GLASS-02, GLASS-03, GLASS-04, GLASS-05
+
+**Rationale:** The current UI (Phase 6) is functionally complete but visually utilitarian. A hackathon-winning demo requires a "wow factor" at first glance. Glassmorphism + animated backgrounds create an immersive intelligence-tool aesthetic that elevates the entire platform's perceived value.
+
+**Depends on:** Phase 6 (all 5 tabs and pipeline rendering must exist before restyling)
+
+**Success criteria:**
+1. All primary containers (Ticket Form, Status Box, Top Tabs) render as frosted glass cards with `backdrop-filter: blur(20px)` and semi-transparent `rgba(255,255,255,0.03)` backgrounds
+2. Tab navigation renders as individual floating glass islands — active tab lifts via `translateY(-5px)` with neon purple accent border
+3. Background animates with a slow "Aurora Breathing" gradient cycling between `#0d0e17` and `#1a1c2c` using CSS keyframes
+4. Sidebar collapse/expand button is always visible and clickable (fixed position, high z-index, glowing border) regardless of sidebar state
+5. Text inputs use obsidian-dark backgrounds with glowing indigo border on focus
+6. No visual regression — all 5 tabs continue to render pipeline data correctly
+7. No GPU lag during pipeline execution (blur effects limited to top-level containers only)
+
+---
+
 ## Summary
 
 | # | Phase | Goal | Requirements | Success Criteria |
@@ -128,9 +149,10 @@
 | 4 | Agentic Workflows | Triage + Resolution + AutomationDiscovery | TRIAGE-01–02, RESOLVE-01–02, AUTODISC-01–02 | 5 |
 | 5 | LLM-as-Judge | Rubric scorer + safety gate | JUDGE-01–04 | 4 |
 | 6 | Unified UI | 5-tab progressive disclosure | UI-01–05 | 5 |
+| 7 | Premium Glassmorphism UI | Aurora + Glass Cards + Floating Tabs + Sidebar Fix | GLASS-01–05 | 7 |
 
-**Total: 6 phases | 25 requirements | 27 success criteria**
+**Total: 7 phases | 30 requirements | 34 success criteria**
 
 ---
 *Roadmap created: 2026-04-08*
-*Last updated: 2026-04-08 after milestone v3.0 initialization*
+*Last updated: 2026-04-14 after Phase 7 (Glassmorphism UI) addition*
