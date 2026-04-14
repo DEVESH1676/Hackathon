@@ -1036,34 +1036,53 @@ with tab_classify:
             # ── Sankey Flow Visualization ──
             st.markdown('<div class="glass animate-in delay-3"><div class="section-title"><span class="section-icon">🌊</span>Intelligence Flow</div>', unsafe_allow_html=True)
             
-            # Define nodes
-            nodes = ["Ticket", "Classifier", "Agent", "Resolution"]
-            node_colors = [PLOTLY_THEME["accent_cyan"], PLOTLY_THEME["accent_purple"], PLOTLY_THEME["accent_indigo"], PLOTLY_THEME["accent_green"]]
+            # Dynamic Sankey logic
+            triage = pr.get("triage", {})
+            method_label = cascade_pill(method).split('">')[1].split('</span>')[0]
             
-            # Define links
-            links = [
-                {"source": 0, "target": 1, "value": 1, "label": "Input"},
-                {"source": 1, "target": 2, "value": 1, "label": "Triage"},
-                {"source": 2, "target": 3, "value": 1, "label": "Solve"}
+            # Nodes
+            nodes = ["Ticket", f"Classifier ({method_label})", "Triage Agent", "Human Escalation", "Resolution Agent", "Finished"]
+            node_colors = [
+                PLOTLY_THEME["accent_cyan"], PLOTLY_THEME["accent_purple"], 
+                PLOTLY_THEME["accent_indigo"], PLOTLY_THEME["accent_red"],
+                PLOTLY_THEME["accent_green"], PLOTLY_THEME["accent_cyan"]
             ]
+            
+            # Links
+            sources = [0, 1]
+            targets = [1, 2]
+            values = [1, 1]
+            
+            if triage.get("escalate"):
+                targets[1] = 3
+                sources.append(3)
+                targets.append(5)
+                values.append(1)
+            else:
+                sources.append(2)
+                targets.append(4)
+                values.append(1)
+                sources.append(4)
+                targets.append(5)
+                values.append(1)
             
             sankey_fig = go.Figure(data=[go.Sankey(
                 node=dict(
-                    pad=15, thickness=20, line=dict(color="black", width=0.5),
+                    pad=15, thickness=20, line=dict(color="rgba(0,0,0,0)", width=0),
                     label=nodes, color=node_colors
                 ),
                 link=dict(
-                    source=[l["source"] for l in links],
-                    target=[l["target"] for l in links],
-                    value=[l["value"] for l in links],
+                    source=sources,
+                    target=targets,
+                    value=values,
                     color="rgba(99, 102, 241, 0.2)"
                 )
             )])
             
             sankey_fig.update_layout(
-                height=200, margin=dict(l=0, r=0, t=0, b=0),
+                height=240, margin=dict(l=0, r=0, t=10, b=10),
                 paper_bgcolor=PLOTLY_THEME["background"],
-                font=dict(color=PLOTLY_THEME["text"], size=10)
+                font=dict(color=PLOTLY_THEME["text"], size=10, family="Inter")
             )
             st.plotly_chart(sankey_fig, use_container_width=True, config={'displayModeBar': False})
             st.markdown('</div>', unsafe_allow_html=True)
