@@ -743,7 +743,7 @@ with tab_submit:
             gate_color = "#4ade80" if gate == "PASS" else ("#f87171" if gate == "BLOCKED" else "#64748b")
             
             st.markdown(f"""
-            <div class="glass-accent animate-in" style="margin-bottom: 16px;">
+            <div class="glass-accent animate-in delay-1" style="margin-bottom: 16px;">
                 <div class="section-title" style="margin-bottom: 14px; border: none; padding: 0;">
                     <span class="section-icon">⚡</span>Pipeline Result
                 </div>
@@ -825,7 +825,7 @@ with tab_submit:
             gate_color = "#4ade80" if gate == "PASS" else ("#f87171" if gate == "BLOCKED" else "#64748b")
             
             st.markdown(f"""
-            <div class="glass-accent">
+            <div class="glass-accent animate-in delay-1">
                 <div class="section-title" style="margin-bottom: 14px; border: none; padding: 0;">
                     <span class="section-icon">⚡</span>Last Pipeline Result
                 </div>
@@ -866,7 +866,7 @@ with tab_classify:
         
         with col1:
             st.markdown(f"""
-            <div class="glass">
+            <div class="glass animate-in delay-1">
                 <div class="section-title"><span class="section-icon">🎯</span>Classification Result</div>
                 <div class="kv">
                     <span class="kv-key">Category</span>
@@ -930,7 +930,7 @@ with tab_classify:
                     xaxis=dict(showgrid=False, range=[0, 1], visible=False),
                     yaxis=dict(showgrid=False, tickfont=dict(size=13, family="Inter"))
                 )
-                st.markdown('<div class="glass"><div class="section-title"><span class="section-icon">📊</span>Confidence Scores</div>', unsafe_allow_html=True)
+                st.markdown('<div class="glass animate-in delay-2"><div class="section-title"><span class="section-icon">📊</span>Confidence Scores</div>', unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -961,7 +961,7 @@ with tab_rag:
                 sc = score_color(final * 5)  # normalize 0-1 to 0-5 scale for color
                 
                 st.markdown(f"""
-                <div class="glass" style="margin-bottom:12px;">
+                <div class="glass animate-in delay-{(i+1)%5 + 1}" style="margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                         <span style="color:#e2e8f0; font-weight:600; font-size:0.9rem;">
                             #{i+1} · {chunk.get('id', 'N/A')}
