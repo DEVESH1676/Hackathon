@@ -625,6 +625,8 @@ if "history" not in st.session_state:
     st.session_state.history = []
 if "pipeline_result" not in st.session_state:
     st.session_state.pipeline_result = None
+if "is_processing" not in st.session_state:
+    st.session_state.is_processing = False
 
 
 # ── Sidebar ──────────────────────────────────────────────────
@@ -735,6 +737,7 @@ def render_rubric_bar(label: str, score, max_s: int = 5) -> str:
 
 # ── Full Pipeline ────────────────────────────────────────────
 def run_full_pipeline(title: str, desc: str, enable_rag: bool):
+    st.session_state.is_processing = True
     result = {}
     
     with st.status("Running intelligence pipeline...", expanded=True) as status:
@@ -799,6 +802,7 @@ def run_full_pipeline(title: str, desc: str, enable_rag: bool):
         
         status.update(label="Pipeline complete", state="complete", expanded=False)
     
+    st.session_state.is_processing = False
     result["title"] = title
     result["description"] = desc
     return result
