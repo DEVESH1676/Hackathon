@@ -190,12 +190,13 @@ st.markdown("""
         cursor: pointer !important;
         border: 1px solid transparent !important;
         /* Holographic Border Hack */
-        background-image: linear-gradient(#090a10, #090a10), 
-                          linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+        background-image: linear-gradient(#090a10, #090a10),
+                           linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
         background-origin: border-box !important;
         background-clip: padding-box, border-box !important;
         box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
         white-space: nowrap !important;
+        transition: all 0.3s ease !important;
     }
     
     /* ── 3D: Navigation Items ("The Grip") ── */
