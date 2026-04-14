@@ -50,6 +50,14 @@ Requirements for milestone v3.0. Each maps to roadmap phases.
 - [x] **UI-04**: Tab 4 (🤖 Agent Decisions) shows which agent fired, its decision, and rationale — ✅ Triage + AutomationDiscovery panels
 - [x] **UI-05**: Tab 5 (⚖️ Resolution + Judge) shows resolution steps, rubric scores, safety gate status — ✅ 4-axis bars + PASS/BLOCKED gate
 
+### Premium Glassmorphism UI
+
+- [ ] **GLASS-01**: All primary containers (Ticket Form, Status Box, Top Tabs) render as frosted Glass Cards with `backdrop-filter: blur(20px)` and `rgba(255,255,255,0.03)` backgrounds with multi-layered box shadows
+- [ ] **GLASS-02**: Tab navigation renders as individual "floating glass islands" with active tab using `translateY(-5px)` lift and neon purple accent border, inactive tabs show hover glow
+- [ ] **GLASS-03**: Background animates with slow "Aurora Breathing" gradient between `#0d0e17` and `#1a1c2c` using CSS keyframes (20s cycle)
+- [ ] **GLASS-04**: Sidebar collapse/expand button is always visible and clickable — fixed position, `z-index: 99999`, glowing cosmic purple border — regardless of sidebar state
+- [ ] **GLASS-05**: Text inputs use obsidian-dark `#090a10` backgrounds with indigo `#818cf8` glowing border on focus; blur effects restricted to top-level containers to prevent GPU lag
+
 ## v4.0 Requirements (Deferred)
 
 ### Learning Loop
@@ -112,12 +120,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 6 | Complete |
 | UI-04 | Phase 6 | Complete |
 | UI-05 | Phase 6 | Complete |
+| GLASS-01 | Phase 7 | Planned |
+| GLASS-02 | Phase 7 | Planned |
+| GLASS-03 | Phase 7 | Planned |
+| GLASS-04 | Phase 7 | Planned |
+| GLASS-05 | Phase 7 | Planned |
 
 **Coverage:**
-- v3.0 requirements: 25 total
-- Mapped to phases: 25
+- v3.0 requirements: 30 total
+- Mapped to phases: 30
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-08*
-*Last updated: 2026-04-08 after milestone v3.0 initialization*
+*Last updated: 2026-04-14 after Phase 7 (Glassmorphism UI) addition*
