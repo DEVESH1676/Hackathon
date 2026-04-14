@@ -611,6 +611,55 @@ if "pipeline_result" not in st.session_state:
 if "is_processing" not in st.session_state:
     st.session_state.is_processing = False
 
+# ── Dynamic Status & Elite UX Components ─────────────────────
+is_proc = st.session_state.is_processing
+status_label = "STATUS: PROCESSING..." if is_proc else "STATUS: ONLINE"
+status_color = "#fbbf24" if is_proc else "#818cf8"
+status_border = "rgba(251, 191, 36, 0.4)" if is_proc else "rgba(99, 102, 241, 0.3)"
+status_bg = "rgba(251, 191, 36, 0.05)" if is_proc else "rgba(9, 10, 16, 0.8)"
+status_glow = "pulseGlow 2s infinite" if is_proc else "none"
+
+st.markdown(f"""
+<style>
+    [data-baseweb="tab-list"]::after {{
+        content: "{status_label}" !important;
+        display: inline-flex !important;
+        color: {status_color} !important;
+        font-weight: 700 !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0.05em !important;
+        margin-left: 15px !important;
+        margin-right: 10px !important;
+        padding: 6px 16px !important;
+        border-radius: 9999px !important;
+        background: {status_bg} !important;
+        border: 1px solid {status_border} !important;
+        box-shadow: 0 0 15px {status_color}33 !important;
+        animation: {status_glow} !important;
+        text-transform: uppercase !important;
+        transition: all 0.3s ease !important;
+    }}
+</style>
+
+<div class="fab-glass" onclick="alert('Nexus Support: How can we help with this pipeline?')">
+    <span>⚡</span>
+</div>
+
+<div class="shortcut-badge" title="Quick Navigation: \n 1-5: Switch Tabs \n R: Rerun \n ?: Documentation">
+    ⌨️ SHIFT + ?
+</div>
+
+<div style="position:fixed; top:25px; right:50px; z-index:99999; width:200px;">
+    <div class="cmd-palette">
+        <span style="opacity:0.5; margin-right:8px;">🔍</span>
+        <input type="text" placeholder="Global Search..." 
+               style="background:transparent; border:none; color:white; font-size:0.75rem; outline:none; width:130px;">
+    </div>
+</div>
+""", unsafe_allow_html=True)
+if "is_processing" not in st.session_state:
+    st.session_state.is_processing = False
+
 
 # ── Sidebar ──────────────────────────────────────────────────
 with st.sidebar:
