@@ -20,6 +20,20 @@ import json
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import config
 
+# ── Premium Visualization Palette ──────────────────────────────
+PLOTLY_THEME = {
+    "background": "rgba(0,0,0,0)",
+    "text": "#94a3b8",
+    "accent_indigo": "#6366f1",
+    "accent_cyan": "#22d3ee",
+    "accent_purple": "#a855f7",
+    "accent_green": "#4ade80",
+    "accent_amber": "#fbbf24",
+    "accent_red": "#f87171",
+    "grid": "rgba(255,255,255,0.05)",
+    "palette": ["#6366f1", "#22d3ee", "#a855f7", "#4ade80", "#fbbf24", "#f87171"]
+}
+
 # ── Page Config ──────────────────────────────────────────────
 st.set_page_config(
     page_title="Nexus AI — Ticket Intelligence",
