@@ -74,64 +74,69 @@ st.markdown("""
     /* ═══════════════════════════════════════════════════════════
        SECTION 2: CORE GLASSMORPHISM MATERIAL (Task 7.1.2)
        ═══════════════════════════════════════════════════════════ */
+    /* ── Core Glassmorphism Material ── */
     .glass {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px; padding: 20px;
         box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .glass:hover {
-        border-color: rgba(129, 140, 248, 0.3);
-        box-shadow: 0 15px 40px -10px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255,255,255,0.15);
-        transform: translateY(-4px) scale(1.02);
+        border-color: rgba(129, 140, 248, 0.4);
+        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3), 
+                    0 0 20px rgba(99, 102, 241, 0.1),
+                    inset 0 1px 0 rgba(255,255,255,0.15);
+        transform: translateY(-5px) scale(1.02);
     }
     .glass-accent {
         background: rgba(99, 102, 241, 0.04);
         backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(99, 102, 241, 0.15);
+        border: 1px solid rgba(99, 102, 241, 0.2);
         border-radius: 16px; padding: 24px;
         box-shadow: 0 10px 30px -10px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .glass-accent:hover {
-        border-color: rgba(129, 140, 248, 0.4);
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+        border-color: rgba(129, 140, 248, 0.6);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.4),
+                    0 0 30px rgba(99, 102, 241, 0.2);
     }
     
     /* ── Form & Status Box — Frosted Glass ── */
     [data-testid="stForm"] {
         background: rgba(255, 255, 255, 0.03) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: 16px !important;
-        padding: 24px !important;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1) !important;
-        transition: transform 0.3s ease, border-color 0.3s ease !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+        transition: all 0.3s ease !important;
     }
+    [data-testid="stForm"]:focus-within {
+        border-color: rgba(129, 140, 248, 0.4) !important;
+        box-shadow: 0 25px 60px -10px rgba(99,102,241,0.2) !important;
+    }
+    
     [data-testid="stStatusWidget"] {
         background: rgba(255, 255, 255, 0.02) !important;
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
-        border: 1px solid rgba(99,102,241,0.15) !important;
+        border: 1px solid rgba(99,102,241,0.2) !important;
         border-radius: 14px !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.08) !important;
-        padding: 8px 16px !important;
-        margin-bottom: 16px !important;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
     }
 
     /* ═══════════════════════════════════════════════════════════
-       SECTION 3: ELITE FLOATING PILL NAVBAR (The "Glide" Edition)
-       Ported from React/Tailwind — High-fidelity floating glass
+       SECTION 3: ELITE FLOATING PILL NAVBAR
        ═══════════════════════════════════════════════════════════ */
     
-    /* ── 3A: The Global "Floating Pill" Container ── */
     div[data-testid="stTabs"] {
         position: fixed !important;
-        top: 20px !important;
+        top: 25px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
         width: auto !important;
@@ -141,63 +146,53 @@ st.markdown("""
     }
     
     [data-baseweb="tab-list"] {
-        background: rgba(13, 14, 23, 0.5) !important;
-        backdrop-filter: blur(24px) saturate(150%) !important;
-        -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 9999px !important; /* Full Pill */
-        padding: 6px 10px !important;
-        gap: 6px !important;
+        background: rgba(10, 11, 18, 0.7) !important;
+        backdrop-filter: blur(24px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 9999px !important;
+        padding: 8px 12px !important;
+        gap: 8px !important;
         box-shadow: 
-            0 10px 15px -3px rgba(0, 0, 0, 0.1),
-            0 4px 6px -2px rgba(0, 0, 0, 0.05),
+            0 20px 25px -5px rgba(0, 0, 0, 0.3),
+            0 10px 10px -5px rgba(0, 0, 0, 0.2),
             inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
         border-bottom: none !important;
-        display: flex !important;
-        align-items: center !important;
-        position: relative !important;
     }
     
-    /* ── 3B: Branding Injection (The Logo) ── */
+    /* Branding */
     [data-baseweb="tab-list"]::before {
-        content: "Nexus AI" !important;
-        color: #f8fafc !important;
-        font-weight: 800 !important;
-        font-size: 0.9rem !important;
-        letter-spacing: -0.02em !important;
-        margin-right: 24px !important;
-        margin-left: 12px !important;
-        flex-shrink: 0 !important;
-        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+        content: "NEXUS" !important;
+        color: #fff !important;
+        font-weight: 900 !important;
+        font-size: 0.95rem !important;
+        letter-spacing: 0.1em !important;
+        margin-right: 20px !important;
+        margin-left: 15px !important;
+        background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(129, 140, 248, 0.3);
     }
     
-    /* ── 3C: Utility Injection (The "Status" Action) ── */
+    /* Status Badge */
     [data-baseweb="tab-list"]::after {
-        content: "Status: Online" !important;
+        content: "STATUS: ONLINE" !important;
         color: #818cf8 !important;
-        font-weight: 600 !important;
-        font-size: 0.72rem !important;
-        margin-left: 20px !important;
+        font-weight: 700 !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0.05em !important;
+        margin-left: 15px !important;
         margin-right: 10px !important;
-        padding: 6px 14px !important;
+        padding: 6px 16px !important;
         border-radius: 9999px !important;
-        background: #090a10 !important;
-        position: relative !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        cursor: pointer !important;
-        border: 1px solid transparent !important;
-        /* Holographic Border Hack */
-        background-image: linear-gradient(#090a10, #090a10),
-                           linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
-        background-origin: border-box !important;
-        background-clip: padding-box, border-box !important;
-        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
-        white-space: nowrap !important;
+        background: rgba(9, 10, 16, 0.8) !important;
+        border: 1px solid rgba(99, 102, 241, 0.3) !important;
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.2) !important;
         transition: all 0.3s ease !important;
+        text-transform: uppercase !important;
     }
+
     
     /* ── 3D: Navigation Items ("The Grip") ── */
     [data-baseweb="tab"] {
