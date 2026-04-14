@@ -225,7 +225,7 @@ Return ONLY a JSON object with this exact structure (no markdown fences):
                         "stream": False,
                         "options": {"temperature": 0.2},
                     },
-                    timeout=60,
+                    timeout=5,
                 )
                 if resp.status_code == 200:
                     return resp.json().get("message", {}).get("content", "").strip()
