@@ -289,10 +289,13 @@ st.markdown("""
     }
     
     section[data-testid="stSidebar"] {
-        background: rgba(10, 14, 26, 0.8) !important;
-        backdrop-filter: blur(25px) !important;
-        -webkit-backdrop-filter: blur(25px) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background: rgba(10, 14, 26, 0.6) !important;
+        backdrop-filter: blur(30px) !important;
+        -webkit-backdrop-filter: blur(30px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 24px !important;
+        margin: 20px !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important;
     }
     section[data-testid="stSidebar"] .stMarkdown h4 {
         color: #94a3b8 !important; font-size: 0.75rem !important;
@@ -352,9 +355,93 @@ st.markdown("""
     }
 
     /* ═══════════════════════════════════════════════════════════
-       SECTION 6: PRESERVED COMPONENT CLASSES
+       SECTION 6: UX & DEEP GLASSMORPHISM (Task 7.2 & 7.3)
        ═══════════════════════════════════════════════════════════ */
     
+    /* ── Floating Action Button (FAB) ── */
+    .fab-glass {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.2);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 9999;
+        font-size: 1.5rem;
+    }
+    .fab-glass:hover {
+        transform: scale(1.1) rotate(10deg);
+        background: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ── Command Palette Pill ── */
+    .cmd-palette {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 9999px !important;
+        padding: 4px 12px !important;
+        transition: all 0.3s ease !important;
+    }
+    .cmd-palette:focus-within {
+        border-color: #818cf8 !important;
+        box-shadow: 0 0 15px rgba(129, 140, 248, 0.3) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* ── Keyboard Shortcut Tooltip ── */
+    .shortcut-badge {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 0.7rem;
+        color: #64748b;
+        cursor: help;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+    .shortcut-badge:hover {
+        color: #e2e8f0;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    /* ── Dynamic Status Processing ── */
+    .status-processing {
+        animation: pulseGlow 2s infinite !important;
+        color: #fbbf24 !important;
+        background: rgba(251, 191, 36, 0.1) !important;
+    }
+
+    /* ── Frosted Modal Overlay ── */
+    .frosted-modal {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease forwards;
+    }
+
     /* ── Animations ── */
     @keyframes slideUp {
         from { opacity: 0; transform: translateY(16px); }
