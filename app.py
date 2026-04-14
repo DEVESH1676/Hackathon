@@ -66,12 +66,12 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 16px; padding: 20px;
         box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-        transition: all 0.25s ease;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .glass:hover {
-        border-color: rgba(129, 140, 248, 0.15);
-        box-shadow: 0 12px 36px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
-        transform: translateY(-2px) scale(1.01);
+        border-color: rgba(129, 140, 248, 0.3);
+        box-shadow: 0 15px 40px -10px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+        transform: translateY(-4px) scale(1.02);
     }
     .glass-accent {
         background: rgba(99, 102, 241, 0.04);
@@ -79,12 +79,12 @@ st.markdown("""
         border: 1px solid rgba(99, 102, 241, 0.15);
         border-radius: 16px; padding: 24px;
         box-shadow: 0 10px 30px -10px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .glass-accent:hover {
-        border-color: rgba(129, 140, 248, 0.3);
-        transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 15px 35px -10px rgba(99,102,241,0.2);
+        border-color: rgba(129, 140, 248, 0.4);
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
     }
     
     /* ── Form & Status Box — Frosted Glass ── */
@@ -228,6 +228,7 @@ st.markdown("""
     /* ── 3G: Content Offset ── */
     [data-baseweb="tab-panel"] {
         padding-top: 15px !important;
+        animation: fadeIn 0.5s ease-out forwards;
     }
     
     /* ── 3H: Mobile Responsiveness Fix ── */
@@ -364,6 +365,13 @@ st.markdown("""
     
     .animate-in { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .fade-in { animation: fadeIn 0.4s ease forwards; }
+    
+    /* Staggered Entrance Delays */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
     
     /* ── Prevent overflow ── */
     .stMarkdown p, .stMarkdown div {
