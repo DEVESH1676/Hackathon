@@ -11,6 +11,16 @@ USE_GROQ = True
 # --- LLM Configurations ---
 # Groq specific
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+
+# Fallback to Streamlit secrets if deployed on Streamlit Community Cloud
+if not GROQ_API_KEY:
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
+            GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+    except Exception:
+        pass
+
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
 # Ollama specific
