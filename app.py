@@ -1020,16 +1020,16 @@ with tab_rag:
                         </span>
                     </div>
                     <div style="display:flex; gap:16px; margin-bottom:14px;">
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(192,132,252,0.06); border-radius:8px;">
-                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Semantic</div>
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(168,85,247,0.1); border-radius:8px; border: 1px solid rgba(168,85,247,0.2);">
+                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Semantic</div>
                             <div style="color:#c084fc; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{sem:.2f}</div>
                         </div>
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(251,191,36,0.06); border-radius:8px;">
-                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Recency</div>
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(251,191,36,0.1); border-radius:8px; border: 1px solid rgba(251,191,36,0.2);">
+                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Recency</div>
                             <div style="color:#fbbf24; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{rec:.2f}</div>
                         </div>
-                        <div style="flex:1; text-align:center; padding:8px; background:rgba(74,222,128,0.06); border-radius:8px;">
-                            <div style="color:#64748b; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Outcome</div>
+                        <div style="flex:1; text-align:center; padding:8px; background:rgba(74,222,128,0.1); border-radius:8px; border: 1px solid rgba(74,222,128,0.2);">
+                            <div style="color:#94a3b8; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Outcome</div>
                             <div style="color:#4ade80; font-size:1rem; font-weight:700; font-family:'JetBrains Mono';">{out:.2f}</div>
                         </div>
                     </div>
