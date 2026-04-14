@@ -20,26 +20,44 @@ class ResolutionEngine:
         self.collection = get_chroma_collection()
         self.embedding_model = get_embedding_model()
     
-    def _generate_ollama(self, prompt: str) -> str:
-        """Call Ollama via REST API directly to avoid LangChain timeouts/hanging."""
-        print(f"  [LLM] Calling Ollama model: {config.OLLAMA_MODEL}...")
-        url = f"{config.OLLAMA_BASE_URL}/api/chat"
-        payload = {
-            "model": config.OLLAMA_MODEL,
-            "messages": [{"role": "user", "content": prompt}],
-            "stream": False,
-            "options": {"temperature": 0.2} # Low temp for factual IT resolutions
-        }
-        
+    def _call_llm(self, prompt: str) -> str:
+        """Call Groq or Ollama via REST API directly to avoid LangChain timeouts/hanging."""
         try:
-            response = requests.post(url, json=payload, timeout=60)
-            if response.status_code == 200:
-                result = response.json()
-                return result.get('message', {}).get('content', "Error: No content returned").strip()
+            if config.USE_GROQ and config.GROQ_API_KEY:
+                print(f"  [LLM] Calling Groq model: {config.GROQ_MODEL}...")
+                response = requests.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {config.GROQ_API_KEY}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": config.GROQ_MODEL,
+                        "messages": [{"role": "user", "content": prompt}],
+                        "temperature": 0.2,
+                        "max_tokens": 1000,
+                    },
+                    timeout=15,
+                )
+                response.raise_for_status()
+                return response.json()["choices"][0]["message"]["content"].strip()
             else:
-                return f"Error: Ollama API returned HTTP {response.status_code}\n{response.text}"
+                print(f"  [LLM] Calling Ollama model: {config.OLLAMA_MODEL}...")
+                url = f"{config.OLLAMA_BASE_URL}/api/chat"
+                payload = {
+                    "model": config.OLLAMA_MODEL,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "stream": False,
+                    "options": {"temperature": 0.2} # Low temp for factual IT resolutions
+                }
+                response = requests.post(url, json=payload, timeout=60)
+                if response.status_code == 200:
+                    result = response.json()
+                    return result.get('message', {}).get('content', "Error: No content returned").strip()
+                else:
+                    return f"Error: Ollama API returned HTTP {response.status_code}\n{response.text}"
         except Exception as e:
-            return f"Error connecting to Ollama: {str(e)}"
+            return f"Error connecting to LLM: {str(e)}"
 
     def _rank_retrieved_chunks(self, results) -> list:
         """Rank chunks based on semantic (60%), recency (20%), and outcome (20%)."""
@@ -164,7 +182,7 @@ Description: {description}
 """
 
         # 3. Request generation
-        resolution_text = self._generate_ollama(prompt)
+        resolution_text = self._call_llm(prompt)
         
         return {
             "suggested_resolution": resolution_text,
