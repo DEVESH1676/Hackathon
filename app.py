@@ -28,7 +28,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ── Premium CSS System ───────────────────────────────────────
+# ── Premium Glassmorphism CSS System ─────────────────────────
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -36,19 +36,203 @@ st.markdown("""
     
     html, body, [class*="css"] { font-family: 'Inter', -apple-system, sans-serif; }
     
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 1: AURORA DYNAMIC ENVIRONMENT (Task 7.1.1)
+       ═══════════════════════════════════════════════════════════ */
+    @keyframes auroraBreathing {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .stApp {
+        background: linear-gradient(-45deg, #0d0e17, #111222, #1a1c2c, #0d0e17);
+        background-size: 400% 400%;
+        animation: auroraBreathing 20s ease infinite;
+        color: #e2e8f0;
+    }
+    
     /* ── Header Overrides & Theme fix ── */
     [data-testid="stHeader"] { display: none !important; height: 0 !important; }
     .stApp > header { display: none !important; }
-
-    /* ── Background & Layout ── */
-    .stApp {
-        background: #0a0e1a;
-        background-image: 
-            radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.04) 0%, transparent 60%);
+    .block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1300px; }
+    
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 2: CORE GLASSMORPHISM MATERIAL (Task 7.1.2)
+       ═══════════════════════════════════════════════════════════ */
+    .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px; padding: 20px;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        transition: all 0.25s ease;
     }
-    .block-container { padding-top: 2rem !important; padding-bottom: 2rem; max-width: 1200px; }
+    .glass:hover {
+        border-color: rgba(129, 140, 248, 0.15);
+        box-shadow: 0 12px 36px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .glass-accent {
+        background: rgba(99, 102, 241, 0.04);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(99, 102, 241, 0.15);
+        border-radius: 16px; padding: 24px;
+        box-shadow: 0 10px 30px -10px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    
+    /* ── Form & Status Box — Frosted Glass ── */
+    [data-testid="stForm"] {
+        background: rgba(255, 255, 255, 0.03) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 24px !important;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+        transition: transform 0.3s ease, border-color 0.3s ease !important;
+    }
+    [data-testid="stStatusWidget"] {
+        background: rgba(255, 255, 255, 0.02) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(99,102,241,0.15) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.08) !important;
+        padding: 8px 16px !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 3: FLOATING TAB NAVIGATION (Task 7.1.3)
+       ═══════════════════════════════════════════════════════════ */
+    [data-baseweb="tab-list"] {
+        background: transparent !important;
+        gap: 12px !important;
+        border-bottom: none !important;
+        padding-bottom: 20px !important;
+        padding-top: 10px !important;
+    }
+    
+    [data-baseweb="tab"] {
+        background: rgba(255, 255, 255, 0.02) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
+        padding: 12px 24px !important;
+        margin: 0 !important;
+        color: #94a3b8 !important;
+        font-weight: 500 !important;
+        font-size: 0.85rem !important;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    
+    /* Hover Glow for Inactive Tabs */
+    [data-baseweb="tab"]:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: #e2e8f0 !important;
+        box-shadow: 0 0 15px rgba(129, 140, 248, 0.15) !important;
+    }
+    
+    /* Active Tab: Lifted, Neon Accent */
+    [data-baseweb="tab"][aria-selected="true"] {
+        background: rgba(99, 102, 241, 0.1) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(129, 140, 248, 0.5) !important;
+        transform: translateY(-5px) !important;
+        box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.3), inset 0 1px 2px rgba(255,255,255,0.2) !important;
+    }
+    
+    /* Hide default Streamlit tab highlight bar */
+    [data-baseweb="tab-highlight"] { display: none !important; }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 4: SIDEBAR RECOVERY PROTOCOL (Task 7.1.4)
+       ═══════════════════════════════════════════════════════════ */
+    [data-testid="collapsedControl"] {
+        z-index: 99999 !important;
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        background: rgba(15, 23, 42, 0.8) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border: 1px solid rgba(168, 85, 247, 0.4) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+    [data-testid="collapsedControl"]:hover {
+        box-shadow: 0 0 25px rgba(168, 85, 247, 0.6) !important;
+        transform: scale(1.1) !important;
+    }
+    
+    section[data-testid="stSidebar"] {
+        background: rgba(10, 14, 26, 0.8) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+    section[data-testid="stSidebar"] .stMarkdown h4 {
+        color: #94a3b8 !important; font-size: 0.75rem !important;
+        text-transform: uppercase !important; letter-spacing: 0.1em !important;
+        font-weight: 600 !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 5: INPUTS & BUTTONS (Task 7.1.5)
+       ═══════════════════════════════════════════════════════════ */
+    .stTextInput input, .stTextArea textarea {
+        background: #090a10 !important;
+        color: #f8fafc !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 8px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.9rem !important;
+        transition: all 0.2s ease !important;
+    }
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #818cf8 !important;
+        box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2) !important;
+        background: #0c0d14 !important;
+    }
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
+        color: #475569 !important;
+    }
+    
+    /* ── Form Submit Button ── */
+    [data-testid="stFormSubmitButton"] > button {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+        height: 3.5rem !important;
+        letter-spacing: 0.5px !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+    }
+    [data-testid="stFormSubmitButton"] > button:hover {
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.5) !important;
+    }
+    
+    /* ── Primary Button (general) ── */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
+        color: white !important; font-weight: 600 !important; font-size: 0.9rem !important;
+        border: none !important; border-radius: 10px !important;
+        padding: 12px 24px !important;
+        transition: all 0.25s ease !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.25) !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 24px rgba(99,102,241,0.4) !important;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECTION 6: PRESERVED COMPONENT CLASSES
+       ═══════════════════════════════════════════════════════════ */
     
     /* ── Animations ── */
     @keyframes slideUp {
@@ -88,46 +272,10 @@ st.markdown("""
     }
     .section-icon { margin-right: 8px; }
     
-    /* ── Glass Cards ── */
-    .glass {
-        background: rgba(15, 23, 42, 0.65);
-        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(148, 163, 184, 0.08);
-        border-radius: 14px; padding: 20px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-        transition: all 0.25s ease;
-    }
-    .glass:hover {
-        border-color: rgba(129, 140, 248, 0.15);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-    .glass-accent, [data-testid="stForm"] {
-        background: rgba(15, 23, 42, 0.65) !important;
-        backdrop-filter: blur(16px) !important;
-        border: 1px solid rgba(99, 102, 241, 0.15) !important;
-        border-radius: 14px !important; 
-        padding: 24px !important;
-        box-shadow: 0 4px 24px rgba(99, 102, 241, 0.06) !important;
-    }
-    
-    /* ── Buttons ── */
-    [data-testid="stFormSubmitButton"] > button, .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
-        color: white !important;
-        border: none !important;
-        font-weight: 600 !important;
-        border-radius: 8px !important;
-        height: 3rem !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    }
-    [data-testid="stFormSubmitButton"] > button:hover, .stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 16px -4px rgba(168, 85, 247, 0.4) !important;
-    }
     /* ── Metric Cards ── */
     .metric-card {
-        background: linear-gradient(135deg, rgba(15,23,42,0.8), rgba(30,41,59,0.6));
-        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 14px; padding: 20px 24px; text-align: center;
         transition: all 0.3s ease;
@@ -191,88 +339,6 @@ st.markdown("""
         background: linear-gradient(135deg, rgba(21,128,61,0.3), rgba(22,163,74,0.15));
         border: 1px solid rgba(34,197,94,0.2); border-radius: 12px;
         padding: 16px 20px;
-    }
-    
-    /* ── Dashboard Integration (Form & Status Box) ── */
-    [data-testid="stForm"] {
-        background: rgba(15, 23, 42, 0.65) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border: 1px solid rgba(148, 163, 184, 0.08) !important;
-        border-radius: 14px !important;
-        padding: 24px !important;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12) !important;
-    }
-    [data-testid="stStatusWidget"] {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(99,102,241,0.2) !important;
-        border-radius: 14px !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.08) !important;
-        padding: 8px 16px !important;
-        margin-bottom: 16px !important;
-    }
-
-    /* ── User Inputs ── */
-    .stTextInput input, .stTextArea textarea {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(99,102,241,0.15) !important;
-        color: #e2e8f0 !important; border-radius: 10px !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 0.9rem !important;
-        transition: all 0.2s ease !important;
-    }
-    .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: rgba(99,102,241,0.4) !important;
-        box-shadow: 0 0 0 3px rgba(99,102,241,0.08) !important;
-        background: rgba(15, 23, 42, 0.95) !important;
-    }
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #475569 !important;
-    }
-    
-    /* ── Primary Button ── */
-    .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
-        color: white !important; font-weight: 600 !important; font-size: 0.9rem !important;
-        border: none !important; border-radius: 10px !important;
-        padding: 12px 24px !important;
-        transition: all 0.25s ease !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.25) !important;
-    }
-    .stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 24px rgba(99,102,241,0.4) !important;
-    }
-    
-    /* ── Tabs ── */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 4px; border-bottom: 1px solid rgba(148,163,184,0.08);
-        padding-bottom: 0;
-    }
-    .stTabs [data-baseweb="tab"] {
-        background: transparent; border-radius: 8px 8px 0 0;
-        border: none; color: #64748b; padding: 10px 18px; font-weight: 500;
-        font-size: 0.85rem; transition: all 0.2s ease;
-        border-bottom: 2px solid transparent; margin-bottom: -1px;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: #94a3b8; background: rgba(99,102,241,0.04);
-    }
-    .stTabs [aria-selected="true"] {
-        background: rgba(99,102,241,0.06) !important;
-        color: #818cf8 !important;
-        border-bottom: 2px solid #818cf8 !important;
-    }
-    
-    /* ── Sidebar Overrides ── */
-    section[data-testid="stSidebar"] {
-        background: rgba(8, 12, 24, 0.95) !important;
-        border-right: 1px solid rgba(148,163,184,0.06) !important;
-    }
-    section[data-testid="stSidebar"] .stMarkdown h4 {
-        color: #94a3b8 !important; font-size: 0.75rem !important;
-        text-transform: uppercase !important; letter-spacing: 0.1em !important;
-        font-weight: 600 !important;
     }
     
     /* ── Expander ── */
