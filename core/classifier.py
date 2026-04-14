@@ -34,8 +34,25 @@ class TicketClassifier:
         """Compute average embedding per category from stored tickets."""
         all_data = self.collection.get(include=["embeddings", "metadatas"])
 
-        if not all_data["ids"]:
-            print("⚠ No tickets in vector store. Run embeddings.py first.")
+        if not all_data.get("ids"):
+            print("⚠ No tickets in vector store. Attempting auto-ingestion...")
+            try:
+                from core.embeddings import ingest_tickets
+                base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                csv_path = os.path.join(base_dir, 'data', 'synthetic_tickets_merged.csv')
+                if not os.path.exists(csv_path):
+                    csv_path = os.path.join(base_dir, 'data', 'synthetic_tickets.csv')
+                
+                if os.path.exists(csv_path):
+                    ingest_tickets(csv_path)
+                    all_data = self.collection.get(include=["embeddings", "metadatas"])
+                else:
+                    print("⚠ No CSV data found. Cannot auto-ingest.")
+            except Exception as e:
+                print(f"⚠ Auto-ingestion failed: {e}")
+
+        if not all_data.get("ids"):
+            print("⚠ Still no tickets in vector store. Classification will run in fallback mode.")
             return
 
         category_embeddings = defaultdict(list)
@@ -142,11 +159,15 @@ Reply ONLY with valid JSON (no markdown, no explanation):
 
         # ── Step 1: Centroid similarity scores ──
         scores = {}
-        for cat, centroid in self.centroids.items():
-            scores[cat] = self._cosine_similarity(embedding, centroid)
+        if self.centroids:
+            for cat, centroid in self.centroids.items():
+                scores[cat] = self._cosine_similarity(embedding, centroid)
 
-        best_category = max(scores, key=scores.get)
-        best_score = scores[best_category]
+            best_category = max(scores, key=scores.get)
+            best_score = scores[best_category]
+        else:
+            best_category = "Unknown"
+            best_score = 0.0
 
         # ── Step 2: ChromaDB nearest-neighbour search ──
         search_results = self.collection.query(
