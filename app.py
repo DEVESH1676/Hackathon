@@ -71,6 +71,7 @@ st.markdown("""
     .glass:hover {
         border-color: rgba(129, 140, 248, 0.15);
         box-shadow: 0 12px 36px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+        transform: translateY(-2px) scale(1.01);
     }
     .glass-accent {
         background: rgba(99, 102, 241, 0.04);
@@ -78,6 +79,12 @@ st.markdown("""
         border: 1px solid rgba(99, 102, 241, 0.15);
         border-radius: 16px; padding: 24px;
         box-shadow: 0 10px 30px -10px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-accent:hover {
+        border-color: rgba(129, 140, 248, 0.3);
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 15px 35px -10px rgba(99,102,241,0.2);
     }
     
     /* ── Form & Status Box — Frosted Glass ── */
