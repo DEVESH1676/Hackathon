@@ -194,3 +194,11 @@
 - Phase 4: Agentic Workflows (TRIAGE-01–02, RESOLVE-01–02, AUTODISC-01–02)
 - Phase 5: LLM-as-Judge (JUDGE-01–04)
 - Phase 6: Unified UI (UI-01–05)
+## Final Polish: UX & Deployment Fixes
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [UI Alignment] Fixed the "floating island" visual bug in Tab 1 by height-matching the `st.text_area` and applying unified `[data-testid="stForm"]` styling so both column elements match exactly.
+- [Theme Bleeding] Added `.streamlit/config.toml` to enforce a dark base theme and added `.block-container { padding-top: 2rem !important; }` to eliminate the white top bar during initial load on Streamlit Community Cloud.
+- [Button Styling] Updated Streamlit `stFormSubmitButton` to match the premium purple-indigo gradient style in CSS to match the rest of the application's glassmorphism style.
+- [Timeout Handlers] (Previously completed) Applied 5-second `requests` timeout for Ollama fallback in `agent.py`, `judge.py`, `classifier.py`, and `rag.py` to ensure local LLM dependency handles gracefully in the cloud. Check for empty scores in `classifier.py`.
