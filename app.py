@@ -36,6 +36,9 @@ st.markdown("""
     
     html, body, [class*="css"] { font-family: 'Inter', -apple-system, sans-serif; }
     
+    /* ── Header Overrides & Theme fix ── */
+    [data-testid="stHeader"] { display: none !important; height: 0 !important; }
+
     /* ── Background & Layout ── */
     .stApp {
         background: #0a0e1a;
@@ -44,7 +47,7 @@ st.markdown("""
             radial-gradient(ellipse at 80% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.04) 0%, transparent 60%);
     }
-    .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 1200px; }
+    .block-container { padding-top: 3rem; padding-bottom: 2rem; max-width: 1200px; }
     
     /* ── Animations ── */
     @keyframes slideUp {
@@ -174,6 +177,25 @@ st.markdown("""
         padding: 16px 20px;
     }
     
+    /* ── Dashboard Integration (Form & Status Box) ── */
+    [data-testid="stForm"] {
+        background: rgba(15, 23, 42, 0.65) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(148, 163, 184, 0.08) !important;
+        border-radius: 14px !important;
+        padding: 24px !important;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12) !important;
+    }
+    [data-testid="stStatusWidget"] {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(99,102,241,0.2) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.08) !important;
+        padding: 8px 16px !important;
+        margin-bottom: 16px !important;
+    }
+
     /* ── User Inputs ── */
     .stTextInput input, .stTextArea textarea {
         background: rgba(15, 23, 42, 0.8) !important;
@@ -498,9 +520,8 @@ with tab_submit:
     col_input, col_result = st.columns([1.3, 1], gap="large")
     
     with col_input:
-        st.markdown('<div class="section-title"><span class="section-icon">📝</span>New Ticket</div>', unsafe_allow_html=True)
-        
         with st.form("ticket_form", clear_on_submit=False):
+            st.markdown('<div class="section-title" style="margin-top:-10px;"><span class="section-icon">📝</span>New Ticket</div>', unsafe_allow_html=True)
             ticket_title = st.text_input(
                 "Subject",
                 placeholder="VPN connection drops after 5 minutes with error 619"
