@@ -103,48 +103,147 @@ st.markdown("""
     }
 
     /* ═══════════════════════════════════════════════════════════
-       SECTION 3: FLOATING TAB NAVIGATION (Task 7.1.3)
+       SECTION 3: ELITE FLOATING PILL NAVBAR
+       Ported from React/Tailwind — fixed centered glass pill
+       with ::before brand injection and ::after status badge
        ═══════════════════════════════════════════════════════════ */
+    
+    /* ── 3A: The Global Pill Container ── */
+    div[data-testid="stTabs"] {
+        position: fixed !important;
+        top: 16px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+        max-width: 95% !important;
+        z-index: 99998 !important;
+        padding: 0 !important;
+    }
+    
     [data-baseweb="tab-list"] {
-        background: transparent !important;
-        gap: 12px !important;
+        background: rgba(13, 14, 23, 0.55) !important;
+        backdrop-filter: blur(24px) saturate(150%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 9999px !important;
+        padding: 6px 8px !important;
+        gap: 4px !important;
+        box-shadow: 
+            0 10px 15px -3px rgba(0, 0, 0, 0.15),
+            0 4px 6px -2px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
         border-bottom: none !important;
-        padding-bottom: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+    
+    /* ── 3B: Brand Injection via ::before ── */
+    [data-baseweb="tab-list"]::before {
+        content: "⚡ Nexus AI" !important;
+        color: #f8fafc !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        letter-spacing: -0.02em !important;
+        margin-right: 16px !important;
+        margin-left: 16px !important;
+        padding-right: 16px !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* ── 3C: Status Badge via ::after (Holographic Border) ── */
+    [data-baseweb="tab-list"]::after {
+        content: "v3.0" !important;
+        color: #a78bfa !important;
+        font-weight: 600 !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0.05em !important;
+        margin-left: 12px !important;
+        margin-right: 14px !important;
+        padding: 4px 12px !important;
+        border-radius: 9999px !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid transparent !important;
+        background-clip: padding-box !important;
+        box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.3), 0 0 8px rgba(168, 85, 247, 0.15) !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        text-transform: uppercase !important;
+    }
+    
+    /* ── 3D: Individual Nav Items (Inactive — "The Grip") ── */
+    [data-baseweb="tab"] {
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        border-radius: 9999px !important;
+        padding: 8px 20px !important;
+        margin: 0 !important;
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-weight: 500 !important;
+        font-size: 0.82rem !important;
+        letter-spacing: 0.01em !important;
+        transition: all 0.3s ease-in-out !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Hover: Subtle Surface Lift */
+    [data-baseweb="tab"]:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        box-shadow: none !important;
+    }
+    
+    /* ── 3E: Active Tab ("The Glide") ── */
+    [data-baseweb="tab"][aria-selected="true"] {
+        background: rgba(99, 102, 241, 0.12) !important;
+        color: #818cf8 !important;
+        font-weight: 600 !important;
+        border: 1px solid rgba(129, 140, 248, 0.2) !important;
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.2), inset 0 0 8px rgba(99, 102, 241, 0.08) !important;
+        letter-spacing: 0.02em !important;
+        transform: none !important;
+    }
+    
+    /* ── 3F: Kill Default Streamlit Tab Decorations ── */
+    [data-baseweb="tab-highlight"] {
+        display: none !important;
+        height: 0px !important;
+        border: none !important;
+    }
+    [data-baseweb="tab-border"] {
+        display: none !important;
+        height: 0px !important;
+    }
+    
+    /* ── 3G: Tab Panel — push content below fixed navbar ── */
+    [data-baseweb="tab-panel"] {
         padding-top: 10px !important;
     }
     
-    [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.02) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 12px !important;
-        padding: 12px 24px !important;
-        margin: 0 !important;
-        color: #94a3b8 !important;
-        font-weight: 500 !important;
-        font-size: 0.85rem !important;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    /* ── 3H: Mobile Responsive Fallback ── */
+    @media (max-width: 768px) {
+        div[data-testid="stTabs"] {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        [data-baseweb="tab-list"] {
+            border-radius: 14px !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+        }
+        [data-baseweb="tab-list"]::before {
+            display: none !important;
+        }
+        [data-baseweb="tab-list"]::after {
+            display: none !important;
+        }
     }
-    
-    /* Hover Glow for Inactive Tabs */
-    [data-baseweb="tab"]:hover {
-        background: rgba(255, 255, 255, 0.06) !important;
-        color: #e2e8f0 !important;
-        box-shadow: 0 0 15px rgba(129, 140, 248, 0.15) !important;
-    }
-    
-    /* Active Tab: Lifted, Neon Accent */
-    [data-baseweb="tab"][aria-selected="true"] {
-        background: rgba(99, 102, 241, 0.1) !important;
-        color: #ffffff !important;
-        border: 1px solid rgba(129, 140, 248, 0.5) !important;
-        transform: translateY(-5px) !important;
-        box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.3), inset 0 1px 2px rgba(255,255,255,0.2) !important;
-    }
-    
-    /* Hide default Streamlit tab highlight bar */
-    [data-baseweb="tab-highlight"] { display: none !important; }
 
     /* ═══════════════════════════════════════════════════════════
        SECTION 4: SIDEBAR RECOVERY PROTOCOL (Task 7.1.4)
