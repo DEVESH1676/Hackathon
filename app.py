@@ -713,6 +713,7 @@ with tab_submit:
 
 # ━━━ TAB 2: CLASSIFICATION ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_classify:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -799,10 +800,12 @@ with tab_classify:
                 st.markdown('<div class="glass"><div class="section-title"><span class="section-icon">📊</span>Confidence Scores</div>', unsafe_allow_html=True)
                 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 3: RAG EVIDENCE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_rag:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -858,10 +861,12 @@ with tab_rag:
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 4: AGENT DECISIONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_agent:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -960,10 +965,12 @@ with tab_agent:
                     <p style="color:#475569; font-size:0.82rem;">No recurring pattern detected. This appears to be a unique or low-frequency issue.</p>
                 </div>
                 """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ━━━ TAB 5: RESOLUTION + JUDGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with tab_judge:
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     pr = st.session_state.pipeline_result
     
@@ -1076,3 +1083,5 @@ with tab_judge:
                         <div style="color:#94a3b8; font-size:0.82rem; line-height:1.6;">{critique}</div>
                     </div>
                     """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
