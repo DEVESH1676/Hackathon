@@ -282,3 +282,46 @@
 - `app.py` - Extensive UI improvements, including updated Plotly configurations and CSS motion properties.
 - `.planning/phases/08-elite-ux/01-PLAN.md` - Detailed execution plan for Phase 8.
 
+
+---
+
+## v4.0 Phase 1: Backend Extraction — API Bridge
+**Status:** COMPLETE
+
+**What We Did Now:**
+- [FastAPI Installation] - Installed `fastapi[standard]>=0.135.0` (v0.136.0) into venv. Native SSE support via `fastapi.sse.EventSourceResponse` confirmed working.
+- [Pydantic Data Contracts] - Created `api/models.py` with 11 Pydantic models field-matched to exact dict keys returned by core modules.
+- [Dependency Injection] - Created `api/deps.py` with 7 FastAPI `Depends()` helpers pulling pre-loaded resources from `app.state`.
+- [Health Endpoint] - `GET /api/health` returns model status and available categories.
+- [Classification Endpoint] - `POST /api/classify` wraps `TicketClassifier.classify()` with `asyncio.to_thread()`.
+- [RAG Retrieval Endpoint] - `POST /api/retrieve` wraps `ResolutionEngine.suggest_resolution()`.
+- [Master Pipeline (Non-Streaming)] - `POST /api/pipeline/run` executes full 7-step cascade and returns `PipelineResponse`.
+- [Master Pipeline (SSE Streaming)] - `GET /api/pipeline/stream` streams real-time status events with progress 0.0→1.0.
+- [Application Entry Point] - Created `main.py` with lifespan model loading, CORS middleware, and 4 routers.
+- [Swagger Auto-Docs] - Interactive API docs at `/docs` with full schema definitions.
+
+**Verification Results:**
+- `uvicorn main:app` starts successfully, all 7 modules load
+- All 6 endpoints tested and returning correct typed responses
+- SSE stream emits proper event types (status, result, done)
+- Swagger UI renders all endpoints
+- **ZERO modifications to core/ directory**
+
+**Files Created/Modified:**
+- `main.py` - FastAPI entry point with lifespan + CORS.
+- `api/models.py` - 11 Pydantic data contracts.
+- `api/deps.py` - 7 dependency injection helpers.
+- `api/routes/health.py` - GET /api/health.
+- `api/routes/classify.py` - POST /api/classify.
+- `api/routes/retrieve.py` - POST /api/retrieve.
+- `api/routes/pipeline.py` - POST /api/pipeline/run + GET /api/pipeline/stream.
+- `requirements.txt` - Added fastapi[standard]>=0.135.0.
+
+---
+
+## v4.0 Phase 1: Backend Extraction — API Bridge
+**Status:** COMPLETE
+
+**What We Did:** FastAPI backend extraction complete. 6 endpoints live: health, classify, retrieve, pipeline/run, pipeline/stream (SSE). All Pydantic typed. Zero changes to core/.
+
+**Files Created:** main.py, api/models.py, api/deps.py, api/routes/{health,classify,retrieve,pipeline}.py
