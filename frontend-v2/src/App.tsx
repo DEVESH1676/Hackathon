@@ -107,18 +107,21 @@ function App() {
         <div className="space-y-12 pt-12 border-t border-white/5">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-black tracking-tight text-white/90 uppercase tracking-widest">Operational Insights</h2>
-            <p className="text-[#94a3b8] text-[10px] font-black uppercase tracking-[0.3em]">Global Analytics & History Persistence</p>
+            <p className="text-[#94a3b8] text-[10px] font-black uppercase tracking-[0.3em]">Global Analytics & System Telemetry</p>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div id="analytics" className="xl:col-span-1 h-full">
-              <AnalyticsMock />
-            </div>
-            <div id="history" className="xl:col-span-1 h-full">
-              <HistoryMock />
-            </div>
-            <div className="xl:col-span-1 h-full">
+          <div className="space-y-8">
+            {/* Top Insight Row: Side-by-Side Metrics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div id="analytics">
+                <AnalyticsMock />
+              </div>
               <HealthPulse />
+            </div>
+
+            {/* Bottom Insight Row: Full-Width History */}
+            <div id="history">
+              <HistoryMock />
             </div>
           </div>
         </div>
