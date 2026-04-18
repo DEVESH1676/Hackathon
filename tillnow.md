@@ -365,4 +365,8 @@
   - **Dev Workflow:** Vite dev server proxy to `localhost:8001` to bypass CORS.
 
 **Next Steps:**
-- Plan Phase 2: Breakdown into executable tasks.
+- Execute Phase 2: Start with Wave 1 (Foundation & Project Setup).
+
+**Files Created/Modified:**
+- `.planning/phases/02-frontend-scaffolding/02-01-PLAN.md` to `02-04-PLAN.md` - Phase 2 wave plans.
+- `.planning/ROADMAP.md` - Updated with Phase 2 plans.

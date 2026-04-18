@@ -27,6 +27,12 @@
 
 **Depends on:** Phase 1 (API Bridge) to test data endpoints
 
+**Plans:** 4 plans
+- [ ] 02-01-PLAN.md — Foundation & Project Setup
+- [ ] 02-02-PLAN.md — Layout & Navigation
+- [ ] 02-03-PLAN.md — Intelligence Feed & State
+- [ ] 02-04-PLAN.md — Polish & Refinement
+
 **Success criteria:**
 1. React + Vite project initializes successfully.
 2. Tailwind CSS is set up and functional.
