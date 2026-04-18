@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { PipelineState, PipelineAction, PipelineStage } from '../types/pipeline';
 
@@ -8,6 +8,12 @@ const initialState: PipelineState = {
   logs: [],
   results: {},
 };
+
+const PipelineContext = createContext<{
+  state: PipelineState;
+  startPipeline: (title: string, description: string) => Promise<void>;
+  reset: () => void;
+} | undefined>(undefined);
 
 function pipelineReducer(state: PipelineState, action: PipelineAction): PipelineState {
   switch (action.type) {
@@ -41,7 +47,7 @@ function pipelineReducer(state: PipelineState, action: PipelineAction): Pipeline
   }
 }
 
-export function usePipeline() {
+export const PipelineProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(pipelineReducer, initialState);
 
   const startPipeline = useCallback(async (title: string, description: string) => {
@@ -81,5 +87,17 @@ export function usePipeline() {
     return () => ctrl.abort();
   }, []);
 
-  return { state, startPipeline, reset: () => dispatch({ type: 'RESET' }) };
-}
+  return (
+    <PipelineContext.Provider value={{ state, startPipeline, reset: () => dispatch({ type: 'RESET' }) }}>
+      {children}
+    </PipelineContext.Provider>
+  );
+};
+
+export const usePipeline = () => {
+  const context = useContext(PipelineContext);
+  if (context === undefined) {
+    throw new Error('usePipeline must be used within a PipelineProvider');
+  }
+  return context;
+};
