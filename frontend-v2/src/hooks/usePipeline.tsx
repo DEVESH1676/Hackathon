@@ -54,12 +54,12 @@ export const PipelineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     dispatch({ type: 'START' });
 
     const ctrl = new AbortController();
+    const params = new URLSearchParams({ title, description, enable_resolution: 'true' });
+    const url = `/api/pipeline/stream?${params.toString()}`;
     
     try {
-      await fetchEventSource('/api/pipeline/stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description }),
+      await fetchEventSource(url, {
+        method: 'GET',
         signal: ctrl.signal,
         onmessage(msg) {
           if (msg.event === 'status') {
