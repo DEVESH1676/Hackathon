@@ -17,29 +17,29 @@ const HistoryMock: React.FC = () => {
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {mockHistory.map((item) => (
-          <div key={item.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all group cursor-pointer">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-mono text-xs border border-cyan-500/20 group-hover:scale-110 transition-transform">
+          <div key={item.id} className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-all group cursor-pointer shadow-xl">
+            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-mono text-sm border border-cyan-500/20 group-hover:scale-105 transition-transform shrink-0">
               {item.id.split('-')[1]}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-semibold text-white/80 truncate">{item.subject}</h4>
-              <div className="flex items-center gap-3 mt-1">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">{item.category}</span>
-                <span className="w-1 h-1 rounded-full bg-zinc-700" />
-                <span className="text-[10px] text-zinc-500 font-medium">{item.date}</span>
+              <h4 className="text-base font-bold text-white/90 truncate">{item.subject}</h4>
+              <div className="flex items-center gap-4 mt-2">
+                <span className="text-[11px] font-black text-cyan-500/80 uppercase tracking-widest">{item.category}</span>
+                <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                <span className="text-xs text-zinc-400 font-bold">{item.date}</span>
               </div>
             </div>
-            <div className="text-right flex flex-col items-end gap-1">
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+            <div className="text-right flex flex-col items-end gap-2 shrink-0">
+              <span className={`text-[10px] font-black px-3 py-1 rounded-lg border tracking-widest ${
                 item.status === 'Escalated' 
-                  ? 'bg-red-500/10 text-red-400 border-red-500/20' 
-                  : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                  ? 'bg-red-500/20 text-red-300 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.1)]' 
+                  : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
               }`}>
                 {item.status.toUpperCase()}
               </span>
-              <span className="text-[10px] font-mono text-zinc-500">
+              <span className="text-[11px] font-mono font-bold text-zinc-400">
                 {(item.confidence * 100).toFixed(0)}% CONF
               </span>
             </div>

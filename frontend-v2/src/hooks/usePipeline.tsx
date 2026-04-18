@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { PipelineState, PipelineAction, PipelineStage } from '../types/pipeline';
+import type { PipelineState, PipelineAction, PipelineStage } from '../types/pipeline';
 
 const initialState: PipelineState = {
   stage: 'idle',
@@ -11,7 +11,7 @@ const initialState: PipelineState = {
 
 const PipelineContext = createContext<{
   state: PipelineState;
-  startPipeline: (title: string, description: string) => Promise<void>;
+  startPipeline: (title: string, description: string) => Promise<any>;
   reset: () => void;
 } | undefined>(undefined);
 

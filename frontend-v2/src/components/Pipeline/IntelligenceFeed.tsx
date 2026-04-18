@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePipeline } from '../../hooks/usePipeline';
 import StageCard from './StageCard';
-import { PipelineStage } from '../../types/pipeline';
+import type { PipelineStage } from '../../types/pipeline';
 
 const STAGES: { id: PipelineStage; title: string }[] = [
   { id: 'classify', title: 'Neural Classification' },
