@@ -1,51 +1,31 @@
-# Phase 2 Validation: Frontend Scaffolding
+# Phase 2 Validation Framework
 
 ## Domain Boundaries
-
-| Boundary | Scope | Responsibilities |
-|----------|-------|------------------|
-| Vite Project | `frontend-v2/` | Build system, dev server, HMR, type generation. |
-| Layout System | `src/components/shell/` | Responsive container, navbar, footer, feed skeleton. |
-| SSE Hook | `src/hooks/use-pipeline.ts` | Real-time state management, connection lifecycle. |
-| Aurora System | `src/components/ui/aurora.tsx` | GPU-accelerated background, motion choreography. |
+- **Frontend Core:** Vite, React, TypeScript, Vitest.
+- **Visual Design:** Glassmorphism, Tailwind v4, Aurora animations, Framer Motion.
+- **Realtime Integration:** SSE Hooks, HealthPulse metrics.
 
 ## Invariants
-
-- **I-01 (Connection Safety):** SSE connection MUST close on unmount.
-- **I-02 (Performance):** Aurora background MUST use GPU acceleration (`will-change`).
-- **I-03 (Visualization):** HealthPulse MUST use Recharts for metrics.
-- **I-04 (Type Safety):** All API-derived types MUST be generated from the FastAPI OpenAPI schema.
-- **I-05 (Accessibility):** All Shadcn UI components MUST maintain WCAG compliance.
+- **SSE Connection Management:** SSE connection MUST close on unmount to prevent resource leaks (T-02-04 mitigation).
+- **GPU Acceleration:** Aurora background and motion-heavy components MUST use GPU acceleration via `will-change: transform` or `will-change: opacity`.
+- **Metrics Standard:** HealthPulse MUST use Recharts for consistent metric visualization.
+- **Type Safety:** All API interactions MUST use Zod-validated schemas or generated TypeScript types.
 
 ## Verification Dimensions
 
 ### D4: Realtime Behavior (SSE)
-- **Goal:** Validate stream consumption and state updates.
-- **Checklist:**
-  - [ ] `usePipeline` hook initializes with `EventSource`.
-  - [ ] Progress values (0.0 - 1.0) correctly update the state.
-  - [ ] Connection closes immediately when the component unmounts.
-  - [ ] Errors in the stream are handled gracefully (reconnect or error state).
+- **Constraint:** Pipeline updates must reflect in UI within 200ms of event reception.
+- **Test:** `pipeline.test.ts` stubs for event handling logic.
 
 ### D8: Glassmorphism Standard
-- **Goal:** Ensure visual consistency across all surface materials.
-- **Checklist:**
-  - [ ] Backdrop blur is applied to cards (`backdrop-blur-xl`).
-  - [ ] Background opacity is consistent (`bg-white/5` or equivalent).
-  - [ ] Borders are subtle and semi-transparent (`border-white/10`).
-  - [ ] No layout shift when applying glass effects.
+- **Constraint:** Glass components must have `backdrop-blur-xl`, `bg-white/5` (or dark equivalent), and `border-white/10`.
+- **Manual Verification:** UI inspection of the Elite Dashboard.
 
 ### D9: Motion Choreography
-- **Goal:** Verify animation fluidity and purpose.
-- **Checklist:**
-  - [ ] Stage reveals use Framer Motion transitions.
-  - [ ] Aurora background remains at < 5% CPU usage during animation.
-  - [ ] Hover states on pills and buttons are responsive and smooth.
-  - [ ] Page-level entrance animations are unified.
+- **Constraint:** All state transitions (e.g., ticket classification) must use choreographed Framer Motion transitions.
+- **Manual Verification:** Visual check of layout shifts and entry/exit animations.
 
-## Success Criteria (Wave 1)
-
-- [ ] Vite dev server starts without errors.
-- [ ] `npm run test` passes (smoke + pipeline stubs).
-- [ ] Tailwind configured with "Glass" material utility.
-- [ ] Shadcn UI components can be imported and rendered.
+## Automated Verification Wave 0
+- [ ] `npm run test` executes Vitest and passes.
+- [ ] Smoke tests confirm React component rendering.
+- [ ] Pipeline stubs confirm basic event processing structure.
