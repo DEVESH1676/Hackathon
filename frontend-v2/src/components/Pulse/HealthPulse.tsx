@@ -13,88 +13,95 @@ const data = [
 
 const HealthPulse: React.FC = () => {
   return (
-    <div className="p-6 h-full glass rounded-3xl flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold tracking-tight text-white/90 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          System Health Pulse
+    <div className="glass rounded-[2rem] p-10 h-full flex flex-col gap-10 relative overflow-hidden group">
+       {/* High-tech accent lines */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+      
+      <div className="flex items-center justify-between relative z-10">
+        <h2 className="text-2xl font-black tracking-tightest text-white/95 uppercase tracking-widest flex items-center gap-3">
+          <div className="relative">
+            <div className="w-3 h-3 rounded-full bg-cyan-400" />
+            <div className="absolute inset-0 w-3 h-3 rounded-full bg-cyan-400 animate-ping opacity-40" />
+          </div>
+          Health Pulse
         </h2>
-        <div className="flex gap-4 text-xs font-medium text-zinc-400">
-          <span className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-cyan-500/50" /> API Load
+        <div className="flex gap-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">
+          <span className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.5)]" /> Realtime Load
           </span>
-          <span className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-purple-500/50" /> Latency
+          <span className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]" /> Latency MS
           </span>
         </div>
       </div>
 
-      <div className="flex-1 min-h-[200px] w-full">
+      <div className="flex-1 min-h-[220px] w-full relative z-10">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.4}/>
                 <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorLatency" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3}/>
+                <stop offset="5%" stopColor="#a855f7" stopOpacity={0.4}/>
                 <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.03)" />
             <XAxis 
               dataKey="time" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#71717a', fontSize: 10 }} 
+              tick={{ fill: '#71717a', fontSize: 11, fontWeight: 700 }} 
             />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#71717a', fontSize: 10 }} 
+              tick={{ fill: '#71717a', fontSize: 11, fontWeight: 700 }} 
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: 'rgba(9, 9, 11, 0.8)', 
+                backgroundColor: 'rgba(9, 9, 11, 0.95)', 
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '12px',
-                backdropFilter: 'blur(8px)'
+                borderRadius: '16px',
+                backdropFilter: 'blur(12px)',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
               }}
-              itemStyle={{ fontSize: '12px' }}
+              itemStyle={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase' }}
             />
             <Area 
-              type="monotone" 
+              type="stepAfter" 
               dataKey="load" 
               stroke="#22d3ee" 
               fillOpacity={1} 
               fill="url(#colorLoad)" 
-              strokeWidth={2}
+              strokeWidth={3}
             />
             <Area 
-              type="monotone" 
+              type="stepAfter" 
               dataKey="latency" 
               stroke="#a855f7" 
               fillOpacity={1} 
               fill="url(#colorLatency)" 
-              strokeWidth={2}
+              strokeWidth={3}
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 pt-2 border-t border-white/5">
-        <div className="flex flex-col">
-          <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Models</span>
-          <span className="text-sm font-mono text-cyan-400">Online</span>
+      <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/5 relative z-10">
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] text-zinc-600 uppercase font-black tracking-[0.3em]">Core Models</span>
+          <span className="text-base font-mono font-black text-cyan-400 tracking-tighter">ONLINE [3]</span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Requests</span>
-          <span className="text-sm font-mono text-white/90">1.2k</span>
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] text-zinc-600 uppercase font-black tracking-[0.3em]">Processing</span>
+          <span className="text-base font-mono font-black text-white/95 tracking-tighter">1.24k REQ</span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Uptime</span>
-          <span className="text-sm font-mono text-white/90">99.9%</span>
+        <div className="flex flex-col gap-2">
+          <span className="text-[10px] text-zinc-600 uppercase font-black tracking-[0.3em]">Session Uptime</span>
+          <span className="text-base font-mono font-black text-white/95 tracking-tighter">99.98%</span>
         </div>
       </div>
     </div>

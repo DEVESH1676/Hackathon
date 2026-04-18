@@ -11,33 +11,46 @@ const categoryData = [
 
 const AnalyticsMock: React.FC = () => {
   return (
-    <div className="glass rounded-3xl p-8 h-full flex flex-col gap-10">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight text-white/90">Analytics</h2>
-        <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-zinc-400 uppercase tracking-widest shadow-inner">
-          30D Overview
+    <div className="glass rounded-[2rem] p-10 h-full flex flex-col gap-12 relative overflow-hidden">
+      {/* Decorative accent */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full" />
+      
+      <div className="flex items-center justify-between relative z-10">
+        <h2 className="text-2xl font-black tracking-tightest text-white/90 uppercase tracking-widest">Analytics</h2>
+        <div className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-cyan-400 uppercase tracking-[0.3em] shadow-inner">
+          30D Operational Delta
         </div>
       </div>
 
-      <div className="space-y-6">
-        <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 shadow-xl">
-          <span className="text-[10px] text-zinc-500 uppercase font-black tracking-[0.2em]">Auto-Resolve Rate</span>
-          <div className="flex items-end gap-3 mt-2">
-            <span className="text-3xl font-mono font-bold text-emerald-400">74%</span>
-            <span className="text-xs text-emerald-500 font-black mb-1.5">+12% ↑</span>
+      <div className="grid grid-cols-1 gap-6 relative z-10">
+        <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 shadow-2xl group hover:bg-white/[0.05] transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1.5 h-4 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+            <span className="text-[11px] text-zinc-500 uppercase font-black tracking-[0.2em]">Resolution Efficacy</span>
+          </div>
+          <div className="flex items-end gap-4">
+            <span className="text-5xl font-mono font-black text-white/95 leading-none">74%</span>
+            <span className="text-xs text-emerald-400 font-black mb-1 bg-emerald-500/10 px-2 py-1 rounded-md">+12.4%</span>
           </div>
         </div>
-        <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 shadow-xl">
-          <span className="text-[10px] text-zinc-500 uppercase font-black tracking-[0.2em]">Avg Confidence</span>
-          <div className="flex items-end gap-3 mt-2">
-            <span className="text-3xl font-mono font-bold text-cyan-400">86.2%</span>
-            <span className="text-xs text-cyan-500 font-black mb-1.5">+2.4% ↑</span>
+        
+        <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 shadow-2xl group hover:bg-white/[0.05] transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1.5 h-4 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
+            <span className="text-[11px] text-zinc-500 uppercase font-black tracking-[0.2em]">Neural Confidence</span>
+          </div>
+          <div className="flex items-end gap-4">
+            <span className="text-5xl font-mono font-black text-white/95 leading-none">86.2%</span>
+            <span className="text-xs text-cyan-400 font-black mb-1 bg-cyan-500/10 px-2 py-1 rounded-md">+2.8%</span>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-[180px]">
-        <span className="text-[10px] text-zinc-500 uppercase font-black tracking-[0.2em] block mb-6">Volume by Category</span>
+      <div className="flex-1 min-h-[220px] relative z-10">
+        <div className="flex items-center gap-3 mb-8">
+           <span className="text-[11px] text-zinc-500 uppercase font-black tracking-[0.2em]">Distribution by Category</span>
+           <div className="flex-1 h-px bg-white/5" />
+        </div>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={categoryData} layout="vertical" margin={{ left: -10, right: 20 }}>
             <XAxis type="number" hide />

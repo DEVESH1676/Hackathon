@@ -19,27 +19,29 @@ const HistoryMock: React.FC = () => {
 
       <div className="space-y-4">
         {mockHistory.map((item) => (
-          <div key={item.id} className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-all group cursor-pointer shadow-xl">
-            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-mono text-sm border border-cyan-500/20 group-hover:scale-105 transition-transform shrink-0">
+          <div key={item.id} className="flex items-center gap-6 p-6 rounded-[2rem] bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all group cursor-pointer shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-mono text-base font-black border border-cyan-500/20 group-hover:scale-105 transition-transform shrink-0 relative z-10 shadow-inner">
               {item.id.split('-')[1]}
             </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="text-base font-bold text-white/90 truncate">{item.subject}</h4>
+            <div className="flex-1 min-w-0 relative z-10">
+              <h4 className="text-lg font-black text-white/95 tracking-tight truncate">{item.subject}</h4>
               <div className="flex items-center gap-4 mt-2">
-                <span className="text-[11px] font-black text-cyan-500/80 uppercase tracking-widest">{item.category}</span>
-                <span className="w-1 h-1 rounded-full bg-zinc-600" />
-                <span className="text-xs text-zinc-400 font-bold">{item.date}</span>
+                <span className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em]">{item.category}</span>
+                <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                <span className="text-[11px] text-zinc-400 font-bold uppercase tracking-wider">{item.date}</span>
               </div>
             </div>
-            <div className="text-right flex flex-col items-end gap-2 shrink-0">
-              <span className={`text-[10px] font-black px-3 py-1 rounded-lg border tracking-widest ${
+            <div className="text-right flex flex-col items-end gap-2 shrink-0 relative z-10">
+              <span className={`text-[10px] font-black px-4 py-1.5 rounded-full border tracking-[0.2em] ${
                 item.status === 'Escalated' 
-                  ? 'bg-red-500/20 text-red-300 border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.1)]' 
-                  : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.1)]'
+                  ? 'bg-red-500/15 text-red-400 border-red-500/30' 
+                  : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
               }`}>
                 {item.status.toUpperCase()}
               </span>
-              <span className="text-[11px] font-mono font-bold text-zinc-400">
+              <span className="text-[11px] font-mono font-black text-zinc-500">
                 {(item.confidence * 100).toFixed(0)}% CONF
               </span>
             </div>
