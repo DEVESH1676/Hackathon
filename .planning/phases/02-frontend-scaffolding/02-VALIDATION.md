@@ -1,30 +1,45 @@
-# Phase 2 Validation Framework: Elite Frontend Scaffolding
+# Phase 2 Validation Framework: Frontend Scaffolding
 
 ## Domain Boundaries
+- **Foundation**: Vite, TypeScript, Vitest.
+- **Visual Foundation**: Aurora Background, Glassmorphism System.
+- **Reactive Layer**: SSE Pipeline Hook, React State Management.
+- **Metric Layer**: HealthPulse (Recharts integration).
 
-| Domain | Scope | Criticality |
-|--------|-------|-------------|
-| **Vite** | Build system, hot reload, bundling, proxy | High |
-| **Layout** | Glassmorphism, Responsive Grid, Motion (Aurora) | Medium |
-| **SSE Hook** | Real-time ticket pipeline connection | High |
-| **Aurora** | Background motion choreography | Low (Visual) |
+## Core Invariants
+- **[INV-01] Realtime Reliability**: SSE connection MUST close on unmount to prevent memory leaks and zombie connections (T-02-04 mitigation).
+- **[INV-02] Performance (GPU)**: Aurora background MUST use GPU acceleration (`will-change: transform`) to maintain 60FPS on high-density displays.
+- **[INV-03] Visual Hierarchy**: Glassmorphism layers MUST follow the defined opacity/blur standards (bg-white/5, backdrop-blur-xl) for readability.
+- **[INV-04] Observability**: HealthPulse MUST use Recharts for metrics to ensure consistent visual language with the bridge API.
 
-## Invariants (Correctness Requirements)
+## Verification Dimensions
 
-1.  **SSE Lifecycle:** SSE connection MUST close on unmount (T-02-04 mitigation).
-2.  **Aurora GPU Acceleration:** Aurora background MUST use GPU acceleration (will-change).
-3.  **HealthPulse Metrics:** HealthPulse MUST use Recharts for metrics.
-4.  **Glass Material:** Glass components MUST use backdrop-blur-xl, bg-white/5, and border-white/10.
+### D4: Realtime Behavior (SSE)
+- Validate connection handshake.
+- Validate automatic reconnection logic.
+- Validate proper cleanup on component unmount.
 
-## Verification Dimensions (Nyquist-D)
+### D8: Glassmorphism Standard
+- Verify backdrop filter support.
+- Verify contrast ratios on frosted glass elements.
+- Verify color bleed through transparent layers.
 
-| ID | Dimension | Target | Verification Method |
-|----|-----------|--------|---------------------|
-| **D4** | Realtime behavior | Server-Sent Events (SSE) | Automated: Mock SSE event flow |
-| **D8** | Glassmorphism standard | Visual Material System | Inspection: Tailwind config & utility check |
-| **D9** | Motion choreography | Framer Motion animations | Inspection: will-change application |
+### D9: Motion Choreography
+- Verify Framer Motion layout transitions.
+- Verify "Liquid Entrance" animation for new ticket cards.
+- Verify Staggered entry for metric pulses.
 
-## Threat Register Mitigations
+## Wave Validation Gates
 
-- **T-02-01 (Spoofing):** API Proxy only targets local loopback (localhost:8000).
-- **T-02-02 (Tampering):** Use fixed versions or lockfile; npm audit in CI.
+### Wave 0: Infrastructure
+- [ ] Vite project starts.
+- [ ] Tailwind configured with Glass utility.
+- [ ] Vitest environment active.
+
+### Wave 1: Reactive Bridge
+- [ ] SSE Hook successfully receives mock stream.
+- [ ] Pipeline state updates correctly.
+
+### Wave 2: Visual Elite
+- [ ] Aurora component renders without layout thrashing.
+- [ ] Shadcn components themed with Glassmorphism.
