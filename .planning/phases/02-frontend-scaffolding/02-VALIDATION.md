@@ -1,45 +1,51 @@
-# Phase 2 Validation Framework: Frontend Scaffolding
+# Phase 2 Validation: Frontend Scaffolding
 
-## 1. Domain Boundaries
+## Domain Boundaries
 
-| Domain | Scope | Responsibility |
-|--------|-------|----------------|
-| Vite | Build & Tooling | Hot module replacement, asset bundling, API proxying |
-| Layout | Shell & Navigation | Core UI scaffolding, Sidebar, Breadcrumbs, Glassmorphism foundations |
-| SSE Hook | Real-time Data | Connection management, event parsing, state synchronization, clean-up |
-| Aurora | Visual Aesthetics | Dynamic background, motion choreography, GPU-accelerated effects |
+| Boundary | Scope | Responsibilities |
+|----------|-------|------------------|
+| Vite Project | `frontend-v2/` | Build system, dev server, HMR, type generation. |
+| Layout System | `src/components/shell/` | Responsive container, navbar, footer, feed skeleton. |
+| SSE Hook | `src/hooks/use-pipeline.ts` | Real-time state management, connection lifecycle. |
+| Aurora System | `src/components/ui/aurora.tsx` | GPU-accelerated background, motion choreography. |
 
-## 2. Invariants
+## Invariants
 
-| ID | Invariant | Mitigation/Requirement |
-|----|-----------|-------------------------|
-| INV-02-01 | SSE Lifecycle | SSE connection **MUST** close on component unmount (T-02-04 mitigation) |
-| INV-02-02 | Performance | Aurora background **MUST** use GPU acceleration (via `will-change: transform/opacity`) |
-| INV-02-03 | Metrics | HealthPulse component **MUST** use Recharts for metrics visualization |
-| INV-02-04 | Safety | All API interactions **MUST** use Zod-validated TypeScript interfaces |
+- **I-01 (Connection Safety):** SSE connection MUST close on unmount.
+- **I-02 (Performance):** Aurora background MUST use GPU acceleration (`will-change`).
+- **I-03 (Visualization):** HealthPulse MUST use Recharts for metrics.
+- **I-04 (Type Safety):** All API-derived types MUST be generated from the FastAPI OpenAPI schema.
+- **I-05 (Accessibility):** All Shadcn UI components MUST maintain WCAG compliance.
 
-## 3. Verification Dimensions
+## Verification Dimensions
 
-### D4: Real-time Behavior (SSE)
-- **Goal:** Robust event-driven state updates.
-- **Verification:** Mock SSE server emitting multiple event types; verify UI updates without full re-render; verify memory leak absence on rapid mount/unmount.
+### D4: Realtime Behavior (SSE)
+- **Goal:** Validate stream consumption and state updates.
+- **Checklist:**
+  - [ ] `usePipeline` hook initializes with `EventSource`.
+  - [ ] Progress values (0.0 - 1.0) correctly update the state.
+  - [ ] Connection closes immediately when the component unmounts.
+  - [ ] Errors in the stream are handled gracefully (reconnect or error state).
 
 ### D8: Glassmorphism Standard
-- **Goal:** Elite aesthetics across all containers.
-- **Verification:** Visual check for `backdrop-blur-xl`, `bg-white/5`, and `border-white/10` on target components.
+- **Goal:** Ensure visual consistency across all surface materials.
+- **Checklist:**
+  - [ ] Backdrop blur is applied to cards (`backdrop-blur-xl`).
+  - [ ] Background opacity is consistent (`bg-white/5` or equivalent).
+  - [ ] Borders are subtle and semi-transparent (`border-white/10`).
+  - [ ] No layout shift when applying glass effects.
 
 ### D9: Motion Choreography
-- **Goal:** Fluid, non-blocking transitions.
-- **Verification:** Use Framer Motion for entry/exit animations; ensure no layout shifts during state transitions.
+- **Goal:** Verify animation fluidity and purpose.
+- **Checklist:**
+  - [ ] Stage reveals use Framer Motion transitions.
+  - [ ] Aurora background remains at < 5% CPU usage during animation.
+  - [ ] Hover states on pills and buttons are responsive and smooth.
+  - [ ] Page-level entrance animations are unified.
 
-## 4. Wave Validation Gates
+## Success Criteria (Wave 1)
 
-### Wave 0: Baseline
-- [ ] Vite project starts
-- [ ] Vitest executes successfully
-- [ ] Tailwind Glass utilities functional
-
-### Wave 1: Foundation
-- [ ] SSE Hook unit tests pass
-- [ ] Layout renders with Glassmorphism
-- [ ] Zod schemas match backend OpenAPI spec
+- [ ] Vite dev server starts without errors.
+- [ ] `npm run test` passes (smoke + pipeline stubs).
+- [ ] Tailwind configured with "Glass" material utility.
+- [ ] Shadcn UI components can be imported and rendered.
