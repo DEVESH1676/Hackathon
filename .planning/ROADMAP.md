@@ -15,6 +15,8 @@
 2. Endpoint (e.g. `/api/ticket/process`) correctly triggers classification cascade and returns structured JSON output.
 3. API is testable via Swagger UI/Docs or cURL without starting Streamlit.
 
+**Status:** COMPLETE
+
 ---
 
 ## Phase 2: Frontend Scaffolding
@@ -28,15 +30,18 @@
 **Depends on:** Phase 1 (API Bridge) to test data endpoints
 
 **Plans:** 4 plans
-- [ ] 02-01-PLAN.md — Foundation & Project Setup
-- [ ] 02-02-PLAN.md — Layout & Navigation
-- [ ] 02-03-PLAN.md — Intelligence Feed & State
-- [ ] 02-04-PLAN.md — Polish & Refinement
+- [ ] 02-01-PLAN.md — Setup & Nyquist Validation
+- [ ] 02-02-PLAN.md — Shell, HealthPulse & Mocks
+- [ ] 02-03-PLAN.md — Pipeline State & Command Console
+- [ ] 02-04-PLAN.md — Intelligence Feed & Visual Polish
 
 **Success criteria:**
-1. React + Vite project initializes successfully.
-2. Tailwind CSS is set up and functional.
-3. Component rendering for ticket submission and dashboard dashboard states are mocked up and then mapped to Phase 1 APIs.
+1. React + Vite project initializes successfully in `frontend-v2/` with passing Wave 0 tests.
+2. Tailwind CSS, Shadcn UI, and Glassmorphism design system are functional.
+3. Intelligence Feed rendering mocked pipeline states correctly according to the 5-stage logic.
+4. HealthPulse, History, and Analytics sections contain high-fidelity mocked metrics and components.
+
+**Status:** PLANNED
 
 ---
 
@@ -75,13 +80,13 @@
 
 ## Summary
 
-| # | Phase | Goal | Requirements | Success Criteria |
-|---|-------|------|--------------|------------------|
-| 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 |
-| 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 3 |
-| 3 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 |
-| 4 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 |
+| # | Phase | Goal | Requirements | Success Criteria | Status |
+|---|-------|------|--------------|------------------|--------|
+| 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 | COMPLETE |
+| 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | PLANNED |
+| 3 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
+| 4 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
 
 ---
-*Roadmap created: 2026-04-18*
+*Roadmap updated: 2026-04-18*
 *Milestone: v4.0 Architectural Decoupling & UI Modernization*
