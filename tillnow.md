@@ -218,6 +218,30 @@
 - Integrated and generated formal implementation plan tracking for triage and discovery bots.
 
 ## Phase 5: LLM-as-Judge Evaluation Framework
+
+---
+
+## v4.0 Phase 2: Frontend Scaffolding
+**Status:** IN PROGRESS
+
+**What We Did Now:**
+- [Phase 2 context refinement] - Reviewed roadmap, requirements, prior v3 UI context, current `app.py`, and local agent workspace rules before locking frontend scaffolding decisions.
+- [React UX direction locked] - Added a single-page progressive disclosure "Intelligence Feed" direction for the new React frontend.
+- [Command center interaction model] - Locked the split workspace pattern: left-side submission hero plus live logs, right-side holographic stage cards, with SSE as the default interaction model.
+- [Mock scope expanded] - Locked full mock scaffolding for workflow, history, and system-health/analytics surfaces so motion and glassmorphism can be validated before full API wiring.
+- [Merge correction] - Restored the original collaborator-authored technical decisions and headings into `02-CONTEXT.md` after initially deleting and replacing that file body.
+
+**Wrong Assumptions Corrected:**
+- [Phase 2 context handling] - A `02-CONTEXT.md` already existed in `.planning/phases/02-frontend-scaffolding/`. I deleted its body and replaced it instead of merging in place.
+- [Merge safety] - Rewriting the file at the same path was the wrong merge tactic for a collaborator-owned planning artifact. The original collaborator text is now explicitly restored in the file.
+- [Implementation plan location] - `implementation_plan.md` was not present at the repo root during this session. The architecture plan in `artifacts/implementation_plan.md` is the available reference path.
+
+**Next Steps:**
+- Run Phase 2 planning against the updated context so the React/Vite/Tailwind scaffold, pipeline state model, and premium feed layout can be broken into executable tasks.
+
+**Files Created/Modified:**
+- `/home/devesh/Hackathon/.planning/phases/02-frontend-scaffolding/02-CONTEXT.md` - Merged Phase 2 frontend decisions into a planning-ready context file.
+- `/home/devesh/Hackathon/tillnow.md` - Logged the Phase 2 discussion outcome and corrected assumptions.
 **Status:** COMPLETE
 
 **What We Did Now:**
@@ -325,3 +349,20 @@
 **What We Did:** FastAPI backend extraction complete. 6 endpoints live: health, classify, retrieve, pipeline/run, pipeline/stream (SSE). All Pydantic typed. Zero changes to core/.
 
 **Files Created:** main.py, api/models.py, api/deps.py, api/routes/{health,classify,retrieve,pipeline}.py
+
+---
+
+## v4.0 Phase 2: Frontend Scaffolding
+**Status:** IN PROGRESS
+
+**What We Did Now:**
+- [Discuss Phase Completion] - Finalized architectural decisions for the React + Vite + Tailwind frontend. Key decisions include:
+  - **State Management:** SSE consumption via `usePipeline` hook with a `useReducer` for multi-stage tracking and live log streaming.
+  - **Component Stack:** Aceternity UI for premium animated "Hero" and Aurora components; Shadcn UI for utility components (inputs, cards, modals).
+  - **UX Flow:** Transition from tabs to a "Step-Aware Dashboard" with progressive disclosure (unfolding UI).
+  - **Styling:** Framer Motion for performance-optimized Aurora Breathing effects; custom Tailwind plugin for a unified "Glassmorphism" material.
+  - **Type Safety:** Automated TypeScript interface generation from FastAPI Pydantic models via `openapi-typescript`.
+  - **Dev Workflow:** Vite dev server proxy to `localhost:8001` to bypass CORS.
+
+**Next Steps:**
+- Plan Phase 2: Breakdown into executable tasks.
