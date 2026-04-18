@@ -83,16 +83,15 @@ Every incoming ticket gets classified, routed, and resolved with transparent con
 | Cascade classifier (centroid → LLM) | Save LLM tokens on easy tickets | — Pending |
 | Safety hard-gate on judge scores | Never auto-resolve unsafe resolutions | — Pending |
 
-## Current Milestone: v3.0 Enterprise Intelligence (Free Stack)
+## Current Milestone: v4.0 Architectural Decoupling & UI Modernization
 
-**Goal:** Implement advanced classification cascade, enhanced RAG with context ranking and multi-hop, dedicated agentic workflows (Triage/Resolution/AutomationDiscovery), and LLM-as-Judge evaluation — all on the existing free/local infrastructure.
+**Goal:** Transition from a monolithic Streamlit architecture to a decoupled React + Vite frontend and FastAPI backend builder to support premium UI aesthetics and pure API interaction.
 
 **Target features:**
-- Confidence calibration + feedback capture table (Day 1)
-- Cascade classifier with novelty detection (Days 2-3)
-- Context ranking + multi-hop RAG (Days 4-5)
-- Three agent classes + LLM-as-Judge (Week 2)
-- 5-tab Streamlit UI (Final)
+- Backend Extraction: Wrapping existing AI modules via FastAPI integration
+- Frontend Scaffolding: Creating an elite, glassmorphic UI using React + Tailwind
+- The Purge: Scouring the codebase of Streamlit components and GUI logic inside python libraries.
+- Branch Convergence: Syncing codeframes back into `core` and setting up the true `core/zenith/main` pipeline.
 
 ## Evolution
 

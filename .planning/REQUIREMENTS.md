@@ -1,136 +1,75 @@
 # Requirements: Nexus AI Ticket Intelligence Platform
 
-**Defined:** 2026-04-08
-**Core Value:** Every ticket gets classified, routed, and resolved with transparent confidence scoring and safety gates
+**Defined:** 2026-04-18
+**Core Value:** Every ticket gets classified, routed, and resolved with transparent confidence scoring and safety gates — completely decoupled via API to allow for elite modern UX.
 
-## v3.0 Requirements
+## v4.0 Requirements - UI Decoupling & Architecture Modernization
 
-Requirements for milestone v3.0. Each maps to roadmap phases.
+Requirements for milestone v4.0. Each maps to roadmap phases to transition the platform to a modern React + FastAPI architecture.
 
-### Calibration & Feedback
+### Backend Extraction
+- [ ] **API-01**: Wrap core Nexus functionality within a FastAPI service (`main.py`)
+- [ ] **API-02**: Core intelligence paths (classification cascade, RAG, evaluators) output pure JSON responses without embedded UI styling code
 
-- [x] **CALIB-01**: System validates classifier confidence bands against existing 50 tickets (high/medium/low accuracy per band) — ✅ 100% accuracy all bands
-- [x] **FDBK-01**: System stores every pipeline run in SQLite feedback table (ticket_id, category, confidence, resolution, judge_scores, agent_action, human_override, outcome, created_at) — ✅ Schema verified
+### Frontend Scaffolding
+- [ ] **UI-01**: Initialize Vite/React single-page application under `frontend-v2` branch/working space
+- [ ] **UI-02**: Configure Tailwind CSS alongside premium component libraries (Aceternity UI/Shadcn) for a high-end application aesthetic
+- [ ] **UI-03**: Create dashboard to process tickets, surfacing pipeline stage data accurately from the new API structure
 
-### Classification Cascade
+### The Purge
+- [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
+- [ ] **PURGE-02**: Clean `requirements.txt` of all presentation-layer Python libraries (Streamlit, Altair, etc.)
 
-- [x] **CASC-01**: System routes tickets through fast centroid path (>0.75 confidence → direct route, no LLM call) — ✅ Verified
-- [x] **CASC-02**: System escalates medium-confidence tickets (0.40–0.75) to LLM judge for re-classification — ✅ Groq API working
-- [x] **CASC-03**: System escalates low-confidence tickets (<0.40) directly without wasting LLM tokens — ✅ Verified
-- [x] **CASC-04**: System detects novel tickets (embedding distance from ALL training examples above threshold) and flags as `NOVEL_TICKET` before classification — ✅ Verified
+### Branch Convergence
+- [ ] **MERGE-01**: Bring `frontend-v2` work into the core git flow supporting the `core` / `zenith` / `main` environment architecture.
 
-### Enhanced RAG
-
-- [x] **RANK-01**: System scores retrieved chunks on 3 axes: semantic similarity (60%), recency (20%), outcome success (20%) — ✅ Verified
-- [x] **RANK-02**: System returns ranked results instead of raw ChromaDB order — ✅ Verified
-- [x] **MHOP-01**: System performs second ChromaDB query using category/metadata from initial retrieval to fetch linked KB articles — ✅ Verified
-- [x] **MHOP-02**: System feeds both retrieval hops as combined context to LLM for resolution generation — ✅ Verified
-
-### Agentic Workflows
-
-- [x] **TRIAGE-01**: TriageAgent class accepts ticket + classification → outputs routing decision with rationale — ✅ 6/6 tests passed
-- [x] **TRIAGE-02**: TriageAgent applies confidence gates + sentiment check for escalation decisions — ✅ Urgency keyword detection verified
-- [x] **RESOLVE-01**: ResolutionAgent class accepts ticket + ranked RAG chunks → outputs structured resolution steps — ✅ Groq structured JSON output verified
-- [x] **RESOLVE-02**: ResolutionAgent exposes confidence score for its generated resolution — ✅ avg(final_score) calculation verified
-- [x] **AUTODISC-01**: AutomationDiscoveryAgent runs as post-resolution hook (not during triage) — ✅ Decoupled from TriageAgent
-- [x] **AUTODISC-02**: AutomationDiscoveryAgent checks ChromaDB for 3+ tickets with same category + root-cause → suggests automation — ✅ Category-filtered query verified
-
-### Evaluation (LLM-as-Judge)
-
-- [x] **JUDGE-01**: System evaluates resolutions on 4 rubric axes: correctness (1-5), completeness (1-5), safety (1-5), clarity (1-5) — ✅ Verified
-- [x] **JUDGE-02**: System returns structured JSON with per-axis scores, overall score, and critique — ✅ All 8 keys verified
-- [x] **JUDGE-03**: Safety hard-gate blocks resolutions with safety < 3 from auto-resolve path — ✅ DROP DATABASE blocked
-- [x] **JUDGE-04**: System uses Groq free tier for judge calls (separate from resolution LLM) — ✅ Groq API verified
-
-### Unified UI
-
-- [x] **UI-01**: Tab 1 (🎫 Submit Ticket) provides form input for title and description — ✅ Full pipeline triggered on submit
-- [x] **UI-02**: Tab 2 (🧠 Classification) shows cascade result, confidence score, novelty flag — ✅ Badge + bar chart + LLM rationale
-- [x] **UI-03**: Tab 3 (🔍 RAG Evidence) displays ranked chunks with multi-hop results and individual scores — ✅ Semantic/Recency/Outcome scores per chunk
-- [x] **UI-04**: Tab 4 (🤖 Agent Decisions) shows which agent fired, its decision, and rationale — ✅ Triage + AutomationDiscovery panels
-- [x] **UI-05**: Tab 5 (⚖️ Resolution + Judge) shows resolution steps, rubric scores, safety gate status — ✅ 4-axis bars + PASS/BLOCKED gate
-
-### Premium Glassmorphism UI
-
-- [ ] **GLASS-01**: All primary containers (Ticket Form, Status Box, Top Tabs) render as frosted Glass Cards with `backdrop-filter: blur(20px)` and `rgba(255,255,255,0.03)` backgrounds with multi-layered box shadows
-- [ ] **GLASS-02**: Tab navigation renders as individual "floating glass islands" with active tab using `translateY(-5px)` lift and neon purple accent border, inactive tabs show hover glow
-- [ ] **GLASS-03**: Background animates with slow "Aurora Breathing" gradient between `#0d0e17` and `#1a1c2c` using CSS keyframes (20s cycle)
-- [ ] **GLASS-04**: Sidebar collapse/expand button is always visible and clickable — fixed position, `z-index: 99999`, glowing cosmic purple border — regardless of sidebar state
-- [ ] **GLASS-05**: Text inputs use obsidian-dark `#090a10` backgrounds with indigo `#818cf8` glowing border on focus; blur effects restricted to top-level containers to prevent GPU lag
-
-## v4.0 Requirements (Deferred)
+## Deferred / Future Requirements (v5.0+)
 
 ### Learning Loop
 - **LEARN-01**: System retrains classification centroids from feedback table corrections
 - **LEARN-02**: System adjusts confidence thresholds based on override patterns
-- **LEARN-03**: System performs active learning — surfaces uncertain tickets for human labeling
 
 ### Enterprise Integration
-- **INTEG-01**: System ingests tickets from ServiceNow API
-- **INTEG-02**: System ingests tickets from Jira Service Management API
-- **INTEG-03**: System writes resolutions back to ITSM tools via API
+- **INTEG-01**: System ingests tickets from ServiceNow / Jira Service Management APIs
 
 ### Advanced Agents
 - **AIOPS-01**: AIOps agent correlates tickets with observability signals
 - **SELFHEAL-01**: Self-healing agent applies known remediations automatically
 
+## Previous Milestones (v3.0) - Completed
+
+### Calibration, Cascade, & Enhanced RAG
+- ✓ **CALIB-01**: System validates classifier confidence bands
+- ✓ **FDBK-01**: System stores pipeline run feedback in SQLite
+- ✓ **CASC-01 to CASC-04**: Fast path, LLM judge, and novelty escalation functioning
+- ✓ **RANK-01 to RANK-02**: Chunk ranking enabled
+- ✓ **MHOP-01 to MHOP-02**: Multi-hop semantic traversal
+
+### Agentic Workflows & Safety
+- ✓ **TRIAGE-01 to TRIAGE-02**: TriageAgent rationale routing
+- ✓ **RESOLVE-01 to RESOLVE-02**: ResolutionAgent JSON structures
+- ✓ **AUTODISC-01 to AUTODISC-02**: AutomationDiscoveryAgent checks for pattern repetitions
+- ✓ **JUDGE-01 to JUDGE-04**: LLM Judge evaluates responses with hard gating for safety
+
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Microservices architecture | Zero budget — prove intelligence in monolith first |
-| Kafka/Pulsar message bus | Single-process pipeline, no inter-service comms |
-| Managed vector DBs (Pinecone, Weaviate) | ChromaDB is free and sufficient |
-| gRPC/REST service mesh | No distributed services |
-| Multi-tenant deployment | Single demo instance |
-| Paid API tiers | Must stay $0.00 |
-| PII detection/masking | Not handling real user data |
-| Mobile/native app | Streamlit web-only |
-| OAuth/SSO authentication | Internal demo tool |
-| Real-time streaming inference | Batch/request-response sufficient |
+| Microservices architecture | Keep the backend monolithic for the prototype while decoupling frontend |
+| GraphQL API | Standard RESTful API covers all basic requirement states |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| CALIB-01 | Phase 1 | Complete |
-| FDBK-01 | Phase 1 | Complete |
-| CASC-01 | Phase 2 | Complete |
-| CASC-02 | Phase 2 | Complete |
-| CASC-03 | Phase 2 | Complete |
-| CASC-04 | Phase 2 | Complete |
-| RANK-01 | Phase 3 | Complete |
-| RANK-02 | Phase 3 | Complete |
-| MHOP-01 | Phase 3 | Complete |
-| MHOP-02 | Phase 3 | Complete |
-| TRIAGE-01 | Phase 4 | Complete |
-| TRIAGE-02 | Phase 4 | Complete |
-| RESOLVE-01 | Phase 4 | Complete |
-| RESOLVE-02 | Phase 4 | Complete |
-| AUTODISC-01 | Phase 4 | Complete |
-| AUTODISC-02 | Phase 4 | Complete |
-| JUDGE-01 | Phase 5 | Complete |
-| JUDGE-02 | Phase 5 | Complete |
-| JUDGE-03 | Phase 5 | Complete |
-| JUDGE-04 | Phase 5 | Complete |
-| UI-01 | Phase 6 | Complete |
-| UI-02 | Phase 6 | Complete |
-| UI-03 | Phase 6 | Complete |
-| UI-04 | Phase 6 | Complete |
-| UI-05 | Phase 6 | Complete |
-| GLASS-01 | Phase 7 | Planned |
-| GLASS-02 | Phase 7 | Planned |
-| GLASS-03 | Phase 7 | Planned |
-| GLASS-04 | Phase 7 | Planned |
-| GLASS-05 | Phase 7 | Planned |
-
-**Coverage:**
-- v3.0 requirements: 30 total
-- Mapped to phases: 30
-- Unmapped: 0 ✓
+| Requirement | Phase (v4.0) | Status |
+|-------------|--------------|--------|
+| API-01      | Phase 1      | Planned |
+| API-02      | Phase 1      | Planned |
+| UI-01       | Phase 2      | Planned |
+| UI-02       | Phase 2      | Planned |
+| UI-03       | Phase 2      | Planned |
+| PURGE-01    | Phase 3      | Planned |
+| PURGE-02    | Phase 3      | Planned |
+| MERGE-01    | Phase 4      | Planned |
 
 ---
-*Requirements defined: 2026-04-08*
-*Last updated: 2026-04-14 after Phase 7 (Glassmorphism UI) addition*
+*Last updated: 2026-04-18 after Milestone 4.0 initialization*
