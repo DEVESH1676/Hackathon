@@ -1,45 +1,45 @@
 # Phase 2 Validation Framework: Frontend Scaffolding
 
-## Domain Boundaries
-- **Foundation**: Vite, TypeScript, Vitest.
-- **Visual Foundation**: Aurora Background, Glassmorphism System.
-- **Reactive Layer**: SSE Pipeline Hook, React State Management.
-- **Metric Layer**: HealthPulse (Recharts integration).
+## 1. Domain Boundaries
 
-## Core Invariants
-- **[INV-01] Realtime Reliability**: SSE connection MUST close on unmount to prevent memory leaks and zombie connections (T-02-04 mitigation).
-- **[INV-02] Performance (GPU)**: Aurora background MUST use GPU acceleration (`will-change: transform`) to maintain 60FPS on high-density displays.
-- **[INV-03] Visual Hierarchy**: Glassmorphism layers MUST follow the defined opacity/blur standards (bg-white/5, backdrop-blur-xl) for readability.
-- **[INV-04] Observability**: HealthPulse MUST use Recharts for metrics to ensure consistent visual language with the bridge API.
+| Domain | Scope | Responsibility |
+|--------|-------|----------------|
+| Vite | Build & Tooling | Hot module replacement, asset bundling, API proxying |
+| Layout | Shell & Navigation | Core UI scaffolding, Sidebar, Breadcrumbs, Glassmorphism foundations |
+| SSE Hook | Real-time Data | Connection management, event parsing, state synchronization, clean-up |
+| Aurora | Visual Aesthetics | Dynamic background, motion choreography, GPU-accelerated effects |
 
-## Verification Dimensions
+## 2. Invariants
 
-### D4: Realtime Behavior (SSE)
-- Validate connection handshake.
-- Validate automatic reconnection logic.
-- Validate proper cleanup on component unmount.
+| ID | Invariant | Mitigation/Requirement |
+|----|-----------|-------------------------|
+| INV-02-01 | SSE Lifecycle | SSE connection **MUST** close on component unmount (T-02-04 mitigation) |
+| INV-02-02 | Performance | Aurora background **MUST** use GPU acceleration (via `will-change: transform/opacity`) |
+| INV-02-03 | Metrics | HealthPulse component **MUST** use Recharts for metrics visualization |
+| INV-02-04 | Safety | All API interactions **MUST** use Zod-validated TypeScript interfaces |
+
+## 3. Verification Dimensions
+
+### D4: Real-time Behavior (SSE)
+- **Goal:** Robust event-driven state updates.
+- **Verification:** Mock SSE server emitting multiple event types; verify UI updates without full re-render; verify memory leak absence on rapid mount/unmount.
 
 ### D8: Glassmorphism Standard
-- Verify backdrop filter support.
-- Verify contrast ratios on frosted glass elements.
-- Verify color bleed through transparent layers.
+- **Goal:** Elite aesthetics across all containers.
+- **Verification:** Visual check for `backdrop-blur-xl`, `bg-white/5`, and `border-white/10` on target components.
 
 ### D9: Motion Choreography
-- Verify Framer Motion layout transitions.
-- Verify "Liquid Entrance" animation for new ticket cards.
-- Verify Staggered entry for metric pulses.
+- **Goal:** Fluid, non-blocking transitions.
+- **Verification:** Use Framer Motion for entry/exit animations; ensure no layout shifts during state transitions.
 
-## Wave Validation Gates
+## 4. Wave Validation Gates
 
-### Wave 0: Infrastructure
-- [ ] Vite project starts.
-- [ ] Tailwind configured with Glass utility.
-- [ ] Vitest environment active.
+### Wave 0: Baseline
+- [ ] Vite project starts
+- [ ] Vitest executes successfully
+- [ ] Tailwind Glass utilities functional
 
-### Wave 1: Reactive Bridge
-- [ ] SSE Hook successfully receives mock stream.
-- [ ] Pipeline state updates correctly.
-
-### Wave 2: Visual Elite
-- [ ] Aurora component renders without layout thrashing.
-- [ ] Shadcn components themed with Glassmorphism.
+### Wave 1: Foundation
+- [ ] SSE Hook unit tests pass
+- [ ] Layout renders with Glassmorphism
+- [ ] Zod schemas match backend OpenAPI spec
