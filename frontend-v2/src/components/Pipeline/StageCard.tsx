@@ -62,36 +62,37 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
             {getIcon()}
           </div>
           <div>
-            <h3 className={cn(
-              "text-sm font-semibold tracking-tight transition-colors duration-300",
-              status === 'idle' ? "text-slate-500" : "text-slate-200"
-            )}>
-              {title}
-            </h3>
-            {status === 'running' && (
-              <p className="text-[10px] uppercase tracking-widest text-blue-400/80 mt-1 font-bold animate-pulse">
-                Analyzing...
-              </p>
+            <div>
+              <h3 className={cn(
+                "text-[13px] font-black tracking-tight transition-colors duration-300",
+                status === 'idle' ? "text-slate-500" : "text-slate-100"
+              )}>
+                {title.toUpperCase()}
+              </h3>
+              {status === 'running' && (
+                <p className="text-[9px] uppercase tracking-[0.3em] text-blue-400 mt-1.5 font-black animate-pulse">
+                  Neural Synthesis Active
+                </p>
+              )}
+            </div>
+            ...
+            <AnimatePresence>
+            {result && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="mt-6 pt-6 border-t border-white/5 relative z-10"
+            >
+              <div className="bg-black/30 rounded-xl p-5 overflow-hidden border border-white/5 shadow-inner">
+                 <pre className="text-[11px] font-mono font-medium text-zinc-400 overflow-x-auto whitespace-pre-wrap leading-relaxed">
+                  {typeof result === 'string' ? result : JSON.stringify(result, null, 3)}
+                </pre>
+              </div>
+            </motion.div>
             )}
-          </div>
-        </div>
-        <div className="mt-1">
-          {getStatusIcon()}
-        </div>
-      </div>
+            </AnimatePresence>
 
-      <AnimatePresence>
-        {result && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="mt-4 pt-4 border-t border-white/10 relative z-10"
-          >
-            <div className="bg-black/20 rounded-lg p-3 overflow-hidden border border-white/5">
-               <pre className="text-[11px] font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap leading-relaxed">
-                {typeof result === 'string' ? result : JSON.stringify(result, null, 2)}
-              </pre>
             </div>
           </motion.div>
         )}

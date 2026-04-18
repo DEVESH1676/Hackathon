@@ -31,12 +31,16 @@ const TerminalLogs: React.FC = () => {
         className="flex-1 p-4 overflow-y-auto space-y-2 no-scrollbar scroll-smooth"
       >
         {state.logs.length === 0 ? (
-          <div className="text-slate-600 text-xs italic">Awaiting pipeline initialization...</div>
+          <div className="text-slate-600 text-[11px] font-bold uppercase tracking-widest italic px-2">Awaiting telemetry...</div>
         ) : (
           state.logs.map((log, index) => (
-            <div key={index} className="flex gap-3 text-xs">
-              <span className="text-emerald-500/50 shrink-0 select-none">[{index.toString().padStart(3, '0')}]</span>
-              <span className="text-slate-300 leading-relaxed whitespace-pre-wrap">{log}</span>
+            <div key={index} className="flex gap-4 text-[11px] leading-relaxed group">
+              <span className="text-emerald-500/40 shrink-0 select-none font-black opacity-40 group-hover:opacity-100 transition-opacity">
+                {index.toString().padStart(3, '0')}
+              </span>
+              <span className="text-slate-300 font-medium whitespace-pre-wrap tracking-normal">
+                {log}
+              </span>
             </div>
           ))
         )}
