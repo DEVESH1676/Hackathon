@@ -5,6 +5,7 @@ GET  /api/pipeline/stream — Full pipeline, SSE streaming (yields ServerSentEve
 """
 import asyncio
 import time
+import json
 from collections.abc import AsyncIterable
 
 from fastapi import APIRouter, Query, Request
@@ -163,18 +164,12 @@ async def run_pipeline(
 
 
 # ──────────────────────────────────────────────────────────────
-# GET /api/pipeline/stream — SSE streaming pipeline
+# POST /api/pipeline/stream — SSE streaming pipeline
 # ──────────────────────────────────────────────────────────────
-@router.get("/stream", response_class=EventSourceResponse)
+@router.post("/stream", response_class=EventSourceResponse)
 async def stream_pipeline(
+    ticket: TicketRequest,
     request: Request,
-    title: str = Query(..., min_length=3, description="Ticket title"),
-    description: str = Query(
-        ..., min_length=10, description="Ticket description"
-    ),
-    enable_resolution: bool = Query(
-        default=True, description="Run full resolution pipeline"
-    ),
 ) -> AsyncIterable[ServerSentEvent]:
     """
     Master Orchestrator — SSE streaming pipeline.
@@ -183,6 +178,9 @@ async def stream_pipeline(
     - event: result → Stage completion with actual data
     - event: done   → Pipeline complete with full response payload
     """
+    title = ticket.title
+    description = ticket.description
+    enable_resolution = ticket.enable_resolution
     state = request.app.state
 
     # Step 1: Classification
@@ -191,14 +189,14 @@ async def stream_pipeline(
             stage="classifying",
             message="Extracting semantic embeddings...",
             progress=0.0,
-        ),
+        ).model_dump_json(),
         event="status",
     )
     classification = await asyncio.to_thread(
         state.classifier.classify, title, description
     )
     yield ServerSentEvent(
-        data={"stage": "classified", "result": classification},
+        data=json.dumps({"stage": "classified", "type": "classification", "payload": classification}),
         event="result",
     )
 
@@ -208,7 +206,7 @@ async def stream_pipeline(
             stage="triaging",
             message="Triage agent routing...",
             progress=0.15,
-        ),
+        ).model_dump_json(),
         event="status",
     )
     ticket = {"title": title, "description": description}
@@ -216,7 +214,7 @@ async def stream_pipeline(
         state.triage_agent.run, ticket, classification
     )
     yield ServerSentEvent(
-        data={"stage": "triaged", "result": triage_result},
+        data=json.dumps({"stage": "triaged", "type": "triage", "payload": triage_result}),
         event="result",
     )
 
@@ -226,7 +224,7 @@ async def stream_pipeline(
             stage="retrieving",
             message="Retrieving & ranking historical evidence...",
             progress=0.30,
-        ),
+        ).model_dump_json(),
         event="status",
     )
     rag_result = await asyncio.to_thread(
@@ -246,7 +244,7 @@ async def stream_pipeline(
     )
     ranked_chunks = state.rag_engine._rank_retrieved_chunks(raw_results)[:3]
     yield ServerSentEvent(
-        data={"stage": "retrieved", "result": rag_result},
+        data=json.dumps({"stage": "retrieved", "type": "rag", "payload": rag_result}),
         event="result",
     )
 
@@ -261,14 +259,14 @@ async def stream_pipeline(
                 stage="resolving",
                 message="Resolution agent generating fix...",
                 progress=0.50,
-            ),
+            ).model_dump_json(),
             event="status",
         )
         resolution_result = await asyncio.to_thread(
             state.resolution_agent.run, ticket, ranked_chunks
         )
         yield ServerSentEvent(
-            data={"stage": "resolved", "result": resolution_result},
+            data=json.dumps({"stage": "resolved", "type": "resolution", "payload": resolution_result}),
             event="result",
         )
 
@@ -278,7 +276,7 @@ async def stream_pipeline(
                 stage="judging",
                 message="Quality judge evaluating resolution...",
                 progress=0.70,
-            ),
+            ).model_dump_json(),
             event="status",
         )
         resolution_text = "\n".join(
@@ -294,7 +292,7 @@ async def stream_pipeline(
             resolution_text,
         )
         yield ServerSentEvent(
-            data={"stage": "judged", "result": judge_result},
+            data=json.dumps({"stage": "judged", "type": "judge", "payload": judge_result}),
             event="result",
         )
 
@@ -304,7 +302,7 @@ async def stream_pipeline(
                 stage="automating",
                 message="Scanning for automation patterns...",
                 progress=0.85,
-            ),
+            ).model_dump_json(),
             event="status",
         )
         automation_result = await asyncio.to_thread(
@@ -317,7 +315,7 @@ async def stream_pipeline(
             },
         )
         yield ServerSentEvent(
-            data={"stage": "automated", "result": automation_result},
+            data=json.dumps({"stage": "automated", "type": "automation", "payload": automation_result}),
             event="result",
         )
     else:
@@ -359,7 +357,7 @@ async def stream_pipeline(
     yield ServerSentEvent(
         data=PipelineStatusEvent(
             stage="complete", message="Pipeline complete", progress=1.0
-        ),
+        ).model_dump_json(),
         event="status",
     )
-    yield ServerSentEvent(data=final_response, event="done")
+    yield ServerSentEvent(data=json.dumps(final_response), event="done")
