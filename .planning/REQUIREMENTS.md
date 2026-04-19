@@ -21,9 +21,9 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 - [x] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages (COMPLETE: State sync unified in 03-01, Rich UI in 03-03)
 
 ### Architectural Observability
-- [ ] **UI-06**: Integrate Mermaid.js to visualize live execution flows
-- [ ] **UI-07**: Build a searchable "Term Inspector" glossary of core logic concepts
-- [ ] **UI-08**: Display file-level dependency mapping within the UI
+- [x] **UI-06**: Integrate Mermaid.js to visualize live execution flows
+- [x] **UI-07**: Build a searchable "Term Inspector" glossary of core logic concepts
+- [x] **UI-08**: Display file-level dependency mapping within the UI
 
 ### The Purge
 - [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
@@ -78,9 +78,9 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 | UI-03       | Phase 2      | COMPLETE |
 | UI-04       | Phase 3      | COMPLETE |
 | UI-05       | Phase 3      | COMPLETE |
-| UI-06       | Phase 4      | PLANNED |
-| UI-07       | Phase 4      | PLANNED |
-| UI-08       | Phase 4      | PLANNED |
+| UI-06       | Phase 4      | COMPLETE |
+| UI-07       | Phase 4      | COMPLETE |
+| UI-08       | Phase 4      | COMPLETE |
 | PURGE-01    | Phase 5      | PLANNED |
 | PURGE-02    | Phase 5      | PLANNED |
 | MERGE-01    | Phase 6      | PLANNED |

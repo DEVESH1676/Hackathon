@@ -4,14 +4,24 @@ const sections = [
   { id: "classify", label: "Pipeline" },
   { id: "history", label: "History" },
   { id: "analytics", label: "Analytics" },
+  { id: "blueprint", label: "Blueprint" },
 ];
 
-const PillNavbar: React.FC = () => {
+interface PillNavbarProps {
+  onViewChange?: (view: "operations" | "architecture") => void;
+}
+
+const PillNavbar: React.FC<PillNavbarProps> = ({ onViewChange }) => {
   const [activeSection, setActiveSection] = useState("classify");
 
   useEffect(() => {
     const handleScroll = () => {
-      const sectionElements = sections.map(s => document.getElementById(s.id));
+      // Don't update active section via scroll if we're in blueprint view
+      if (activeSection === "blueprint") return;
+
+      const sectionElements = sections
+        .filter(s => s.id !== "blueprint")
+        .map(s => document.getElementById(s.id));
       const currentSection = sectionElements.find(el => {
         if (!el) return false;
         const rect = el.getBoundingClientRect();
@@ -22,7 +32,7 @@ const PillNavbar: React.FC = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [activeSection]);
 
   return (
     <nav className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] w-full max-w-fit px-4">
@@ -38,7 +48,15 @@ const PillNavbar: React.FC = () => {
               href={`#${section.id}`}
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" });
+                if (section.id === "blueprint") {
+                  onViewChange?.("architecture");
+                } else {
+                  onViewChange?.("operations");
+                  // Small delay to allow App.tsx to switch view before scrolling
+                  setTimeout(() => {
+                    document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" });
+                  }, 10);
+                }
                 setActiveSection(section.id);
               }}
               className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 ${

@@ -84,7 +84,7 @@
 2. Searchable "Term Inspector" maps logical concepts (e.g. "Novelty") to specific code lines and DB columns.
 3. Interactive dependency graph shows file-level links across the v4.0 architecture.
 
-**Status:** PLANNED
+**Status:** COMPLETE
 
 ---
 
@@ -132,7 +132,7 @@
 | 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 | COMPLETE |
 | 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | COMPLETE |
 | 3 | Frontend Robustness | Fix Validation Wall & State Sync | UI-04–05 | 3 | COMPLETE |
-| 4 | Nexus Blueprint | Architectural Observability | UI-06–08 | 3 | PLANNED |
+| 4 | Nexus Blueprint | Architectural Observability | UI-06–08 | 3 | COMPLETE |
 | 5 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
 | 6 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
 

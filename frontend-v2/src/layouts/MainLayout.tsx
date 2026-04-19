@@ -2,11 +2,16 @@ import React from "react";
 import PillNavbar from "../components/Navigation/PillNavbar";
 import { AuroraBackground } from "../components/Visuals/AuroraBackground";
 
-const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface MainLayoutProps {
+  children: React.ReactNode;
+  onViewChange?: (view: "operations" | "architecture") => void;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ children, onViewChange }) => {
   return (
     <AuroraBackground className="z-0">
       <div className="min-h-screen text-white font-sans selection:bg-cyan-500/30 overflow-x-hidden text-balance w-full">
-        <PillNavbar />
+        <PillNavbar onViewChange={onViewChange} />
 
         <main className="relative z-10 pt-32 pb-20 px-6 max-w-[1700px] mx-auto">
           {children}
