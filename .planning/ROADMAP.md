@@ -69,7 +69,26 @@
 
 ---
 
-## Phase 4: The Purge
+## Phase 4: Architectural Observability (The Nexus Blueprint)
+
+**Goal:** Implement a dynamic "Nexus Blueprint" tab using Mermaid.js and a searchable Data Dictionary to visualize logic flows, term definitions, and file dependencies.
+
+**Requirements:** UI-06, UI-07, UI-08
+
+**Rationale:** To facilitate rapid debugging and future-proofing, the system must expose its inner workings (how centroids calculate, where terms are stored) in a visual, searchable format rather than just hidden in code.
+
+**Depends on:** Phase 2 & 3
+
+**Success criteria:**
+1. Mermaid.js integrated and rendering a live "Execution Graph" of the 7-step pipeline.
+2. Searchable "Term Inspector" maps logical concepts (e.g. "Novelty") to specific code lines and DB columns.
+3. Interactive dependency graph shows file-level links across the v4.0 architecture.
+
+**Status:** PLANNED
+
+---
+
+## Phase 5: The Purge
 
 **Goal:** Systematically remove Streamlit-related code, dependencies, and legacy python-based UI injections across the codebase once the React interface takes over.
 
@@ -77,16 +96,18 @@
 
 **Rationale:** Complete the decoupling by removing UI responsibilities completely from Python logic, enforcing the API-only architecture.
 
-**Depends on:** Phase 2 & 3
+**Depends on:** Phase 2, 3 & 4
 
 **Success criteria:**
 1. `app.py` Streamlit entrypoint removed/archived.
 2. Direct styling injections (e.g., `st.markdown`) successfully scrubbed from core logic files.
 3. Heavy unneeded dependencies (Streamlit, Altair, Watchdog) pruned from `requirements.txt`.
 
+**Status:** PLANNED
+
 ---
 
-## Phase 5: Branch Convergence
+## Phase 6: Branch Convergence
 
 **Goal:** Finalize the architectural change and stabilize the git repository with the 3-tier realm standard (`core`, `zenith`, `dao`/main).
 
@@ -94,11 +115,13 @@
 
 **Rationale:** Integrate verified, decoupled changes from `frontend-v2` into the standard development stream, ensuring the multi-tier repo is ready for staging testing.
 
-**Depends on:** Phase 4
+**Depends on:** Phase 5
 
 **Success criteria:**
 1. `frontend-v2` is successfully merged into the `core` branch.
 2. Both Node/React app and FastAPI backend build/run commands are properly documented for developers working on the unified repository.
+
+**Status:** PLANNED
 
 ---
 
@@ -109,8 +132,9 @@
 | 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 | COMPLETE |
 | 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | COMPLETE |
 | 3 | Frontend Robustness | Fix Validation Wall & State Sync | UI-04–05 | 3 | COMPLETE |
-| 4 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
-| 5 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
+| 4 | Nexus Blueprint | Architectural Observability | UI-06–08 | 3 | PLANNED |
+| 5 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
+| 6 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
 
 ---
 *Roadmap updated: 2026-04-18*

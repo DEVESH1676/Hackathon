@@ -20,6 +20,11 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 - [x] **UI-04**: Implement client-side validation for ticket inputs to prevent 422 backend crashes
 - [x] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages (COMPLETE: State sync unified in 03-01, Rich UI in 03-03)
 
+### Architectural Observability
+- [ ] **UI-06**: Integrate Mermaid.js to visualize live execution flows
+- [ ] **UI-07**: Build a searchable "Term Inspector" glossary of core logic concepts
+- [ ] **UI-08**: Display file-level dependency mapping within the UI
+
 ### The Purge
 - [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
 - [ ] **PURGE-02**: Clean `requirements.txt` of all presentation-layer Python libraries (Streamlit, Altair, etc.)
@@ -73,9 +78,12 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 | UI-03       | Phase 2      | COMPLETE |
 | UI-04       | Phase 3      | COMPLETE |
 | UI-05       | Phase 3      | COMPLETE |
-| PURGE-01    | Phase 4      | PLANNED |
-| PURGE-02    | Phase 4      | PLANNED |
-| MERGE-01    | Phase 5      | PLANNED |
+| UI-06       | Phase 4      | PLANNED |
+| UI-07       | Phase 4      | PLANNED |
+| UI-08       | Phase 4      | PLANNED |
+| PURGE-01    | Phase 5      | PLANNED |
+| PURGE-02    | Phase 5      | PLANNED |
+| MERGE-01    | Phase 6      | PLANNED |
 
 ---
 *Last updated: 2026-04-18 after Milestone 4.0 initialization*
