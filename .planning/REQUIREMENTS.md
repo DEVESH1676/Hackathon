@@ -8,17 +8,17 @@
 Requirements for milestone v4.0. Each maps to roadmap phases to transition the platform to a modern React + FastAPI architecture.
 
 ### Backend Extraction
-- [ ] **API-01**: Wrap core Nexus functionality within a FastAPI service (`main.py`)
-- [ ] **API-02**: Core intelligence paths (classification cascade, RAG, evaluators) output pure JSON responses without embedded UI styling code
+- [x] **API-01**: Wrap core Nexus functionality within a FastAPI service (`main.py`)
+- [x] **API-02**: Core intelligence paths (classification cascade, RAG, evaluators) output pure JSON responses without embedded UI styling code
 
 ### Frontend Scaffolding
-- [ ] **UI-01**: Initialize Vite/React single-page application under `frontend-v2` branch/working space
-- [ ] **UI-02**: Configure Tailwind CSS alongside premium component libraries (Aceternity UI/Shadcn) for a high-end application aesthetic
-- [ ] **UI-03**: Create dashboard to process tickets, surfacing pipeline stage data accurately from the new API structure
+- [x] **UI-01**: Initialize Vite/React single-page application under `frontend-v2` branch/working space
+- [x] **UI-02**: Configure Tailwind CSS alongside premium component libraries (Aceternity UI/Shadcn) for a high-end application aesthetic
+- [x] **UI-03**: Create dashboard to process tickets, surfacing pipeline stage data accurately from the new API structure
 
 ### Frontend Robustness
 - [ ] **UI-04**: Implement client-side validation for ticket inputs to prevent 422 backend crashes
-- [ ] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages
+- [/] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages (Partially complete: State sync unified in 03-01)
 
 ### The Purge
 - [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
@@ -66,16 +66,16 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 
 | Requirement | Phase (v4.0) | Status |
 |-------------|--------------|--------|
-| API-01      | Phase 1      | Planned |
-| API-02      | Phase 1      | Planned |
-| UI-01       | Phase 2      | Planned |
-| UI-02       | Phase 2      | Planned |
-| UI-03       | Phase 2      | Planned |
-| UI-04       | Phase 3      | Planned |
-| UI-05       | Phase 3      | Planned |
-| PURGE-01    | Phase 4      | Planned |
-| PURGE-02    | Phase 4      | Planned |
-| MERGE-01    | Phase 5      | Planned |
+| API-01      | Phase 1      | COMPLETE |
+| API-02      | Phase 1      | COMPLETE |
+| UI-01       | Phase 2      | COMPLETE |
+| UI-02       | Phase 2      | COMPLETE |
+| UI-03       | Phase 2      | COMPLETE |
+| UI-04       | Phase 3      | PLANNED |
+| UI-05       | Phase 3      | IN PROGRESS |
+| PURGE-01    | Phase 4      | PLANNED |
+| PURGE-02    | Phase 4      | PLANNED |
+| MERGE-01    | Phase 5      | PLANNED |
 
 ---
 *Last updated: 2026-04-18 after Milestone 4.0 initialization*

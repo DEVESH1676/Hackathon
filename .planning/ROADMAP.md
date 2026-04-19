@@ -30,10 +30,10 @@
 **Depends on:** Phase 1 (API Bridge) to test data endpoints
 
 **Plans:** 4 plans
-- [ ] 02-01-PLAN.md — Setup & Nyquist Validation
-- [ ] 02-02-PLAN.md — Shell, HealthPulse & Mocks
-- [ ] 02-03-PLAN.md — Pipeline State & Command Console
-- [ ] 02-04-PLAN.md — Intelligence Feed & Visual Polish
+- [x] 02-01-PLAN.md — Setup & Nyquist Validation
+- [x] 02-02-PLAN.md — Shell, HealthPulse & Mocks
+- [x] 02-03-PLAN.md — Pipeline State & Command Console
+- [x] 02-04-PLAN.md — Intelligence Feed & Visual Polish
 
 **Success criteria:**
 1. React + Vite project initializes successfully in `frontend-v2/` with passing Wave 0 tests.
@@ -41,7 +41,7 @@
 3. Intelligence Feed rendering mocked pipeline states correctly according to the 5-stage logic.
 4. HealthPulse, History, and Analytics sections contain high-fidelity mocked metrics and components.
 
-**Status:** PLANNED
+**Status:** COMPLETE
 
 ---
 
@@ -56,7 +56,7 @@
 **Depends on:** Phase 2 (Frontend Scaffolding)
 
 **Plans:** 3 plans
-- [ ] 03-01-PLAN.md — Pipeline Logic Unification
+- [x] 03-01-PLAN.md — Pipeline Logic Unification
 - [ ] 03-02-PLAN.md — The Validation Wall
 - [ ] 03-03-PLAN.md — Rich Visual Synthesis
 
@@ -65,7 +65,7 @@
 2. React Reducer correctly persists SSE `result` payloads in the state.
 3. `StageCard` components dynamically render AI data once the payload is received.
 
-**Status:** PLANNED
+**Status:** IN PROGRESS
 
 ---
 
