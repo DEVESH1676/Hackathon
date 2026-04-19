@@ -55,6 +55,11 @@
 
 **Depends on:** Phase 2 (Frontend Scaffolding)
 
+**Plans:** 3 plans
+- [ ] 03-01-PLAN.md — Pipeline Logic Unification
+- [ ] 03-02-PLAN.md — The Validation Wall
+- [ ] 03-03-PLAN.md — Rich Visual Synthesis
+
 **Success criteria:**
 1. UI validation prevents "Launch" for tickets with <3 subject or <10 description chars.
 2. React Reducer correctly persists SSE `result` payloads in the state.
