@@ -15,10 +15,10 @@ const PipelineContext = createContext<{
   reset: () => void;
 } | undefined>(undefined);
 
-function pipelineReducer(state: PipelineState, action: PipelineAction): PipelineState {
+export function pipelineReducer(state: PipelineState, action: PipelineAction): PipelineState {
   switch (action.type) {
     case 'START':
-      return { ...initialState, stage: 'classify', logs: ['Initiating pipeline...'] };
+      return { ...initialState, stage: 'classification', logs: ['Initiating pipeline...'] };
     case 'UPDATE_PROGRESS':
       return { ...state, progress: action.payload };
     case 'ADD_LOG':
@@ -27,7 +27,7 @@ function pipelineReducer(state: PipelineState, action: PipelineAction): Pipeline
       const nextStageMap: Record<string, PipelineStage> = {
         classification: 'triage',
         triage: 'rag',
-        rag: 'resolve',
+        rag: 'resolution',
         resolution: 'judge',
         judge: 'complete'
       };
