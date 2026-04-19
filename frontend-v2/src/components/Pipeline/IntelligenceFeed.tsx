@@ -4,10 +4,10 @@ import StageCard from './StageCard';
 import type { PipelineStage } from '../../types/pipeline';
 
 const STAGES: { id: PipelineStage; title: string }[] = [
-  { id: 'classify', title: 'Neural Classification' },
+  { id: 'classification', title: 'Neural Classification' },
   { id: 'triage', title: 'Priority Triage' },
   { id: 'rag', title: 'Contextual Retrieval' },
-  { id: 'resolve', title: 'Resolution Synthesis' },
+  { id: 'resolution', title: 'Resolution Synthesis' },
   { id: 'judge', title: 'Safety Verification' },
 ];
 
@@ -29,10 +29,10 @@ const IntelligenceFeed: React.FC = () => {
 
   const getResult = (stageId: PipelineStage) => {
     switch (stageId) {
-      case 'classify': return state.results.classification;
+      case 'classification': return state.results.classification;
       case 'triage': return state.results.triage;
       case 'rag': return state.results.rag;
-      case 'resolve': return state.results.resolution;
+      case 'resolution': return state.results.resolution;
       case 'judge': return state.results.judge;
       default: return undefined;
     }

@@ -14,10 +14,10 @@ interface StageCardProps {
 const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, index }) => {
   const getIcon = () => {
     switch (stage) {
-      case 'classify': return <Zap className="w-5 h-5" />;
+      case 'classification': return <Zap className="w-5 h-5" />;
       case 'triage': return <Cpu className="w-5 h-5" />;
       case 'rag': return <Search className="w-5 h-5" />;
-      case 'resolve': return <FileText className="w-5 h-5" />;
+      case 'resolution': return <FileText className="w-5 h-5" />;
       case 'judge': return <ShieldCheck className="w-5 h-5" />;
       default: return <Clock className="w-5 h-5" />;
     }
