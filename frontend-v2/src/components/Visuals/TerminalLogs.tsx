@@ -13,7 +13,7 @@ const TerminalLogs: React.FC = () => {
   }, [state.logs]);
 
   return (
-    <div className="flex flex-col h-full bg-black/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden font-mono shadow-2xl">
+    <div className="flex flex-col h-full glass rounded-xl overflow-hidden font-mono shadow-2xl">
       <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-emerald-400" />
@@ -28,17 +28,18 @@ const TerminalLogs: React.FC = () => {
       
       <div 
         ref={scrollRef}
-        className="flex-1 p-4 overflow-y-auto space-y-2 no-scrollbar scroll-smooth"
+        className="flex-1 p-6 overflow-y-auto space-y-2 no-scrollbar scroll-smooth"
+        style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}
       >
         {state.logs.length === 0 ? (
-          <div className="text-slate-600 text-[11px] font-bold uppercase tracking-widest italic px-2">Awaiting telemetry...</div>
+          <div className="text-slate-400 text-[13px] font-bold uppercase tracking-widest italic px-2">Awaiting telemetry...</div>
         ) : (
           state.logs.map((log, index) => (
-            <div key={index} className="flex gap-4 text-[11px] leading-relaxed group">
+            <div key={index} className="flex gap-4 text-[13px] leading-relaxed group">
               <span className="text-emerald-500/40 shrink-0 select-none font-black opacity-40 group-hover:opacity-100 transition-opacity">
                 {index.toString().padStart(3, '0')}
               </span>
-              <span className="text-slate-300 font-medium whitespace-pre-wrap tracking-normal">
+              <span className="text-slate-100 font-medium whitespace-pre-wrap tracking-normal">
                 {log}
               </span>
             </div>

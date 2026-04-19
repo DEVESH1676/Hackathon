@@ -25,9 +25,12 @@ const HealthPulse: React.FC = () => {
           </div>
           Health Pulse
         </h2>
-        <div className="flex gap-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">
+        <div className="flex gap-6 text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]">
           <span className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.5)]" /> Realtime Load
+            <div className="relative flex h-1.5 w-1.5">
+              <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></div>
+              <div className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.5)]"></div>
+            </div> Realtime Load
           </span>
           <span className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]" /> Latency MS

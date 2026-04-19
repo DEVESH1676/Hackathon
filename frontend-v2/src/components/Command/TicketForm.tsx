@@ -52,7 +52,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSubmit, isLoading }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
         <div className="flex justify-between items-end ml-1">
-          <label className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">
+          <label className="text-[10px] font-black text-zinc-100 uppercase tracking-widest">
             Subject
           </label>
           <AnimatePresence>
@@ -75,7 +75,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSubmit, isLoading }) => {
           onBlur={() => setTouched(prev => ({ ...prev, title: true }))}
           placeholder="e.g. VPN connection failing with error 619"
           disabled={isLoading}
-          className={`w-full bg-white/[0.04] border rounded-2xl px-5 py-4 text-sm text-white placeholder:text-zinc-500 focus:outline-none transition-all disabled:opacity-50 ${
+          className={`w-full font-sans bg-black/20 border rounded-2xl px-5 py-4 text-sm text-white placeholder:text-zinc-500 focus:outline-none transition-all disabled:opacity-50 ${
             touched.title && errors.title 
               ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20" 
               : "border-white/10 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20"
@@ -85,7 +85,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSubmit, isLoading }) => {
 
       <div className="space-y-2">
         <div className="flex justify-between items-end ml-1">
-          <label className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">
+          <label className="text-[10px] font-black text-zinc-100 uppercase tracking-widest">
             Description
           </label>
           <AnimatePresence>
@@ -108,7 +108,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSubmit, isLoading }) => {
           placeholder="Provide technical context, error codes, and affected systems..."
           disabled={isLoading}
           rows={6}
-          className={`w-full bg-white/[0.04] border rounded-2xl px-5 py-4 text-sm text-white placeholder:text-zinc-500 focus:outline-none transition-all resize-none disabled:opacity-50 ${
+          className={`w-full font-sans bg-black/20 border rounded-2xl px-5 py-4 text-sm text-white placeholder:text-zinc-500 focus:outline-none transition-all resize-none disabled:opacity-50 ${
             touched.description && errors.description 
               ? "border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500/20" 
               : "border-white/10 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20"
@@ -119,10 +119,10 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSubmit, isLoading }) => {
       <Button 
         type="submit" 
         disabled={isLoading || !isValid}
-        className={`w-full h-16 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] transition-all duration-500 ${
+        className={`w-full font-sans h-16 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] transition-all duration-500 border ${
           isLoading || !isValid
-            ? "bg-zinc-800 text-zinc-500 border border-white/5 cursor-not-allowed opacity-50" 
-            : "bg-white text-black hover:bg-cyan-400 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-white/10"
+            ? "bg-zinc-800 text-zinc-500 border-white/5 cursor-not-allowed opacity-50" 
+            : "bg-white text-black border-cyan-400 hover:bg-cyan-400 hover:text-white hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(34,211,238,0.4)]"
         }`}
       >
         {isLoading ? (

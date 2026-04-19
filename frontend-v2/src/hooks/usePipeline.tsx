@@ -79,11 +79,13 @@ export const PipelineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
         onmessage(msg) {
           if (msg.event === 'status') {
-            const data = JSON.parse(msg.data);
+            let data = JSON.parse(msg.data);
+            if (typeof data === 'string') data = JSON.parse(data);
             if (data.message) dispatch({ type: 'ADD_LOG', payload: data.message });
             if (data.progress) dispatch({ type: 'UPDATE_PROGRESS', payload: data.progress });
           } else if (msg.event === 'result') {
-            const data = JSON.parse(msg.data);
+            let data = JSON.parse(msg.data);
+            if (typeof data === 'string') data = JSON.parse(data);
             dispatch({ type: 'SET_RESULT', payload: { key: data.type, data: data.payload } });
           } else if (msg.event === 'done') {
             dispatch({ type: 'COMPLETE' });

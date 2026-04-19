@@ -101,7 +101,7 @@ const Blueprint: React.FC = () => {
 
   // Generate a simple mermaid string for dependencies if not provided by backend as mermaid
   const depGraph = data.dependencies 
-    ? "graph TD\n" + data.dependencies.map((d, i) => `  dep${i}From["${d.from}"] --> dep${i}To["${d.to}"]`).join("\n")
+    ? "%%{init: {'flowchart': {'curve': 'basis'}}}%%\ngraph TD\n  Pipeline[\"api/routes/pipeline.py\"]\n" + data.dependencies.map((d, i) => `  Pipeline -->|${d.type}| Node${i}[\"${d.to}\"]`).join("\n")
     : "graph TD\n  A[No Dependencies Found]";
 
   return (
@@ -126,7 +126,7 @@ const Blueprint: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left: Term Inspector */}
-        <div className="lg:col-span-4 h-[800px]">
+        <div className="lg:col-span-4 h-[800px] lg:sticky lg:top-32">
           <div className="h-full glass rounded-2xl border border-white/10 p-6 flex flex-col">
             <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 mb-6 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />

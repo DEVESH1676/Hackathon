@@ -25,10 +25,10 @@ export default defineConfig({
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
           });
-          proxy.on('proxyRes', (proxyRes, _req, _res) => {
-            proxyRes.headers['cache-control'] = 'no-cache';
-            proxyRes.headers['connection'] = 'keep-alive';
-            proxyRes.headers['x-accel-buffering'] = 'no';
+          proxy.on('proxyRes', (_proxyRes, _req, res) => {
+            res.setHeader('cache-control', 'no-cache');
+            res.setHeader('connection', 'keep-alive');
+            res.setHeader('x-accel-buffering', 'no');
           });
         },
       }
