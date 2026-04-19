@@ -16,6 +16,10 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 - [ ] **UI-02**: Configure Tailwind CSS alongside premium component libraries (Aceternity UI/Shadcn) for a high-end application aesthetic
 - [ ] **UI-03**: Create dashboard to process tickets, surfacing pipeline stage data accurately from the new API structure
 
+### Frontend Robustness
+- [ ] **UI-04**: Implement client-side validation for ticket inputs to prevent 422 backend crashes
+- [ ] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages
+
 ### The Purge
 - [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
 - [ ] **PURGE-02**: Clean `requirements.txt` of all presentation-layer Python libraries (Streamlit, Altair, etc.)
@@ -67,9 +71,11 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 | UI-01       | Phase 2      | Planned |
 | UI-02       | Phase 2      | Planned |
 | UI-03       | Phase 2      | Planned |
-| PURGE-01    | Phase 3      | Planned |
-| PURGE-02    | Phase 3      | Planned |
-| MERGE-01    | Phase 4      | Planned |
+| UI-04       | Phase 3      | Planned |
+| UI-05       | Phase 3      | Planned |
+| PURGE-01    | Phase 4      | Planned |
+| PURGE-02    | Phase 4      | Planned |
+| MERGE-01    | Phase 5      | Planned |
 
 ---
 *Last updated: 2026-04-18 after Milestone 4.0 initialization*

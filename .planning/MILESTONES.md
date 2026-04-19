@@ -27,8 +27,8 @@
 
 **Goal:** Transition from a monolithic Streamlit application to a decoupled React + Vite frontend and FastAPI backend structure to facilitate agentic evolution and premium high-performance UI components.
 
-**Phases:** 4
-**Requirements:** 8
+**Phases:** 5
+**Requirements:** 10
 
 ---
 *Last updated: 2026-04-18*

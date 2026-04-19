@@ -45,7 +45,26 @@
 
 ---
 
-## Phase 3: The Purge
+## Phase 3: Frontend Robustness & State Sync
+
+**Goal:** Implement client-side validation to prevent backend crashes and fix state management bugs where pipeline data is lost during the SSE stream.
+
+**Requirements:** UI-04, UI-05
+
+**Rationale:** Ensuring the UI is "crash-proof" against validation errors and that the intelligence feed correctly renders real-time data is critical for the "Elite" user experience before legacy code is removed.
+
+**Depends on:** Phase 2 (Frontend Scaffolding)
+
+**Success criteria:**
+1. UI validation prevents "Launch" for tickets with <3 subject or <10 description chars.
+2. React Reducer correctly persists SSE `result` payloads in the state.
+3. `StageCard` components dynamically render AI data once the payload is received.
+
+**Status:** PLANNED
+
+---
+
+## Phase 4: The Purge
 
 **Goal:** Systematically remove Streamlit-related code, dependencies, and legacy python-based UI injections across the codebase once the React interface takes over.
 
@@ -53,7 +72,7 @@
 
 **Rationale:** Complete the decoupling by removing UI responsibilities completely from Python logic, enforcing the API-only architecture.
 
-**Depends on:** Phase 2 (Functional React app replacing Streamlit functionality)
+**Depends on:** Phase 2 & 3
 
 **Success criteria:**
 1. `app.py` Streamlit entrypoint removed/archived.
@@ -62,7 +81,7 @@
 
 ---
 
-## Phase 4: Branch Convergence
+## Phase 5: Branch Convergence
 
 **Goal:** Finalize the architectural change and stabilize the git repository with the 3-tier realm standard (`core`, `zenith`, `dao`/main).
 
@@ -70,7 +89,7 @@
 
 **Rationale:** Integrate verified, decoupled changes from `frontend-v2` into the standard development stream, ensuring the multi-tier repo is ready for staging testing.
 
-**Depends on:** Phase 3
+**Depends on:** Phase 4
 
 **Success criteria:**
 1. `frontend-v2` is successfully merged into the `core` branch.
@@ -84,8 +103,9 @@
 |---|-------|------|--------------|------------------|--------|
 | 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 | COMPLETE |
 | 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | PLANNED |
-| 3 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
-| 4 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
+| 3 | Frontend Robustness | Fix Validation Wall & State Sync | UI-04–05 | 3 | PLANNED |
+| 4 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
+| 5 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
 
 ---
 *Roadmap updated: 2026-04-18*

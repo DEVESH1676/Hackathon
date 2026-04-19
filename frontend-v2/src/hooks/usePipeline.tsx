@@ -64,10 +64,23 @@ export const PipelineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
         body: JSON.stringify({ title, description, enable_resolution: true }),
         signal: ctrl.signal,
+        async onopen(response) {
+          if (response.ok && response.headers.get('content-type')?.includes('text/event-stream')) {
+            return; // Everything is fine
+          } else {
+            const errorData = await response.json().catch(() => ({ detail: 'Unknown backend error' }));
+            const errorMessage = typeof errorData.detail === 'string' 
+              ? errorData.detail 
+              : JSON.stringify(errorData.detail);
+            
+            dispatch({ type: 'ERROR', payload: `Backend Error: ${errorMessage}` });
+            throw new Error(`Expected stream, got ${response.status}: ${errorMessage}`);
+          }
+        },
         onmessage(msg) {
           if (msg.event === 'status') {
             const data = JSON.parse(msg.data);
-            if (data.log) dispatch({ type: 'ADD_LOG', payload: data.log });
+            if (data.message) dispatch({ type: 'ADD_LOG', payload: data.message });
             if (data.progress) dispatch({ type: 'UPDATE_PROGRESS', payload: data.progress });
           } else if (msg.event === 'result') {
             const data = JSON.parse(msg.data);

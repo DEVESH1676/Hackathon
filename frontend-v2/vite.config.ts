@@ -17,18 +17,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8002',
+        target: 'http://127.0.0.1:8001', 
         changeOrigin: true,
-        secure: false,
+        // Removed rewrite: (path) => path.replace(/^\/api/, '') 
+        // to ensure backend receives the full /api/... path
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
           });
-          proxy.on('proxyReq', (_proxyReq, req, _res) => {
-            console.log('Sending Request to the Target:', req.method, req.url);
-          });
           proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+            proxyRes.headers['cache-control'] = 'no-cache';
+            proxyRes.headers['connection'] = 'keep-alive';
+            proxyRes.headers['x-accel-buffering'] = 'no';
           });
         },
       }
