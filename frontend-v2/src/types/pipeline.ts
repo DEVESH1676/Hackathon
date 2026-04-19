@@ -1,4 +1,4 @@
-export type PipelineStage = 'idle' | 'classify' | 'triage' | 'rag' | 'resolve' | 'judge' | 'complete' | 'error';
+export type PipelineStage = 'idle' | 'classification' | 'triage' | 'rag' | 'resolution' | 'judge' | 'complete' | 'error';
 
 export interface PipelineState {
   stage: PipelineStage;
