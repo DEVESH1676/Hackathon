@@ -17,8 +17,8 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 - [x] **UI-03**: Create dashboard to process tickets, surfacing pipeline stage data accurately from the new API structure
 
 ### Frontend Robustness
-- [ ] **UI-04**: Implement client-side validation for ticket inputs to prevent 422 backend crashes
-- [/] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages (Partially complete: State sync unified in 03-01)
+- [x] **UI-04**: Implement client-side validation for ticket inputs to prevent 422 backend crashes
+- [x] **UI-05**: Ensure React state correctly captures and renders SSE result payloads across all pipeline stages (COMPLETE: State sync unified in 03-01, Rich UI in 03-03)
 
 ### The Purge
 - [ ] **PURGE-01**: Remove Streamlit application (`app.py`), archiving functionality securely into legacy if needed
@@ -71,8 +71,8 @@ Requirements for milestone v4.0. Each maps to roadmap phases to transition the p
 | UI-01       | Phase 2      | COMPLETE |
 | UI-02       | Phase 2      | COMPLETE |
 | UI-03       | Phase 2      | COMPLETE |
-| UI-04       | Phase 3      | PLANNED |
-| UI-05       | Phase 3      | IN PROGRESS |
+| UI-04       | Phase 3      | COMPLETE |
+| UI-05       | Phase 3      | COMPLETE |
 | PURGE-01    | Phase 4      | PLANNED |
 | PURGE-02    | Phase 4      | PLANNED |
 | MERGE-01    | Phase 5      | PLANNED |

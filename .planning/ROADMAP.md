@@ -57,15 +57,15 @@
 
 **Plans:** 3 plans
 - [x] 03-01-PLAN.md — Pipeline Logic Unification
-- [ ] 03-02-PLAN.md — The Validation Wall
-- [ ] 03-03-PLAN.md — Rich Visual Synthesis
+- [x] 03-02-PLAN.md — The Validation Wall
+- [x] 03-03-PLAN.md — Rich Visual Synthesis
 
 **Success criteria:**
 1. UI validation prevents "Launch" for tickets with <3 subject or <10 description chars.
 2. React Reducer correctly persists SSE `result` payloads in the state.
 3. `StageCard` components dynamically render AI data once the payload is received.
 
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 ---
 
@@ -107,8 +107,8 @@
 | # | Phase | Goal | Requirements | Success Criteria | Status |
 |---|-------|------|--------------|------------------|--------|
 | 1 | Backend Extraction | Expose core logic as REST API | API-01, API-02 | 3 | COMPLETE |
-| 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | PLANNED |
-| 3 | Frontend Robustness | Fix Validation Wall & State Sync | UI-04–05 | 3 | PLANNED |
+| 2 | Frontend Scaffolding | Build Vite/React/Tailwind Base UI | UI-01–03 | 4 | COMPLETE |
+| 3 | Frontend Robustness | Fix Validation Wall & State Sync | UI-04–05 | 3 | COMPLETE |
 | 4 | The Purge | Remove Streamlit + dependencies | PURGE-01–02 | 3 | PLANNED |
 | 5 | Branch Convergence | Merge `frontend-v2` to `core` | MERGE-01 | 2 | PLANNED |
 
