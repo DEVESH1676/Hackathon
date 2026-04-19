@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText } from 'lucide-react';
+import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { Badge } from '../ui/badge';
 
 interface StageCardProps {
   stage: string;
@@ -29,6 +30,150 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
       case 'running': return <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}><Clock className="w-5 h-5 text-blue-400" /></motion.div>;
       case 'error': return <AlertCircle className="w-5 h-5 text-red-400" />;
       default: return <Circle className="w-5 h-5 text-slate-500" />;
+    }
+  };
+
+  const renderClassification = (data: any) => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Identified Category</span>
+        <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider">
+          {data.category || 'Unknown'}
+        </Badge>
+      </div>
+      <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${(data.confidence || 0) * 100}%` }}
+          className="h-full bg-gradient-to-r from-cyan-500 to-blue-500"
+        />
+      </div>
+      <div className="flex justify-between text-[10px] font-bold uppercase text-zinc-400">
+        <span>Confidence</span>
+        <span className="text-cyan-400">{Math.round((data.confidence || 0) * 100)}%</span>
+      </div>
+    </div>
+  );
+
+  const renderTriage = (data: any) => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Severity Level</span>
+        <Badge className={cn(
+          "px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider",
+          data.priority?.toLowerCase() === 'high' ? "bg-red-500/10 text-red-400 border-red-500/20" :
+          data.priority?.toLowerCase() === 'medium' ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+          "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+        )}>
+          {data.priority || 'Normal'}
+        </Badge>
+      </div>
+      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+        <p className="text-[11px] text-zinc-300 leading-relaxed font-medium">
+          {data.rationale || 'No triage rationale provided.'}
+        </p>
+      </div>
+    </div>
+  );
+
+  const renderRAG = (data: any) => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Knowledge Retrieval</span>
+        <span className="text-[10px] font-black text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded uppercase">
+          {data.sources?.length || 0} Sources Found
+        </span>
+      </div>
+      <div className="bg-black/40 border border-white/5 rounded-xl p-4 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-2 opacity-30 group-hover:opacity-100 transition-opacity">
+          <ExternalLink className="w-3 h-3 text-zinc-400" />
+        </div>
+        <p className="text-[11px] text-zinc-400 italic leading-relaxed line-clamp-3">
+          "{data.context || 'No specific context retrieved.'}"
+        </p>
+      </div>
+    </div>
+  );
+
+  const renderResolution = (data: any) => (
+    <div className="space-y-4">
+      <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Execution Blueprint</span>
+      <div className="space-y-2">
+        {(data.steps || []).map((step: string, i: number) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="flex gap-3 items-start group"
+          >
+            <span className="text-[10px] font-black text-zinc-600 mt-1">{String(i + 1).padStart(2, '0')}</span>
+            <p className="text-[11px] text-zinc-300 font-medium group-hover:text-cyan-300 transition-colors">
+              {step}
+            </p>
+          </motion.div>
+        ))}
+        {(!data.steps || data.steps.length === 0) && (
+          <p className="text-[11px] text-zinc-500 italic">Compiling resolution steps...</p>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderJudge = (data: any) => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Safety Compliance</span>
+        <div className="flex items-center gap-2">
+          {data.verdict === 'Verified' ? (
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+          ) : (
+            <ShieldAlert className="w-4 h-4 text-red-400" />
+          )}
+          <span className={cn(
+            "text-[11px] font-black uppercase tracking-wider",
+            data.verdict === 'Verified' ? "text-emerald-400" : "text-red-400"
+          )}>
+            {data.verdict || 'Pending'}
+          </span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {(data.rubric || []).map((item: any, i: number) => (
+          <div key={i} className="bg-white/5 rounded-lg p-2 border border-white/5">
+            <div className="text-[9px] text-zinc-500 uppercase font-bold mb-1">{item.criteria}</div>
+            <div className="text-[11px] text-zinc-200 font-black">{item.score}/10</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    if (!result) return null;
+    
+    // Fallback if result is a string
+    if (typeof result === 'string') {
+      return (
+        <div className="bg-black/30 rounded-xl p-5 border border-white/5">
+          <p className="text-[11px] font-mono text-zinc-400 whitespace-pre-wrap leading-relaxed">{result}</p>
+        </div>
+      );
+    }
+
+    switch (stage) {
+      case 'classification': return renderClassification(result);
+      case 'triage': return renderTriage(result);
+      case 'rag': return renderRAG(result);
+      case 'resolution': return renderResolution(result);
+      case 'judge': return renderJudge(result);
+      default: return (
+        <div className="bg-black/30 rounded-xl p-5 border border-white/5">
+          <pre className="text-[11px] font-mono text-zinc-400 overflow-x-auto">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        </div>
+      );
     }
   };
 
@@ -80,19 +225,17 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {result && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="mt-6 pt-6 border-t border-white/5 relative z-10"
+            key="content"
+            initial={{ height: 0, opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
+            animate={{ height: 'auto', opacity: 1, filter: 'blur(0px)', scale: 1 }}
+            exit={{ height: 0, opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            className="mt-6 pt-6 border-t border-white/5 relative z-10 overflow-hidden"
           >
-            <div className="bg-black/30 rounded-xl p-5 overflow-hidden border border-white/5 shadow-inner">
-               <pre className="text-[11px] font-mono font-medium text-zinc-400 overflow-x-auto whitespace-pre-wrap leading-relaxed">
-                {typeof result === 'string' ? result : JSON.stringify(result, null, 3)}
-              </pre>
-            </div>
+            {renderContent()}
           </motion.div>
         )}
       </AnimatePresence>
