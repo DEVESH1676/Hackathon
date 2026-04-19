@@ -10,9 +10,6 @@ import json
 import sqlite3
 from datetime import datetime, timezone
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
 class FeedbackStore:
     """Persistent SQLite store for pipeline run feedback and resolution tracking."""
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MermaidCanvas from '../components/Architecture/Mermaid';
-import TermInspector, { Term } from '../components/Architecture/TermInspector';
+import TermInspector, { type Term } from '../components/Architecture/TermInspector';
 import { Cpu } from 'lucide-react';
 
 interface BlueprintData {

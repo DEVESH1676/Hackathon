@@ -4,8 +4,6 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 import sys
 
-# Hack to allow absolute imports from parent directory
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 # Initialize models and DB lazily

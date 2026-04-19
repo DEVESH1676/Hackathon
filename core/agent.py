@@ -15,7 +15,6 @@ import requests
 from datetime import datetime, timedelta
 from collections import Counter
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 from core.embeddings import get_chroma_collection, get_embedding_model
 
@@ -313,70 +312,6 @@ class AutomationDiscoveryAgent:
             "pattern_count": len(matching_ids),
             "matching_ids": matching_ids,
             "suggested_runbook": suggested_runbook,
-        }
-
-
-# ──────────────────────────────────────────────────────────────
-# Backward-Compatible Orchestrator (keeps app.py working)
-# ──────────────────────────────────────────────────────────────
-class AgenticLayer:
-    """
-    Thin orchestrator that wraps the three specialized agents.
-    Maintains backward compatibility with app.py's `agent.process()` call.
-    """
-
-    def __init__(self):
-        self.triage = TriageAgent()
-        self.automation = AutomationDiscoveryAgent()
-        # ResolutionAgent doesn't need ChromaDB init
-        self.resolution = ResolutionAgent()
-
-    def process(self, title: str, description: str, classification_result: dict) -> dict:
-        """
-        Legacy-compatible entry point.
-        Runs TriageAgent + AutomationDiscoveryAgent (not ResolutionAgent here
-        since resolution is handled separately via RAG toggle in app.py).
-        """
-        ticket = {"title": title, "description": description}
-
-        # Run Triage
-        triage_result = self.triage.run(ticket, classification_result)
-
-        # Run Automation Discovery (post-classification, before resolution)
-        auto_result = self.automation.run({
-            "title": title,
-            "description": description,
-            "category": classification_result.get("category", "Unknown"),
-            "resolution": "",
-        })
-
-        # Build legacy-compatible response
-        actions = []
-
-        if triage_result["escalate"]:
-            actions.append({
-                "type": "ESCALATE",
-                "reason": triage_result["rationale"],
-                "action": f"Route to {triage_result['route_to']} for human review.",
-            })
-
-        if auto_result["should_automate"]:
-            actions.append({
-                "type": "SUGGEST_AUTOMATION",
-                "reason": (
-                    f"Detected {auto_result['pattern_count']} highly similar tickets "
-                    f"(similarity >= {config.SIMILARITY_THRESHOLD})."
-                ),
-                "action": "Generate automated runbook or proactive script for this issue.",
-                "pattern_preview": auto_result.get("suggested_runbook", ""),
-            })
-
-        return {
-            "requires_human": triage_result["escalate"],
-            "suggests_automation": auto_result["should_automate"],
-            "agent_actions": actions,
-            "triage_result": triage_result,
-            "automation_result": auto_result,
         }
 
 

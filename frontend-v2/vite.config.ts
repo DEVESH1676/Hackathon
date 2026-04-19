@@ -25,7 +25,7 @@ export default defineConfig({
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
           });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
+          proxy.on('proxyRes', (proxyRes, _req, _res) => {
             proxyRes.headers['cache-control'] = 'no-cache';
             proxyRes.headers['connection'] = 'keep-alive';
             proxyRes.headers['x-accel-buffering'] = 'no';
