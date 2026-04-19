@@ -8,6 +8,7 @@ import time
 import json
 import requests
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 PROMPT = """Generate exactly 100 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.

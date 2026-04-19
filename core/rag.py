@@ -8,6 +8,7 @@ import json
 import requests
 from typing import Dict, Any
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 from core.embeddings import get_chroma_collection, get_embedding_model
 

@@ -16,6 +16,7 @@ import requests
 import numpy as np
 from collections import defaultdict
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 from core.embeddings import get_embedding_model, get_chroma_collection
 

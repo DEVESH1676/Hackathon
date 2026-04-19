@@ -2,6 +2,7 @@
 Generate remaining 50 tickets (TKT-2024-00101 to 00150) and merge with batch 1.
 """
 import os, sys, time, json, requests
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
 PROMPT = """Generate exactly 50 realistic IT support tickets as CSV. Output ONLY raw CSV, no explanations.
