@@ -3,6 +3,9 @@ venv/
 env/
 .env
 
+# Local tool state
+.codex
+
 # Compiled Python files
 __pycache__/
 *.pyc
@@ -14,9 +17,6 @@ chroma_db/
 
 # IDE / Editor folders
 .vscode/
-.agent/
-.agents/
-.github/
 .idea/
 *.swp
 *.swo
@@ -24,6 +24,13 @@ chroma_db/
 # Temporary logs / scripts
 *.log
 output.txt
+
+# Runtime data
+data/*.db
+
+# Generated graph exports
+graphify-out/
+.planning/graphs/.last-build-snapshot.json
 
 # Depending on your preference, you could also ignore the dataset.
 # Uncomment the line below if the CSV gets too large (>100MB) for GitHub.
