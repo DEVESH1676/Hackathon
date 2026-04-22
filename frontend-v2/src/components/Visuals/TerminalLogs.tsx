@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { usePipeline } from '../../hooks/usePipeline';
 import { Terminal } from 'lucide-react';
+import HoverBorderCard from '../ui/HoverBorderCard';
 
 const TerminalLogs: React.FC = () => {
   const { state } = usePipeline();
@@ -13,8 +14,8 @@ const TerminalLogs: React.FC = () => {
   }, [state.logs]);
 
   return (
-    <div className="flex flex-col h-full glass rounded-xl overflow-hidden font-mono shadow-2xl">
-      <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+    <HoverBorderCard className="flex flex-col h-full glass rounded-xl overflow-hidden font-mono shadow-2xl relative">
+      <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10 relative z-10">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-emerald-400" />
           <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Autonomous Reasoning</span>
@@ -28,7 +29,7 @@ const TerminalLogs: React.FC = () => {
       
       <div 
         ref={scrollRef}
-        className="flex-1 p-6 overflow-y-auto space-y-2 no-scrollbar scroll-smooth"
+        className="flex-1 p-6 overflow-y-auto space-y-2 no-scrollbar scroll-smooth relative z-10"
         style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}
       >
         {state.logs.length === 0 ? (
@@ -53,7 +54,7 @@ const TerminalLogs: React.FC = () => {
         )}
       </div>
       
-      <div className="px-4 py-1.5 bg-black/20 border-t border-white/5 flex items-center justify-between">
+      <div className="px-4 py-1.5 bg-black/20 border-t border-white/5 flex items-center justify-between relative z-10">
         <div className="flex items-center gap-2">
           <div className={state.stage !== 'idle' && state.stage !== 'complete' ? "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" : "w-1.5 h-1.5 rounded-full bg-slate-700"} />
           <span className="text-[9px] text-slate-500 uppercase tracking-tighter">
@@ -64,7 +65,7 @@ const TerminalLogs: React.FC = () => {
           UTF-8
         </span>
       </div>
-    </div>
+    </HoverBorderCard>
   );
 };
 

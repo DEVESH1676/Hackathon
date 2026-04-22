@@ -1,5 +1,6 @@
 import React from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import HoverBorderCard from "../ui/HoverBorderCard";
 
 const data = [
   { time: '10:00', load: 40, latency: 240 },
@@ -13,7 +14,7 @@ const data = [
 
 const HealthPulse: React.FC = () => {
   return (
-    <div className="glass rounded-[2rem] p-10 h-full flex flex-col gap-10 relative overflow-hidden group">
+    <HoverBorderCard className="glass rounded-[2rem] p-10 h-full flex flex-col gap-10 relative overflow-hidden group">
        {/* High-tech accent lines */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
       
@@ -107,7 +108,7 @@ const HealthPulse: React.FC = () => {
           <span className="text-base font-mono font-black text-white/95 tracking-tighter">99.98%</span>
         </div>
       </div>
-    </div>
+    </HoverBorderCard>
   );
 };
 

@@ -1,9 +1,10 @@
 import React from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Badge } from '../ui/badge';
 import NeuralParticles from '../Visuals/NeuralParticles';
+import HoverBorderCard from '../ui/HoverBorderCard';
 
 interface StageCardProps {
   stage: string;
@@ -14,22 +15,6 @@ interface StageCardProps {
 }
 
 const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, index }) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Smooth out the mouse movement
-  const springConfig = { damping: 25, stiffness: 300 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
-
-  const glowBackground = useMotionTemplate`radial-gradient(400px circle at ${smoothX}px ${smoothY}px, var(--glass-glow), transparent 80%)`;
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top } = e.currentTarget.getBoundingClientRect();
-    mouseX.set(e.clientX - left);
-    mouseY.set(e.clientY - top);
-  };
-
   const getIcon = () => {
     switch (stage) {
       case 'classification': return <Zap className="w-5 h-5" />;
@@ -73,7 +58,6 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
   );
 
   const renderTriage = (data: any) => {
-    // Map decision to priority/color for display
     const isEscalate = data.escalate || data.decision?.includes('ESCALATE');
     return (
       <div className="space-y-4">
@@ -179,8 +163,6 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
 
   const renderContent = () => {
     if (!result) return null;
-    
-    // Fallback if result is a string
     if (typeof result === 'string') {
       return (
         <div className="rounded-xl p-5 border border-white/5 relative z-40">
@@ -188,7 +170,6 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
         </div>
       );
     }
-
     switch (stage) {
       case 'classification': return renderClassification(result);
       case 'triage': return renderTriage(result);
@@ -206,24 +187,17 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
   };
 
   return (
-    <motion.div
+    <HoverBorderCard
       initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
-      onMouseMove={handleMouseMove}
       className={cn(
-        "relative group overflow-hidden rounded-xl p-4 transition-all duration-500",
+        "relative rounded-xl p-4 transition-all duration-500",
         "glass",
         status === 'running' && "border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]",
         status === 'completed' && "border-emerald-500/30 bg-emerald-500/[0.02]"
       )}
     >
-      {/* Magnetic Mouse Glow Overlay */}
-      <motion.div
-        className="absolute inset-0 z-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ background: glowBackground }}
-      />
-
       {/* Border Flow Animation for Running State */}
       {status === 'running' && (
         <>
@@ -284,7 +258,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </HoverBorderCard>
   );
 };
 

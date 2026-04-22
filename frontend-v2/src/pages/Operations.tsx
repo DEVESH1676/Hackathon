@@ -8,6 +8,7 @@ import HealthPulse from "../components/Pulse/HealthPulse";
 import History from "../components/History/History";
 import AnalyticsMock from "../components/Analytics/AnalyticsMock";
 import { usePipeline } from '../hooks/usePipeline';
+import HoverBorderCard from '../components/ui/HoverBorderCard';
 
 const Operations: React.FC = () => {
   const { state, startPipeline } = usePipeline();
@@ -21,10 +22,10 @@ const Operations: React.FC = () => {
         
         {/* LEFT: Command & Logs */}
         <div className="xl:col-span-4 flex flex-col gap-6 xl:sticky xl:top-32">
-          <div className="glass rounded-2xl p-6 lg:p-8 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative overflow-hidden group">
+          <HoverBorderCard className="glass rounded-2xl p-6 lg:p-8 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative overflow-hidden group">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4 mb-6 relative z-10">
               <div className="w-10 h-10 rounded-xl bg-cyan-500/5 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -36,9 +37,11 @@ const Operations: React.FC = () => {
               </div>
             </div>
             
-            <TicketForm onSubmit={startPipeline} isLoading={isPipelineActive} />
-            <GlowingProgressBar progress={state.progress} stage={state.stage} />
-          </div>
+            <div className="relative z-10">
+              <TicketForm onSubmit={startPipeline} isLoading={isPipelineActive} />
+              <GlowingProgressBar progress={state.progress} stage={state.stage} />
+            </div>
+          </HoverBorderCard>
 
           {/* Terminal always visible for active feedback */}
           <div className="h-[250px]">

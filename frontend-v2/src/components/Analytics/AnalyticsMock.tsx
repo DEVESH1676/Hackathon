@@ -1,5 +1,6 @@
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import HoverBorderCard from "../ui/HoverBorderCard";
 
 const categoryData = [
   { name: 'Network', count: 42, color: '#22d3ee' },
@@ -11,7 +12,7 @@ const categoryData = [
 
 const AnalyticsMock: React.FC = () => {
   return (
-    <div className="glass rounded-[2rem] p-10 h-full flex flex-col gap-12 relative overflow-hidden">
+    <HoverBorderCard className="glass rounded-[2rem] p-10 h-full flex flex-col gap-12 relative overflow-hidden">
       {/* Decorative accent */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 blur-3xl rounded-full" />
       
@@ -81,11 +82,11 @@ const AnalyticsMock: React.FC = () => {
         </ResponsiveContainer>
       </div>
 
-      <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+      <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs relative z-10">
         <span className="text-zinc-500">Processing Node: <span className="text-zinc-300 font-mono">US-EAST-1</span></span>
         <span className="text-zinc-500">Latency: <span className="text-emerald-400 font-mono">14ms</span></span>
       </div>
-    </div>
+    </HoverBorderCard>
   );
 };
 

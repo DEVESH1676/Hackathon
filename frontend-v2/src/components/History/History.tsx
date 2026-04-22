@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HoverBorderCard from "../ui/HoverBorderCard";
 
 interface HistoryRecord {
   id: number;
@@ -65,15 +66,15 @@ const History: React.FC = () => {
   }
 
   return (
-    <div className="glass rounded-3xl p-6 overflow-hidden">
-      <div className="flex items-center justify-between mb-6">
+    <HoverBorderCard className="glass rounded-3xl p-6 overflow-hidden">
+      <div className="flex items-center justify-between mb-6 relative z-10">
         <h2 className="text-xl font-bold tracking-tight text-white/90">Recent Run History</h2>
         <button className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
           View Full Archive ({history.length}) →
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 relative z-10">
         {history.length === 0 ? (
           <div className="p-12 text-center border border-white/5 rounded-[2rem] bg-white/[0.01]">
             <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest">No intelligence runs detected in telemetry.</p>
@@ -112,7 +113,7 @@ const History: React.FC = () => {
           ))
         )}
       </div>
-    </div>
+    </HoverBorderCard>
   );
 };
 

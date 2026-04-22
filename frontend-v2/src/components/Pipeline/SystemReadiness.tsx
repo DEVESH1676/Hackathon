@@ -1,8 +1,9 @@
 import React from 'react';
+import HoverBorderCard from '../ui/HoverBorderCard';
 
 const SystemReadiness: React.FC = () => {
   return (
-    <div className="h-full w-full rounded-2xl flex flex-col items-center justify-center glass relative overflow-hidden p-8">
+    <HoverBorderCard className="h-full w-full rounded-2xl flex flex-col items-center justify-center glass relative overflow-hidden p-8">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.03),transparent_70%)]" />
       
       <div className="w-full max-w-2xl space-y-8 relative z-10">
@@ -21,7 +22,7 @@ const SystemReadiness: React.FC = () => {
           </div>
         </div>
 
-        {/* Mocked Readiness Metrics to fill the "void" */}
+        {/* Mocked Readiness Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="glass p-5 rounded-xl border-white/5 space-y-4">
             <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[#94a3b8]">
@@ -49,7 +50,7 @@ const SystemReadiness: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
+    </HoverBorderCard>
   );
 };
 
