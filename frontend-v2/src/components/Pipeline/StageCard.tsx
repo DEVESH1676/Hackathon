@@ -167,7 +167,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
     // Fallback if result is a string
     if (typeof result === 'string') {
       return (
-        <div className="bg-black/30 rounded-xl p-5 border border-white/5">
+        <div className="rounded-xl p-5 border border-white/5 relative z-40">
           <p className="text-[11px] font-mono text-zinc-400 whitespace-pre-wrap leading-relaxed">{result}</p>
         </div>
       );
@@ -180,7 +180,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
       case 'resolution': return renderResolution(result);
       case 'judge': return renderJudge(result);
       default: return (
-        <div className="bg-black/30 rounded-xl p-5 border border-white/5">
+        <div className="rounded-xl p-5 border border-white/5 relative z-40">
           <pre className="text-[11px] font-mono text-zinc-400 overflow-x-auto">
             {JSON.stringify(result, null, 2)}
           </pre>

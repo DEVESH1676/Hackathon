@@ -2,12 +2,30 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import "./styles/theme.css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Font Aliases */
+  /* =============================================================
+     MASTER THEME SOURCE OF TRUTH 
+     Edit these values to change the whole app!
+     ============================================================= */
+  --primary: #00f2ff;       /* Glowing Cyan (Logo, Pill, Accents) */
+  --secondary: #6366f1;     /* Electric Indigo */
+  --accent: #a855f7;        /* Tech Purple */
+  
+  --bg: #020617;            /* Deep Slate Base */
+  --surface: #0f172a;       /* Card Layer */
+  
+  --text-base: #f1f5f9;     /* Primary Text */
+  --text-muted: #94a3b8;    /* Muted Labels */
+  --text-dim: #475569;      /* Dim Context */
+  
+  --glass-bg: rgba(15, 23, 42, 0.8);    /* Increased opacity for visibility */
+  --glass-border: rgba(255, 255, 255, 0.2); 
+  --glass-glow: rgba(0, 242, 255, 0.3);
+  /* ============================================================= */
+
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 }
@@ -47,14 +65,14 @@
   .glass {
     background-color: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), 0 0 15px 0 var(--glass-glow);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), 0 0 20px 0 var(--glass-glow);
     @apply backdrop-blur-2xl backdrop-saturate-[1.8];
   }
 
   .dark .glass {
     background-color: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    @apply shadow-[0_8px_32px_0_rgba(0,0,0,1)];
+    @apply shadow-[0_8px_32px_0_rgba(0,0,0,1),0_0_20px_0_var(--glass-glow)];
   }
 
   .animate-aurora {
@@ -72,30 +90,24 @@
   --aurora: repeating-linear-gradient(100deg, var(--primary) 0%, var(--secondary) 10%, var(--accent) 15%, var(--primary) 20%);
 }
 
-/* --- BORDER FLOW ANIMATION --- */
+/* --- BORDER FLOW --- */
 .border-flow-container {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 2px;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: xor;
   -webkit-mask-composite: destination-out;
   pointer-events: none;
-  z-index: 20;
+  z-index: 50;
 }
 
 .border-flow-line {
   position: absolute;
   inset: -100%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 280deg,
-    var(--primary) 320deg,
-    var(--primary) 360deg
-  );
-  animation: border-rotate 4s linear infinite;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 280deg, var(--primary) 320deg, var(--primary) 360deg);
+  animation: border-rotate 3s linear infinite;
 }
 
 @keyframes border-rotate {
@@ -106,22 +118,22 @@
 /* --- NEURAL PARTICLES --- */
 @keyframes particle-float {
   0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(10px, -15px); }
+  50% { transform: translate(20px, -20px); }
 }
 
 @keyframes neural-pulse {
-  0%, 100% { opacity: 0.2; scale: 1; }
-  50% { opacity: 0.5; scale: 1.2; }
+  0%, 100% { opacity: 0.3; scale: 1; }
+  50% { opacity: 0.8; scale: 1.5; }
 }
 
 .neural-particle {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   background: var(--primary);
   border-radius: 50%;
   filter: blur(1px);
-  box-shadow: 0 0 8px var(--primary);
-  animation: particle-float 8s ease-in-out infinite, neural-pulse 4s ease-in-out infinite;
+  box-shadow: 0 0 10px var(--primary);
+  animation: particle-float 10s ease-in-out infinite, neural-pulse 3s ease-in-out infinite;
+  z-index: 30;
 }
-
