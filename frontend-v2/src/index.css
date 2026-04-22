@@ -65,14 +65,14 @@
   .glass {
     background-color: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), 0 0 20px 0 var(--glass-glow);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
     @apply backdrop-blur-2xl backdrop-saturate-[1.8];
   }
 
   .dark .glass {
     background-color: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    @apply shadow-[0_8px_32px_0_rgba(0,0,0,1),0_0_20px_0_var(--glass-glow)];
+    @apply shadow-[0_8px_32px_0_rgba(0,0,0,1)];
   }
 
   .animate-aurora {
