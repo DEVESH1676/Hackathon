@@ -200,6 +200,13 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
         status === 'completed' && "border-emerald-500/30 bg-emerald-500/[0.02]"
       )}
     >
+      {/* Border Flow Animation for Running State */}
+      {status === 'running' && (
+        <div className="border-flow-container">
+          <div className="border-flow-line" />
+        </div>
+      )}
+
       {/* Holographic linear-gradient border for active/completed */}
       {(status === 'running' || status === 'completed') && (
         <div className={cn(

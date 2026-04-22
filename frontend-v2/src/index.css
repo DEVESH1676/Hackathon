@@ -90,3 +90,35 @@
   /* Aurora colors can now be managed here or in the theme.ts palette */
   --aurora: repeating-linear-gradient(100deg, #0ea5e9 0%, #22d3ee 7%, #818cf8 12%, #c084fc 17%, #0ea5e9 20%);
 }
+
+/* --- BORDER FLOW ANIMATION --- */
+.border-flow-container {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px; /* The thickness of the flow line */
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: destination-out;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.border-flow-line {
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 280deg,
+    var(--primary) 320deg,
+    var(--primary) 360deg
+  );
+  animation: border-rotate 4s linear infinite;
+}
+
+@keyframes border-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
