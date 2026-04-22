@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Badge } from '../ui/badge';
@@ -22,10 +22,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
-  const glowBackground = useTransform(
-    [smoothX, smoothY],
-    ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, var(--glass-glow), transparent 80%)`
-  );
+  const glowBackground = useMotionTemplate`radial-gradient(400px circle at ${smoothX}px ${smoothY}px, var(--glass-glow), transparent 80%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top } = e.currentTarget.getBoundingClientRect();
