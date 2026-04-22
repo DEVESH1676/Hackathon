@@ -10,3 +10,4 @@ plotly
 python-dotenv
 protobuf==3.20.3
 fastapi[standard]>=0.135.0
+kagglehub
