@@ -5,7 +5,7 @@ import TicketForm from "../components/Command/TicketForm";
 import GlowingProgressBar from "../components/Command/GlowingProgressBar";
 import TerminalLogs from "../components/Visuals/TerminalLogs";
 import HealthPulse from "../components/Pulse/HealthPulse";
-import HistoryMock from "../components/History/HistoryMock";
+import History from "../components/History/History";
 import AnalyticsMock from "../components/Analytics/AnalyticsMock";
 import { usePipeline } from '../hooks/usePipeline';
 
@@ -74,7 +74,7 @@ const Operations: React.FC = () => {
 
           {/* Bottom Insight Row: Full-Width History */}
           <div id="history">
-            <HistoryMock />
+            <History />
           </div>
         </div>
       </div>

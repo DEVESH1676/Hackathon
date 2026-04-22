@@ -265,11 +265,11 @@ code {
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+    @apply backdrop-blur-2xl backdrop-saturate-[1.8] bg-white/[0.03] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
   }
 
   .dark .glass {
-    @apply bg-black/20 border-white/5;
+    @apply bg-black/20 border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,1)];
   }
 
   .animate-aurora {
@@ -285,4 +285,8 @@ code {
   to {
     background-position: 350% 50%, 350% 50%;
   }
+}
+
+.animate-aurora {
+  --aurora: repeating-linear-gradient(100deg, #0ea5e9 0%, #22d3ee 7%, #818cf8 12%, #c084fc 17%, #0ea5e9 20%);
 }

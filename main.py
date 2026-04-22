@@ -19,7 +19,7 @@ from core.agent import TriageAgent, ResolutionAgent, AutomationDiscoveryAgent
 from core.judge import ResolutionJudge
 from core.feedback import FeedbackStore
 
-from api.routes import health, classify, retrieve, pipeline, blueprint
+from api.routes import health, classify, retrieve, pipeline, blueprint, history
 
 
 @asynccontextmanager
@@ -82,6 +82,7 @@ app.include_router(classify.router)
 app.include_router(retrieve.router)
 app.include_router(pipeline.router)
 app.include_router(blueprint.router)
+app.include_router(history.router)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

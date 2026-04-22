@@ -4,8 +4,8 @@ import { cn } from "../../lib/utils";
 
 const sections = [
   { id: "classify", label: "Pipeline" },
-  { id: "history", label: "History" },
   { id: "analytics", label: "Analytics" },
+  { id: "history", label: "History" },
   { id: "blueprint", label: "Blueprint" },
 ];
 
@@ -25,29 +25,29 @@ const PillNavbar: React.FC<PillNavbarProps> = ({ onViewChange }) => {
       
       if (activeSection === "blueprint") return;
 
-      const scrollY = window.scrollY;
-      const offset = window.innerHeight * 0.35;
+      const offset = window.innerHeight * 0.45; // Increased offset for better detection
 
-      let current = "classify";
+      let current = activeSection;
 
-      for (const entry of observerEntries) {
+      // Find the section currently in view by checking from bottom to top
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const entry = sections[i];
         if (entry.id === "blueprint") continue;
         const el = document.getElementById(entry.id);
         if (!el) continue;
         
         const rect = el.getBoundingClientRect();
-        const top = rect.top + scrollY;
-        
-        if (top - offset <= scrollY) {
+        if (rect.top <= offset) {
           current = entry.id;
+          break;
         }
       }
 
-      if (current) setActiveSection(current);
+      if (current && current !== activeSection) setActiveSection(current);
     };
 
-    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [activeSection, observerEntries]);
 
@@ -58,8 +58,20 @@ const PillNavbar: React.FC<PillNavbarProps> = ({ onViewChange }) => {
     } else {
       onViewChange?.("operations");
       setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-      }, 10);
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const offset = 120; // Account for navbar height
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = el.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      }, 50);
     }
     setActiveSection(sectionId);
   };
@@ -78,7 +90,7 @@ const PillNavbar: React.FC<PillNavbarProps> = ({ onViewChange }) => {
           "flex items-center justify-between px-4 lg:px-6 transition-all duration-500 ease-in-out",
           "md:rounded-full md:border",
           isScrolled
-            ? "py-2 md:bg-black/70 md:backdrop-blur-xl md:backdrop-saturate-150 md:shadow-2xl md:shadow-cyan-500/10 md:border-white/10"
+            ? "py-2 md:bg-white/[0.05] md:backdrop-blur-2xl md:backdrop-saturate-[1.8] md:shadow-2xl md:shadow-black/50 md:border-white/20"
             : "py-3 md:bg-transparent md:backdrop-blur-none md:shadow-none md:border-transparent"
         )}
       >
@@ -107,14 +119,14 @@ const PillNavbar: React.FC<PillNavbarProps> = ({ onViewChange }) => {
               className={cn(
                 "relative group px-4 lg:px-6 py-2 text-[10px] uppercase tracking-[0.15em] font-black transition-colors duration-300 rounded-full cursor-pointer",
                 activeSection === section.id
-                  ? "text-cyan-400"
+                  ? "text-white"
                   : "text-zinc-500 hover:text-zinc-200"
               )}
             >
               {activeSection === section.id && (
                 <motion.div
                   layoutId="navbar-pill"
-                  className="absolute inset-0 bg-cyan-500/10 rounded-full -z-10 shadow-[inset_0_0_12px_rgba(34,211,238,0.2)] border border-cyan-500/20"
+                  className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full -z-10 shadow-[0_0_20px_rgba(34,211,238,0.3),inset_0_0_12px_rgba(34,211,238,0.2)] border border-cyan-500/30"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
