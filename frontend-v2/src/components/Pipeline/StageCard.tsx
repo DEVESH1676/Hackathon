@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Badge } from '../ui/badge';
+import NeuralParticles from '../Visuals/NeuralParticles';
 
 interface StageCardProps {
   stage: string;
@@ -202,9 +203,12 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
     >
       {/* Border Flow Animation for Running State */}
       {status === 'running' && (
-        <div className="border-flow-container">
-          <div className="border-flow-line" />
-        </div>
+        <>
+          <div className="border-flow-container">
+            <div className="border-flow-line" />
+          </div>
+          <NeuralParticles />
+        </>
       )}
 
       {/* Holographic linear-gradient border for active/completed */}

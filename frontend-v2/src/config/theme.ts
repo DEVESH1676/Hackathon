@@ -4,25 +4,25 @@
  */
 
 export const THEME = {
-  // Brand Colors (Refined Saturation)
-  primary: "#2dd4bf",    // Molten Teal (Sharper, more precise)
+  // Brand Colors (Ultra-Bright for Visibility)
+  primary: "#00f2ff",    // Pure Glowing Cyan
   secondary: "#6366f1",  // Electric Indigo
   accent: "#a855f7",     // Tech Purple
 
-  // Neutral / Backgrounds (Deep Slate for maximum contrast)
-  background: "#020617", // Slate-950 (Professional Deep Navy/Black)
-  surface: "#0f172a",    // Slate-900 (Elevated Cards)
+  // Neutral / Backgrounds
+  background: "#020617", // Slate-950
+  surface: "#0f172a",    // Slate-900
 
-  // Status Colors (2026 Semantic Standards)
-  success: "#00ffc2",    // Carbon Mint (The 2026 "Success" trend)
+  // Status Colors
+  success: "#00ffc2",    // Carbon Mint
   warning: "#fbbf24",    // Amber
   danger: "#ff4757",     // Vibrant Coral-Red
 
-  // Glassmorphism (Fluent Design 2.0 specs)
+  // Glassmorphism (High Contrast)
   glass: {
-    bg: "rgba(15, 23, 42, 0.4)", // Slate-based transparency
-    border: "rgba(255, 255, 255, 0.08)",
-    glow: "rgba(45, 212, 191, 0.15)", // Subtle primary glow
+    bg: "rgba(15, 23, 42, 0.7)", // Higher opacity to see the texture
+    border: "rgba(255, 255, 255, 0.15)",
+    glow: "rgba(0, 242, 255, 0.2)", // Stronger primary glow
   },
 
   // Typography
