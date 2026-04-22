@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { CheckCircle2, Circle, Clock, AlertCircle, Search, Cpu, Zap, ShieldCheck, FileText, ExternalLink, ShieldAlert } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Badge } from '../ui/badge';
@@ -14,6 +14,25 @@ interface StageCardProps {
 }
 
 const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, index }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth out the mouse movement
+  const springConfig = { damping: 25, stiffness: 300 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const glowBackground = useTransform(
+    [smoothX, smoothY],
+    ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, var(--glass-glow), transparent 80%)`
+  );
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
+  };
+
   const getIcon = () => {
     switch (stage) {
       case 'classification': return <Zap className="w-5 h-5" />;
@@ -194,6 +213,7 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
       initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
+      onMouseMove={handleMouseMove}
       className={cn(
         "relative group overflow-hidden rounded-xl p-4 transition-all duration-500",
         "glass",
@@ -201,6 +221,12 @@ const StageCard: React.FC<StageCardProps> = ({ stage, title, status, result, ind
         status === 'completed' && "border-emerald-500/30 bg-emerald-500/[0.02]"
       )}
     >
+      {/* Magnetic Mouse Glow Overlay */}
+      <motion.div
+        className="absolute inset-0 z-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ background: glowBackground }}
+      />
+
       {/* Border Flow Animation for Running State */}
       {status === 'running' && (
         <>
